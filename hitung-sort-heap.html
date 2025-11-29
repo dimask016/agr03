@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Heap Sort dengan Posisi Title Tree yang Diperbaiki</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #b21f1f;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .simulation-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .simulation-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .array-display {
+            background: #2d2d2d;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .array-title {
+            color: white;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .array-elements {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .array-element {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background: #2196f3;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .array-element.active {
+            background: #ff9800;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ff9800;
+        }
+
+        .array-element.swap {
+            background: #4caf50;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #4caf50;
+        }
+
+        .array-element.root {
+            background: #b21f1f;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #b21f1f;
+        }
+
+        .array-element.leaf {
+            background: #9c27b0;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #9c27b0;
+        }
+
+        .tree-display {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tree-title {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            order: 1; /* Title di atas tree */
+        }
+
+        .tree-container-wrapper {
+            position: relative;
+            height: 380px;
+            order: 2; /* Container di bawah title */
+            flex: 1;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .tree-node {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #bbdefb;
+            border: 2px solid #1a2a6c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .tree-node.active {
+            background: #ff9800;
+            border-color: #ff9800;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px #ff9800;
+        }
+
+        .tree-node.swap {
+            background: #4caf50;
+            border-color: #4caf50;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px #4caf50;
+        }
+
+        .tree-node.root {
+            background: #b21f1f;
+            border-color: #b21f1f;
+            color: white;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px #b21f1f;
+        }
+
+        .tree-node.leaf {
+            background: #9c27b0;
+            border-color: #9c27b0;
+            color: white;
+            transform: scale(1.2);
+            box-shadow: 0 0 15px #9c27b0;
+        }
+
+        .tree-connector {
+            position: absolute;
+            background: #1a2a6c;
+            height: 3px;
+            z-index: 1;
+            transform-origin: 0 0;
+        }
+
+        .calculations {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .calculations-title {
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #1a2a6c;
+            padding-bottom: 10px;
+        }
+
+        .step-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-title {
+            color: #b21f1f;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .step-description {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .formula {
+            background: #2d2d2d;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .calculation {
+            background: #e8f5e9;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            margin: 10px 0;
+        }
+
+        .leaf-calculation {
+            background: #f3e5f5;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #9c27b0;
+            margin: 10px 0;
+        }
+
+        .complexity {
+            background: #fff3e0;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #ff9800;
+            margin: 10px 0;
+        }
+
+        .log {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .log-title {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #1a2a6c;
+            padding-bottom: 10px;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .log-entry.step {
+            border-left: 4px solid #2196f3;
+        }
+
+        .log-entry.heapify {
+            border-left: 4px solid #ff9800;
+        }
+
+        .log-entry.swap {
+            border-left: 4px solid #4caf50;
+        }
+
+        .log-entry.leaf {
+            border-left: 4px solid #9c27b0;
+        }
+
+        .log-entry.complete {
+            border-left: 4px solid #b21f1f;
+        }
+
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            font-weight: bold;
+            color: #2e7d32;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status.build {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status.sort {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status.leaf {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .node-index {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #666;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2px 6px;
+            border-radius: 10px;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulasi Heap Sort dengan Posisi Title Tree yang Diperbaiki</h1>
+        <div class="subtitle">Title tree sekarang berada di atas visualisasi tree</div>
+        
+        <div class="controls">
+            <button class="btn" id="prevBtn">⏮️ Previous Step</button>
+            <button class="btn" id="nextBtn">Next Step ⏭️</button>
+            <button class="btn" id="autoBtn">Auto Play ▶️</button>
+            <button class="btn" id="resetBtn">Reset 🔄</button>
+        </div>
+        
+        <div class="status" id="status">Status: Siap memulai simulasi</div>
+        
+        <div class="simulation-area">
+            <div class="array-display">
+                <div class="array-title">Array Representation</div>
+                <div class="array-elements" id="arrayElements"></div>
+            </div>
+            
+            <div class="tree-display">
+                <div class="tree-title">Heap Tree Visualization</div>
+                <div class="tree-container-wrapper" id="treeContainerWrapper">
+                    <div id="treeContainer"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="calculations">
+            <div class="calculations-title">Perhitungan dan Analisis Langkah</div>
+            <div id="calculationsContent">
+                <div class="step-info">
+                    <div class="step-title">Tahap 1: Identifikasi Leaf Nodes</div>
+                    <div class="step-description">
+                        Menentukan elemen leaf (daun) dalam heap tree.
+                    </div>
+                    <div class="formula">
+                        Leaf nodes = elemen dari index floor(n/2) sampai n-1
+                    </div>
+                    <div class="leaf-calculation">
+                        <strong>Perhitungan Leaf:</strong><br>
+                        n = 6<br>
+                        Leaf mulai dari index: floor(6/2) = 3<br>
+                        Leaf indices: 3, 4, 5<br>
+                        Leaf values: arr[3], arr[4], arr[5]
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="log">
+            <div class="log-title">Log Aktivitas Heap Sort</div>
+            <div id="logContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data and state
+        let arr = [3, 19, 1, 14, 8, 7];
+        let originalArr = [...arr];
+        let steps = [];
+        let currentStep = 0;
+        let autoPlayInterval = null;
+        
+        // Node positions for tree visualization (improved layout with exact pixel positions)
+        const nodePositions = [
+            { x: 250, y: 80 },   // 0 - root
+            { x: 125, y: 180 },  // 1 - left child of 0
+            { x: 375, y: 180 },  // 2 - right child of 0
+            { x: 75, y: 280 },   // 3 - left child of 1
+            { x: 175, y: 280 },  // 4 - right child of 1
+            { x: 325, y: 280 }   // 5 - left child of 2
+        ];
+
+        // Tree container dimensions
+        const treeWidth = 500;
+        const treeHeight = 350;
+
+        // Initialize simulation
+        function initSimulation() {
+            steps = [];
+            currentStep = 0;
+            
+            // Show initial leaf calculation
+            showLeafCalculation();
+            
+            recordStep([...arr], "Array awal: " + arr.join(", "), [], [], "Initial State");
+            
+            // Build max heap phase
+            buildMaxHeap();
+            
+            // Heap sort phase
+            heapSort();
+            
+            updateDisplay();
+        }
+
+        // Show leaf nodes calculation
+        function showLeafCalculation() {
+            const n = arr.length;
+            const leafStart = Math.floor(n / 2);
+            const leafIndices = [];
+            
+            for (let i = leafStart; i < n; i++) {
+                leafIndices.push(i);
+            }
+            
+            recordStep([...arr], 
+                `Identifikasi Leaf Nodes:<br>n = ${n}, Leaf mulai dari index floor(${n}/2) = ${leafStart}<br>Leaf indices: ${leafIndices.join(', ')}<br>Leaf values: ${leafIndices.map(i => `arr[${i}]=${arr[i]}`).join(', ')}`, 
+                leafIndices, [], "Leaf");
+        }
+
+        // Record a step in the process
+        function recordStep(array, message, activeIndices = [], swapIndices = [], stepType = "Step") {
+            steps.push({
+                array: [...array],
+                message: message,
+                activeIndices: [...activeIndices],
+                swapIndices: [...swapIndices],
+                stepType: stepType
+            });
+        }
+
+        // Build max heap function
+        function buildMaxHeap() {
+            let n = arr.length;
+            recordStep([...arr], `Mulai Build Max-Heap. n = ${n}`, [], [], "Build Heap");
+            
+            // Start from the last non-leaf node
+            let startIdx = Math.floor(n / 2) - 1;
+            recordStep([...arr], 
+                `Leaf nodes: indices ${Math.floor(n/2)} hingga ${n-1}<br>Non-leaf terakhir: i = ${startIdx} (nilai: ${arr[startIdx]})`, 
+                [startIdx], [], "Build Heap");
+            
+            for (let i = startIdx; i >= 0; i--) {
+                recordStep([...arr], `Heapify node i = ${i} (nilai: ${arr[i]})`, [i], [], "Heapify");
+                heapify(n, i, "build");
+            }
+            
+            recordStep([...arr], "Max-Heap berhasil dibangun!", [], [], "Complete");
+        }
+
+        // Heapify function
+        function heapify(n, i, phase) {
+            let largest = i;
+            let left = 2 * i + 1;
+            let right = 2 * i + 2;
+            
+            let message = `Heapify node ${i}:<br>`;
+            message += `left = 2*${i}+1 = ${left}<br>`;
+            message += `right = 2*${i}+2 = ${right}<br>`;
+            
+            let activeIndices = [i];
+            
+            if (left < n) {
+                message += `arr[${left}] = ${arr[left]}<br>`;
+                activeIndices.push(left);
+            }
+            if (right < n) {
+                message += `arr[${right}] = ${arr[right]}<br>`;
+                activeIndices.push(right);
+            }
+            
+            recordStep([...arr], message, activeIndices, [], "Heapify");
+            
+            // Check if left child is larger than root
+            if (left < n && arr[left] > arr[largest]) {
+                largest = left;
+                recordStep([...arr], 
+                    `Left child lebih besar: arr[${left}]=${arr[left]} > arr[${i}]=${arr[i]}<br>largest = ${left}`, 
+                    [i, left], [], "Heapify");
+            }
+            
+            // Check if right child is larger than current largest
+            if (right < n && arr[right] > arr[largest]) {
+                largest = right;
+                recordStep([...arr], 
+                    `Right child lebih besar: arr[${right}]=${arr[right]} > arr[${largest}]=${arr[largest]}<br>largest = ${right}`, 
+                    [i, right], [], "Heapify");
+            }
+            
+            // If largest is not root, swap and continue heapifying
+            if (largest !== i) {
+                recordStep([...arr], 
+                    `Swap diperlukan: arr[${i}]=${arr[i]} dengan arr[${largest}]=${arr[largest]}`, 
+                    [], [i, largest], "Swap");
+                
+                // Swap
+                [arr[i], arr[largest]] = [arr[largest], arr[i]];
+                recordStep([...arr], 
+                    `Setelah swap: arr[${i}]=${arr[i]}, arr[${largest}]=${arr[largest]}`, 
+                    [], [i, largest], "Swap");
+                
+                // Recursively heapify the affected sub-tree
+                heapify(n, largest, phase);
+            } else {
+                recordStep([...arr], `Node ${i} sudah memenuhi sifat heap (tidak perlu swap)`, [i], [], "Heapify");
+            }
+        }
+
+        // Heap sort function
+        function heapSort() {
+            let n = arr.length;
+            recordStep([...arr], "Mulai Heap Sort Phase", [], [], "Sort");
+            
+            for (let i = n - 1; i > 0; i--) {
+                recordStep([...arr], 
+                    `Iterasi ${n - i}: Pindah root (${arr[0]}) ke posisi ${i}`, 
+                    [0, i], [0, i], "Sort");
+                
+                // Move current root to end
+                [arr[0], arr[i]] = [arr[i], arr[0]];
+                recordStep([...arr], 
+                    `Setelah swap: ${arr.join(", ")}<br>Root ${arr[i]} dipindah ke akhir`, 
+                    [], [0, i], "Swap");
+                
+                // Call heapify on the reduced heap
+                recordStep([...arr], 
+                    `Heapify root pada heap tereduksi (size=${i})`, 
+                    [0], [], "Heapify");
+                heapify(i, 0, "sort");
+            }
+            
+            recordStep([...arr], 
+                "Heap Sort selesai!<br>Array terurut: " + arr.join(", "), 
+                [], [], "Complete");
+        }
+
+        // Update the display
+        function updateDisplay() {
+            if (currentStep >= steps.length) return;
+            
+            const step = steps[currentStep];
+            
+            // Update array display
+            updateArrayDisplay(step);
+            
+            // Update tree display
+            updateTreeDisplay(step);
+            
+            // Update calculations
+            updateCalculations(step);
+            
+            // Update log
+            updateLog(step);
+            
+            // Update status
+            updateStatus(step);
+            
+            // Update buttons
+            updateButtons();
+        }
+
+        // Update array display
+        function updateArrayDisplay(step) {
+            const arrayElements = document.getElementById('arrayElements');
+            arrayElements.innerHTML = '';
+            
+            const n = step.array.length;
+            const leafStart = Math.floor(n / 2);
+            
+            step.array.forEach((value, index) => {
+                const element = document.createElement('div');
+                element.className = 'array-element';
+                element.textContent = value;
+                
+                if (step.activeIndices.includes(index)) {
+                    element.classList.add('active');
+                }
+                
+                if (step.swapIndices.includes(index)) {
+                    element.classList.add('swap');
+                }
+                
+                if (index === 0 && step.stepType === "Sort") {
+                    element.classList.add('root');
+                }
+                
+                // Highlight leaf nodes
+                if (index >= leafStart && step.stepType === "Leaf") {
+                    element.classList.add('leaf');
+                }
+                
+                arrayElements.appendChild(element);
+            });
+        }
+
+        // Update tree display
+        function updateTreeDisplay(step) {
+            const treeContainer = document.getElementById('treeContainer');
+            treeContainer.innerHTML = '';
+            
+            const n = step.array.length;
+            const leafStart = Math.floor(n / 2);
+            
+            // Draw connectors first (so they appear behind nodes)
+            step.array.forEach((value, index) => {
+                if (index < nodePositions.length) {
+                    // Draw connectors for left child
+                    const leftChild = 2 * index + 1;
+                    if (leftChild < step.array.length && leftChild < nodePositions.length) {
+                        drawConnector(nodePositions[index], nodePositions[leftChild]);
+                    }
+                    
+                    // Draw connectors for right child
+                    const rightChild = 2 * index + 2;
+                    if (rightChild < step.array.length && rightChild < nodePositions.length) {
+                        drawConnector(nodePositions[index], nodePositions[rightChild]);
+                    }
+                }
+            });
+            
+            // Draw nodes
+            step.array.forEach((value, index) => {
+                if (index < nodePositions.length) {
+                    const node = document.createElement('div');
+                    node.className = 'tree-node';
+                    node.textContent = value;
+                    node.style.left = `${nodePositions[index].x - 25}px`;
+                    node.style.top = `${nodePositions[index].y - 25}px`;
+                    
+                    // Add index label
+                    const indexLabel = document.createElement('div');
+                    indexLabel.className = 'node-index';
+                    indexLabel.textContent = `index ${index}`;
+                    node.appendChild(indexLabel);
+                    
+                    if (step.activeIndices.includes(index)) {
+                        node.classList.add('active');
+                    }
+                    
+                    if (step.swapIndices.includes(index)) {
+                        node.classList.add('swap');
+                    }
+                    
+                    if (index === 0 && step.stepType === "Sort") {
+                        node.classList.add('root');
+                    }
+                    
+                    // Highlight leaf nodes
+                    if (index >= leafStart && step.stepType === "Leaf") {
+                        node.classList.add('leaf');
+                    }
+                    
+                    treeContainer.appendChild(node);
+                }
+            });
+        }
+
+        // Draw connector between nodes (IMPROVED - using exact pixel calculations)
+        function drawConnector(from, to) {
+            const treeContainer = document.getElementById('treeContainer');
+            const connector = document.createElement('div');
+            connector.className = 'tree-connector';
+            
+            // Calculate exact positions (center of nodes)
+            const fromCenterX = from.x;
+            const fromCenterY = from.y;
+            const toCenterX = to.x;
+            const toCenterY = to.y;
+            
+            // Calculate distance and angle
+            const deltaX = toCenterX - fromCenterX;
+            const deltaY = toCenterY - fromCenterY;
+            const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+            
+            // Set connector properties
+            connector.style.width = `${length}px`;
+            connector.style.left = `${fromCenterX}px`;
+            connector.style.top = `${fromCenterY}px`;
+            connector.style.transform = `rotate(${angle}deg)`;
+            connector.style.transformOrigin = '0 0';
+            
+            treeContainer.appendChild(connector);
+        }
+
+        // Update calculations display
+        function updateCalculations(step) {
+            const calculationsContent = document.getElementById('calculationsContent');
+            const n = step.array.length;
+            const leafStart = Math.floor(n / 2);
+            const leafIndices = Array.from({length: n - leafStart}, (_, i) => i + leafStart);
+            
+            let content = '';
+            
+            if (step.stepType === "Leaf") {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Identifikasi Leaf Nodes</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            Leaf nodes = elemen dari index floor(n/2) sampai n-1
+                        </div>
+                        <div class="leaf-calculation">
+                            <strong>Perhitungan Leaf:</strong><br>
+                            n = ${n}<br>
+                            Leaf mulai dari index: floor(${n}/2) = ${leafStart}<br>
+                            Leaf indices: ${leafIndices.join(', ')}<br>
+                            Leaf values: ${leafIndices.map(i => `arr[${i}]=${step.array[i]}`).join(', ')}
+                        </div>
+                        <div class="complexity">
+                            <strong>Keterangan:</strong> Leaf nodes tidak memiliki child nodes, jadi tidak perlu di-heapify
+                        </div>
+                    </div>
+                `;
+            } else if (step.stepType === "Build Heap") {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Build Max-Heap</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            for (i = floor(n/2)-1; i >= 0; i--)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;heapify(arr, n, i);
+                        </div>
+                        <div class="calculation">
+                            <strong>Perhitungan:</strong><br>
+                            n = ${n}<br>
+                            i mulai dari floor(${n}/2)-1 = ${Math.floor(n/2)-1} hingga 0<br>
+                            Leaf nodes: indices ${leafStart} hingga ${n-1} (tidak diproses)
+                        </div>
+                        <div class="leaf-calculation">
+                            <strong>Leaf Nodes:</strong> ${leafIndices.map(i => `arr[${i}]=${step.array[i]}`).join(', ')}
+                        </div>
+                        <div class="complexity">
+                            <strong>Kompleksitas Build Heap:</strong> O(n)
+                        </div>
+                    </div>
+                `;
+            } else if (step.stepType === "Heapify") {
+                const activeIndex = step.activeIndices[0] !== undefined ? step.activeIndices[0] : 'N/A';
+                const leftChild = 2 * activeIndex + 1;
+                const rightChild = 2 * activeIndex + 2;
+                
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Heapify Process</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            left = 2*i + 1 = ${leftChild}<br>
+                            right = 2*i + 2 = ${rightChild}<br>
+                            largest = i = ${activeIndex}
+                        </div>
+                        <div class="calculation">
+                            <strong>Perbandingan:</strong><br>
+                            - Jika left < n dan arr[left] > arr[largest], maka largest = left<br>
+                            - Jika right < n dan arr[right] > arr[largest], maka largest = right
+                        </div>
+                        <div class="complexity">
+                            <strong>Kompleksitas Heapify:</strong> O(log n)
+                        </div>
+                    </div>
+                `;
+            } else if (step.stepType === "Swap") {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Swap Operation</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            temp = arr[i]<br>
+                            arr[i] = arr[largest]<br>
+                            arr[largest] = temp
+                        </div>
+                        <div class="calculation">
+                            <strong>Operasi:</strong> Menukar elemen pada indeks ${step.swapIndices[0]} dan ${step.swapIndices[1]}
+                        </div>
+                        <div class="complexity">
+                            <strong>Kompleksitas Swap:</strong> O(1)
+                        </div>
+                    </div>
+                `;
+            } else if (step.stepType === "Sort") {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Heap Sort Phase</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            for (i = n-1; i > 0; i--) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;swap(arr[0], arr[i])<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;heapify(arr, i, 0)<br>
+                            }
+                        </div>
+                        <div class="calculation">
+                            <strong>Proses:</strong> Memindahkan root (elemen terbesar) ke akhir array dan memanggil heapify pada heap yang tereduksi
+                        </div>
+                        <div class="complexity">
+                            <strong>Kompleksitas:</strong> O(n log n) untuk seluruh proses sorting
+                        </div>
+                    </div>
+                `;
+            } else if (step.stepType === "Complete") {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Proses Selesai</div>
+                        <div class="step-description">
+                            ${step.message.replace(/<br>/g, ' ')}
+                        </div>
+                        <div class="formula">
+                            Array terurut: [${step.array.join(', ')}]
+                        </div>
+                        <div class="calculation">
+                            <strong>Verifikasi:</strong> Array telah terurut secara ascending
+                        </div>
+                        <div class="complexity">
+                            <strong>Kompleksitas Total:</strong> O(n log n) untuk best, average, dan worst case
+                        </div>
+                    </div>
+                `;
+            } else {
+                content = `
+                    <div class="step-info">
+                        <div class="step-title">Initial State</div>
+                        <div class="step-description">
+                            ${step.message}
+                        </div>
+                        <div class="formula">
+                            arr = [${step.array.join(', ')}]
+                        </div>
+                        <div class="calculation">
+                            <strong>Ukuran array (n):</strong> ${step.array.length}
+                        </div>
+                        <div class="leaf-calculation">
+                            <strong>Leaf Nodes:</strong> indices ${leafStart} hingga ${n-1}<br>
+                            Values: ${leafIndices.map(i => step.array[i]).join(', ')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            calculationsContent.innerHTML = content;
+        }
+
+        // Update log
+        function updateLog(step) {
+            const logContent = document.getElementById('logContent');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${step.stepType.toLowerCase()}`;
+            
+            const stepNumber = currentStep.toString().padStart(2, '0');
+            logEntry.innerHTML = `
+                <strong>Step ${stepNumber}:</strong> ${step.message.replace(/<br>/g, ' ')}
+            `;
+            
+            logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        // Update status
+        function updateStatus(step) {
+            const statusElement = document.getElementById('status');
+            
+            if (step.stepType === "Leaf") {
+                statusElement.className = 'status leaf';
+                statusElement.innerHTML = `Status: Identifikasi Leaf Nodes - ${step.message}`;
+            } else if (step.stepType === "Build Heap" || step.stepType === "Heapify") {
+                statusElement.className = 'status build';
+                statusElement.innerHTML = `Status: Build Max-Heap - ${step.message}`;
+            } else if (step.stepType === "Sort" || step.stepType === "Swap") {
+                statusElement.className = 'status sort';
+                statusElement.innerHTML = `Status: Heap Sort - ${step.message}`;
+            } else if (step.stepType === "Complete") {
+                statusElement.className = 'status';
+                statusElement.innerHTML = `Status: Selesai - ${step.message}`;
+            } else {
+                statusElement.className = 'status';
+                statusElement.innerHTML = `Status: ${step.message}`;
+            }
+        }
+
+        // Update buttons state
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === steps.length - 1;
+            
+            if (currentStep === steps.length - 1) {
+                document.getElementById('autoBtn').textContent = 'Auto Play ▶️';
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+            }
+        }
+
+        // Event handlers
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('autoBtn').addEventListener('click', () => {
+            if (autoPlayInterval) {
+                // Stop auto play
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+                document.getElementById('autoBtn').textContent = 'Auto Play ▶️';
+            } else {
+                // Start auto play
+                document.getElementById('autoBtn').textContent = 'Stop ⏹️';
+                autoPlayInterval = setInterval(() => {
+                    if (currentStep < steps.length - 1) {
+                        currentStep++;
+                        updateDisplay();
+                    } else {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                        document.getElementById('autoBtn').textContent = 'Auto Play ▶️';
+                    }
+                }, 2000);
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+            arr = [...originalArr];
+            initSimulation();
+        });
+
+        // Initialize the simulation
+        initSimulation();
+    </script>
+</body>
+</html>

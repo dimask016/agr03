@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heap Sort dalam Sistem Rekomendasi Traveloka</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slides-container {
+            flex: 1;
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100%;
+            padding: 20px;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 1000px;
+            width: 95%;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: fadeInUp 0.8s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #1a2a6c;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);
+            border-radius: 2px;
+        }
+
+        .slide-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #b21f1f;
+            text-align: center;
+        }
+
+        .slide-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .slide-list {
+            list-style-type: none;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .slide-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #1a2a6c;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .slide-list li:hover {
+            color: #1a2a6c;
+            transform: translateX(5px);
+        }
+
+        .slide-list li:hover::before {
+            color: #b21f1f;
+            transform: scale(1.2);
+        }
+
+        .slide-list li.completed {
+            color: #4CAF50;
+        }
+
+        .slide-list li.completed::before {
+            content: '✓';
+            color: #4CAF50;
+        }
+
+        .slide-list li.active {
+            color: #b21f1f;
+            font-weight: bold;
+        }
+
+        .slide-list li.active::before {
+            color: #b21f1f;
+            transform: scale(1.3);
+        }
+
+        .code-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            flex: 1;
+        }
+
+        .code-section-title {
+            color: #ff79c6;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+
+        .code-keyword {
+            color: #ff79c6;
+        }
+
+        .code-function {
+            color: #50fa7b;
+        }
+
+        .code-variable {
+            color: #f8f8f2;
+        }
+
+        .code-comment {
+            color: #6272a4;
+            font-style: italic;
+        }
+
+        .code-string {
+            color: #f1fa8c;
+        }
+
+        .code-section {
+            margin-bottom: 15px;
+        }
+
+        .explanation-box {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 5px solid #1a2a6c;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .explanation-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .explanation-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .explanation-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #b21f1f;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            height: 200px;
+        }
+
+        .tree-node {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tree-node.active {
+            transform: scale(1.2);
+            background: linear-gradient(135deg, #fdbb2d, #b21f1f);
+            box-shadow: 0 0 20px #fdbb2d;
+        }
+
+        .tree-connector {
+            position: absolute;
+            background: #fff;
+            height: 2px;
+            z-index: 1;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .comparison-table th {
+            background: #1a2a6c;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        .comparison-table tr:hover {
+            background: #e9f7fe;
+        }
+
+        .btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(to right, #1a2a6c, #b21f1f, #fdbb2d);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .hotel-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 12px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #1a2a6c;
+        }
+
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .hotel-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1a2a6c;
+            margin-bottom: 8px;
+        }
+
+        .hotel-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .hotel-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .hotel-detail i {
+            color: #b21f1f;
+        }
+
+        .complexity-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 180px;
+            margin: 20px 0;
+            padding: 0 15px;
+        }
+
+        .chart-bar {
+            width: 50px;
+            background: linear-gradient(to top, #1a2a6c, #b21f1f);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: height 1s ease;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .agenda-indicator {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            font-weight: bold;
+            color: #1a2a6c;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #fdbb2d, #fdbb2d);
+            background-repeat: no-repeat;
+            background-size: 100% 0.3em;
+            background-position: 0 88%;
+            transition: background-size 0.25s ease-in;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .member {
+            text-align: center;
+            width: 120px;
+        }
+
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            margin: 0 auto 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-content {
+                padding: 15px;
+            }
+            
+            .visualization {
+                height: 150px;
+            }
+            
+            .tree-node {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8rem;
+            }
+            
+            .agenda-indicator {
+                top: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+            
+            .code-block {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Scrollbar styling */
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: #1a2a6c;
+            border-radius: 10px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb:hover {
+            background: #b21f1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="agenda-indicator" id="agendaIndicator">Slide 1: Cover</div>
+    
+    <div class="presentation-container">
+        <div class="slides-container" id="slidesContainer">
+            <!-- Slide 1: Cover -->
+            <div class="slide" id="slide1">
+                <div class="slide-content">
+                    <h1 class="slide-title">HEAP SORT DALAM SISTEM REKOMENDASI TRAVELOKA</h1>
+                    <h2 class="slide-subtitle">Analisis Kompleksitas & Penerapan Nyata</h2>
+                    <div class="slide-text">
+                        <p>Presentasi oleh Kelompok 5 - Struktur Data & Algoritma</p>
+                    </div>
+                    <div class="team-members">
+                        <div class="member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <p>Anggota 1</p>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <p>Anggota 2</p>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <p>Anggota 3</p>
+                        </div>
+                        <div class="member">
+                            <div class="member-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <p>Anggota 4</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Agenda -->
+            <div class="slide" id="slide2">
+                <div class="slide-content">
+                    <h1 class="slide-title">Agenda Presentasi</h1>
+                    <ul class="slide-list" id="agendaList">
+                        <li data-slide="3">Konsep Dasar Heap Sort</li>
+                        <li data-slide="4">Pseudocode & Cara Kerja</li>
+                        <li data-slide="5">Studi Kasus: Traveloka</li>
+                        <li data-slide="6">Implementasi Python</li>
+                        <li data-slide="7">Demo Live System</li>
+                        <li data-slide="8">Analisis Kompleksitas</li>
+                        <li data-slide="9">Keunggulan Bisnis</li>
+                        <li data-slide="10">Q&A Session</li>
+                    </ul>
+                    <button class="btn" id="startDemoBtn">
+                        <i class="fas fa-play"></i> Mulai Demo Interaktif
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slide 3: Definisi Heap Sort -->
+            <div class="slide" id="slide3">
+                <div class="slide-content">
+                    <h1 class="slide-title">Apa itu Heap Sort?</h1>
+                    <div class="slide-text">
+                        <p><span class="highlight">Heap Sort</span> adalah algoritma pengurutan yang memanfaatkan struktur data <span class="highlight">heap</span>, yaitu struktur berbentuk complete binary tree.</p>
+                    </div>
+                    
+                    <div class="visualization" id="heapVisualization">
+                        <!-- Heap tree will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="slide-text">
+                        <p><strong>Jenis Heap:</strong></p>
+                        <ul class="slide-list">
+                            <li><strong>Max-Heap</strong>: Setiap node memiliki nilai lebih besar atau sama dengan nilai anak-anaknya</li>
+                            <li><strong>Min-Heap</strong>: Setiap node memiliki nilai lebih kecil atau sama dengan nilai anak-anaknya</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Pseudocode (FIXED) -->
+            <div class="slide" id="slide4">
+                <div class="slide-content">
+                    <h1 class="slide-title">Pseudocode Heap Sort</h1>
+                    
+                    <div class="code-container">
+                        <div class="code-block">
+                            <div class="code-section-title">Fungsi Utama: Heap Sort</div>
+                            <div class="code-section">
+                                <pre><code><span class="code-keyword">PROCEDURE</span> <span class="code-function">heapSort</span>(arr)
+    n = <span class="code-function">length</span>(arr)
+    <span class="code-comment">// Build max heap</span>
+    <span class="code-keyword">FOR</span> i <span class="code-keyword">FROM</span> n/2 - 1 <span class="code-keyword">DOWN TO</span> 0
+        <span class="code-function">heapify</span>(arr, n, i)
+    
+    <span class="code-comment">// Extract elements from heap one by one</span>
+    <span class="code-keyword">FOR</span> i <span class="code-keyword">FROM</span> n-1 <span class="code-keyword">DOWN TO</span> 1
+        <span class="code-comment">// Move current root to end</span>
+        <span class="code-function">SWAP</span> arr[0] <span class="code-keyword">WITH</span> arr[i]
+        <span class="code-comment">// Call heapify on reduced heap</span>
+        <span class="code-function">heapify</span>(arr, i, 0)</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="code-block">
+                            <div class="code-section-title">Fungsi Pendukung: Heapify</div>
+                            <div class="code-section">
+                                <pre><code><span class="code-keyword">PROCEDURE</span> <span class="code-function">heapify</span>(arr, n, i)
+    largest = i          <span class="code-comment">// Initialize largest as root</span>
+    left = 2*i + 1       <span class="code-comment">// Left child</span>
+    right = 2*i + 2      <span class="code-comment">// Right child</span>
+    
+    <span class="code-comment">// If left child is larger than root</span>
+    <span class="code-keyword">IF</span> left &lt; n <span class="code-keyword">AND</span> arr[left] &gt; arr[largest]
+        largest = left
+    
+    <span class="code-comment">// If right child is larger than current largest</span>
+    <span class="code-keyword">IF</span> right &lt; n <span class="code-keyword">AND</span> arr[right] &gt; arr[largest]
+        largest = right
+    
+    <span class="code-comment">// If largest is not root</span>
+    <span class="code-keyword">IF</span> largest != i
+        <span class="code-function">SWAP</span> arr[i] <span class="code-keyword">WITH</span> arr[largest]
+        <span class="code-comment">// Recursively heapify the affected sub-tree</span>
+        <span class="code-function">heapify</span>(arr, n, largest)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="explanation-box">
+                        <div class="explanation-title">Penjelasan Fungsi:</div>
+                        <ul class="explanation-list">
+                            <li><strong>Heap Sort</strong>: Fungsi utama yang mengatur proses sorting.</li>
+                            <li><strong>heapify</strong>: Fungsi untuk mempertahankan sifat heap.</li>
+                            <li><strong>Build max heap</strong>: Mengubah array menjadi max-heap.</li>
+                            <li><strong>Extract elements</strong>: Mengambil elemen terbesar dan menempatkannya di akhir.</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn" id="visualizeHeapifyBtn">
+                        <i class="fas fa-eye"></i> Visualisasi Heapify
+                    </button>
+                </div>
+            </div>
+                       <!-- Slide 5: Summary Heapify & Leaf -->
+            <div class="slide" id="slide5">
+                <div class="slide-content">
+                    <h1 class="slide-title">Summary Heapify & Leaf</h1>
+                    
+                    <div class="slide-text">
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #fff3e0, #ffecb3); border-left: 5px solid #ff9800;">
+                            <div class="explanation-title">📊 Summary Heapify</div>
+                            <div class="step-description">
+                                Heapify adalah proses untuk memastikan bahwa suatu node dan subtree-nya memenuhi aturan Max-Heap.
+                            </div>
+                            <div class="formula">
+                                <strong>Inti proses Heapify:</strong><br>
+                                1. Hitung anak kiri: left = 2*i + 1<br>
+                                2. Hitung anak kanan: right = 2*i + 2<br>
+                                3. Bandingkan parent dengan anak-anaknya<br>
+                                4. Jika salah satu anak lebih besar → swap<br>
+                                5. Lanjutkan proses ke bawah (rekursif) sampai subtree kembali valid
+                            </div>
+                            <div class="calculation">
+                                <strong>Tujuan:</strong><br>
+                                Menjaga struktur heap agar setiap parent selalu lebih besar dari anaknya dalam Max-Heap.
+                            </div>
+                        </div>
+
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50; margin-top: 20px;">
+                            <div class="explanation-title">🍃 Summary Leaf</div>
+                            <div class="step-description">
+                                Leaf (daun) adalah node pada heap yang tidak memiliki anak, yaitu node paling bawah.
+                            </div>
+                            <div class="formula">
+                                <strong>Cara menentukan leaf:</strong><br>
+                                Jika jumlah elemen array adalah n:<br>
+                                Leaf berada pada index:<br>
+                                index = floor(n/2) sampai n-1
+                            </div>
+                            <div class="calculation">
+                                <strong>Alasannya:</strong><br>
+                                Karena pada array-based heap, node mulai dari floor(n/2) ke atas tidak punya child (keluar dari range array).
+                            </div>
+                        </div>
+
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 5px solid #2196f3; margin-top: 20px;">
+                            <div class="explanation-title">🔗 Hubungan Leaf dan Heapify</div>
+                            <div class="step-description">
+                                <strong>Leaf tidak perlu di-heapify</strong>, karena tidak punya anak.
+                            </div>
+                            <div class="formula">
+                                Heapify dimulai dari node bukan leaf, yaitu dari index floor(n/2) - 1 turun ke 0.
+                            </div>
+                            <div class="calculation">
+                                <strong>Inilah yang membentuk Build Max Heap.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="visualization" style="margin-top: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Heapify Process</div>
+                                <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; border: 2px solid #ff9800;">
+                                    <div style="font-family: monospace; text-align: left;">
+                                        <span style="color: #ff9800;">heapify(arr, n, i):</span><br>
+                                        &nbsp;&nbsp;largest = i<br>
+                                        &nbsp;&nbsp;left = 2*i + 1<br>
+                                        &nbsp;&nbsp;right = 2*i + 2<br>
+                                        &nbsp;&nbsp;if left < n and arr[left] > arr[largest]:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;largest = left<br>
+                                        &nbsp;&nbsp;if right < n and arr[right] > arr[largest]:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;largest = right<br>
+                                        &nbsp;&nbsp;if largest != i:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;swap(arr[i], arr[largest])<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;heapify(arr, n, largest)
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Leaf Identification</div>
+                                <div style="background: #f5f5f5; padding: 15px; border-radius: 10px; border: 2px solid #4caf50;">
+                                    <div style="font-family: monospace; text-align: left;">
+                                        <span style="color: #4caf50;">n = length(arr)</span><br>
+                                        <span style="color: #4caf50;">leaf_start = floor(n/2)</span><br>
+                                        <br>
+                                        <strong>Example:</strong><br>
+                                        arr = [3, 19, 1, 14, 8, 7]<br>
+                                        n = 6<br>
+                                        leaf_start = floor(6/2) = 3<br>
+                                        <strong>Leaf index: 3, 4, 5</strong><br>
+                                        <strong>Leaf values: 14, 8, 7</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HYPERLINK KE SIMULASI INTERAKTIF -->
+                    <div style="text-align: center; margin: 30px 0;">
+                        <div style="background: linear-gradient(135deg, #1a2a6c, #b21f1f); padding: 20px; border-radius: 15px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                            <h3 style="margin-bottom: 15px; color: white;">🚀 Ilustrasi / Visualisasi Heap Sort!</h3>
+                            <p style="margin-bottom: 20px; font-size: 1.1rem;">Lihat proses Heap Sort secara live dengan perhitungan langkah demi langkah</p>
+                             <a href="hitung-sort-heap.html" target="_blank"
+                               style="display: inline-block; 
+                                      background: linear-gradient(135deg, #fdbb2d, #ff9800); 
+                                      color: #1a2a6c; 
+                                      padding: 12px 30px; 
+                                      border-radius: 30px; 
+                                      text-decoration: none; 
+                                      font-weight: bold; 
+                                      font-size: 1.1rem;
+                                      transition: all 0.3s ease;
+                                      box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                                📊 Buka Ilustrasi / Visualisasi Heap Sort
+                            </a>
+                            <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.9;">Klik untuk melihat visualisasi lengkap dengan perhitungan real-time</p>
+                        </div>
+                    </div>
+
+                    <div class="slide-text" style="margin-top: 20px; text-align: center;">
+                        <p><strong>Kesimpulan:</strong> Heapify menjaga struktur heap, sedangkan leaf nodes adalah elemen dasar yang tidak perlu diproses.</p>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Slide 6: Traveloka Use Case -->
+            <div class="slide" id="slide6">
+                <div class="slide-content">
+                    <h1 class="slide-title">Kenapa Traveloka Butuh Heap?</h1>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start; margin-bottom: 25px;">
+                        <!-- Kolom Kiri: Problem Statement -->
+                        <div>
+                            <div class="slide-text">
+                                <p><strong>Problem Statement:</strong></p>
+                                <ul class="slide-list">
+                                    <li>970+ hotel perlu diurutkan secara real-time</li>
+                                    <li>Multiple criteria: rating, harga, popularitas, jarak</li>
+                                    <li>Response time &lt; 2 detik</li>
+                                    <li>Update frequent: filter, harga, ketersediaan</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="slide-text">
+                                <p><strong>Solution:</strong> Priority Queue dengan Heap Structure</p>
+                            </div>
+
+                            <!-- Hotel Card Example -->
+                            <div class="visualization">
+                                <div class="hotel-card">
+                                    <div class="hotel-name">City Center Hotel</div>
+                                    <div class="hotel-details">
+                                        <div class="hotel-detail">
+                                            <i class="fas fa-star"></i>
+                                            <span>Rating: 4.8/5</span>
+                                        </div>
+                                        <div class="hotel-detail">
+                                            <i class="fas fa-dollar-sign"></i>
+                                            <span>Harga: $150</span>
+                                        </div>
+                                        <div class="hotel-detail">
+                                            <i class="fas fa-fire"></i>
+                                            <span>Popularitas: 95</span>
+                                        </div>
+                                        <div class="hotel-detail">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>Jarak: 0.5km</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan: Gambar -->
+                        <div>
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 15px; font-size: 1.2rem;">
+                                    🏨 Visualisasi Sistem Rekomendasi Traveloka
+                                </div>
+                                <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 15px; border-radius: 10px; border: 2px solid #1a2a6c;">
+                               <img src="https://drive.google.com/thumbnail?id=15GvzoWrYcTdW8dkAc7JaAyRp-IhYTvoj&sz=w2000"
+     alt="Hotel Recommendation System"
+     style="width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-radius: 8px;
+            border: 2px solid #90caf9;">
+                                    <div style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                                        Ilustrasi: Sistem rekomendasi hotel real-time
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">📈 Keunggulan Heap untuk Traveloka:</div>
+                                <ul style="list-style: none; padding-left: 0;">
+                                    <li style="margin-bottom: 8px;">✅ <strong>O(log n)</strong> untuk insert/update hotel</li>
+                                    <li style="margin-bottom: 8px;">✅ <strong>O(1)</strong> access ke hotel terbaik</li>
+                                    <li style="margin-bottom: 8px;">✅ <strong>Multiple criteria</strong> sorting</li>
+                                    <li style="margin-bottom: 8px;">✅ <strong>Real-time</strong> rekomendasi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information Section -->
+                    <div style="background: linear-gradient(135deg, #fff3e0, #ffecb3); padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ff9800;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">🔧 Teknik Implementasi:</div>
+                                <div style="font-family: monospace; background: #2d2d2d; color: white; padding: 12px; border-radius: 8px; font-size: 0.9rem;">
+                                    class HotelPriority {<br>
+                                    &nbsp;&nbsp;constructor(hotel) {<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;this.priority = [<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-hotel.rating,      // Max-heap<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-hotel.popularity,  // Max-heap<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hotel.price,        // Min-heap<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hotel.distance      // Min-heap<br>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;];<br>
+                                    &nbsp;&nbsp;}<br>
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">📊 Metrik Performa:</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div style="background: #e8f5e9; padding: 10px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #4caf50;">&lt;2s</div>
+                                        <div style="font-size: 0.8rem;">Response Time</div>
+                                    </div>
+                                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #2196f3;">970+</div>
+                                        <div style="font-size: 0.8rem;">Hotels Processed</div>
+                                    </div>
+                                    <div style="background: #fff3e0; padding: 10px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #ff9800;">O(log n)</div>
+                                        <div style="font-size: 0.8rem;">Complexity</div>
+                                    </div>
+                                    <div style="background: #f3e5f5; padding: 10px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #9c27b0;">99.9%</div>
+                                        <div style="font-size: 0.8rem;">Uptime</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Slide 7: Implementasi Python -->
+            <div class="slide" id="slide7">
+                <div class="slide-content">
+                    <h1 class="slide-title">Implementasi Python</h1>
+                    <div class="code-block">
+                        <pre><code><span class="code-keyword">class</span> <span class="code-function">Hotel</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-variable">self</span>, name, price, rating, popularity, distance):
+        <span class="code-variable">self</span>.name = name
+        <span class="code-variable">self</span>.price = price
+        <span class="code-variable">self</span>.rating = rating
+        <span class="code-variable">self</span>.popularity_score = popularity
+        <span class="code-variable">self</span>.distance_from_center = distance
+    
+    <span class="code-keyword">def</span> <span class="code-function">__lt__</span>(<span class="code-variable">self</span>, other):
+        <span class="code-comment"># Priority 1: Rating (higher = better)</span>
+        <span class="code-keyword">if</span> <span class="code-variable">self</span>.rating != other.rating:
+            <span class="code-keyword">return</span> <span class="code-variable">self</span>.rating > other.rating
+        <span class="code-comment"># Priority 2: Popularity</span>
+        <span class="code-keyword">if</span> <span class="code-variable">self</span>.popularity_score != other.popularity_score:
+            <span class="code-keyword">return</span> <span class="code-variable">self</span>.popularity_score > other.popularity_score
+        <span class="code-comment"># Priority 3: Price (cheaper = better)</span>
+        <span class="code-keyword">if</span> <span class="code-variable">self</span>.price != other.price:
+            <span class="code-keyword">return</span> <span class="code-variable">self</span>.price < other.price
+        <span class="code-comment"># Priority 4: Distance (closer = better)</span>
+        <span class="code-keyword">return</span> <span class="code-variable">self</span>.distance_from_center < other.distance_from_center</code></pre>
+                    </div>
+                    <button class="btn" id="runCodeBtn">
+                        <i class="fas fa-code"></i> Jalankan Kode Contoh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slide 8: Demo Hasil -->
+            <div class="slide" id="slide8">
+                <div class="slide-content">
+                    <h1 class="slide-title">Demo: Hasil Rekomendasi</h1>
+                    <div class="slide-text">
+                        <p>Berikut adalah hasil rekomendasi hotel berdasarkan algoritma Heap Sort:</p>
+                    </div>
+                    
+                    <div id="hotelResults">
+                        <!-- Hotel results will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="slide-text">
+                        <p>Algoritma berhasil mengurutkan hotel berdasarkan multiple criteria dengan efisien!</p>
+                    </div>
+                </div>
+            </div>
+
+                                 <!-- Slide 9: Analisis Kompleksitas -->
+            <div class="slide" id="slide9">
+                <div class="slide-content">
+                    <h1 class="slide-title">Analisis Kompleksitas Heap Sort</h1>
+                    
+                    <div class="slide-text">
+                        <!-- Summary Kompleksitas Utama -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                            <div style="text-align: center; background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 25px; border-radius: 15px; border: 2px solid #2196f3;">
+                                <div style="font-size: 2.5rem; font-weight: bold; color: #2196f3; margin-bottom: 10px;">O(log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Insert Operation</div>
+                                <div style="font-size: 0.9rem; color: #666;">
+                                    Tambah hotel baru ke sistem
+                                </div>
+                            </div>
+                            <div style="text-align: center; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); padding: 25px; border-radius: 15px; border: 2px solid #4caf50;">
+                                <div style="font-size: 2.5rem; font-weight: bold; color: #4caf50; margin-bottom: 10px;">O(k log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Top-k Recommendations</div>
+                                <div style="font-size: 0.9rem; color: #666;">
+                                    Ambil k rekomendasi terbaik
+                                </div>
+                            </div>
+                            <div style="text-align: center; background: linear-gradient(135deg, #fff3e0, #ffecb3); padding: 25px; border-radius: 15px; border: 2px solid #ff9800;">
+                                <div style="font-size: 2.5rem; font-weight: bold; color: #ff9800; margin-bottom: 10px;">O(n log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Total Operations</div>
+                                <div style="font-size: 0.9rem; color: #666;">
+                                    n operasi insert + sort
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Perbandingan dengan Alternatif -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #f5f5f5, #eeeeee); border-left: 5px solid #9c27b0; margin-bottom: 25px;">
+                            <div class="explanation-title">📊 Perbandingan Kompleksitas</div>
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Operasi</th>
+                                        <th>Heap (Traveloka)</th>
+                                        <th>Sorted Array</th>
+                                        <th>Sorted Linked List</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Insert</strong></td>
+                                        <td style="color: #4caf50; font-weight: bold;">O(log n)</td>
+                                        <td style="color: #f44336;">O(n)</td>
+                                        <td style="color: #f44336;">O(n)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Get Top-k</strong></td>
+                                        <td style="color: #4caf50; font-weight: bold;">O(k log n)</td>
+                                        <td style="color: #4caf50;">O(1)</td>
+                                        <td style="color: #4caf50;">O(k)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total n ops</strong></td>
+                                        <td style="color: #4caf50; font-weight: bold;">O(n log n)</td>
+                                        <td style="color: #f44336;">O(n²)</td>
+                                        <td style="color: #f44336;">O(n²)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Keunggulan Heap untuk Traveloka -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="explanation-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50;">
+                                <div class="explanation-title">✅ Keunggulan Heap</div>
+                                <ul class="explanation-list">
+                                    <li><strong>Konsisten</strong>: Always O(n log n)</li>
+                                    <li><strong>Real-time</strong>: O(log n) untuk update</li>
+                                    <li><strong>Multiple Criteria</strong>: Support complex sorting</li>
+                                    <li><strong>Memory Efficient</strong>: In-place operations</li>
+                                    <li><strong>Scalable</strong>: Handle large datasets</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="explanation-box" style="background: linear-gradient(135deg, #fff3e0, #ffecb3); border-left: 5px solid #ff9800;">
+                                <div class="explanation-title">🎯 Untuk Use Case Traveloka</div>
+                                <ul class="explanation-list">
+                                    <li><strong>970+ hotels</strong>: O(log n) = ~10 operations</li>
+                                    <li><strong>Response time &lt;2s</strong>: Optimized for speed</li>
+                                    <li><strong>Frequent updates</strong>: Efficient insert/remove</li>
+                                    <li><strong>Multiple filters</strong>: Complex priority handling</li>
+                                    <li><strong>User experience</strong>: Instant recommendations</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Kesimpulan Akhir -->
+                        <div style="text-align: center; margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 15px; color: white;">
+                            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px;">🚀 Heap Sort: Optimal untuk Sistem Real-time</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9;">
+                                Dengan kompleksitas O(n log n) yang konsisten, Heap Sort memberikan performa terbaik 
+                                untuk aplikasi seperti Traveloka yang membutuhkan sorting real-time dengan multiple criteria.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Keunggulan Bisnis -->
+            <div class="slide" id="slide10">
+                <div class="slide-content">
+                    <h1 class="slide-title">Keunggulan untuk Traveloka</h1>
+                    
+                    <div class="slide-text">
+                        <p><strong>Customer Experience:</strong></p>
+                        <ul class="slide-list">
+                            <li>Rekomendasi personal & relevan</li>
+                            <li>Response time &lt; 2 detik</li>
+                            <li>UI/UX yang responsif</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slide-text">
+                        <p><strong>Business Impact:</strong></p>
+                        <ul class="slide-list">
+                            <li>↑ Conversion rates</li>
+                            <li>↑ Customer retention</li>
+                            <li>↑ Competitive advantage</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="visualization">
+                        <div class="tree-node pulse" style="background: linear-gradient(135deg, #fdbb2d, #b21f1f);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Kesimpulan -->
+            <div class="slide" id="slide11">
+                <div class="slide-content">
+                    <h1 class="slide-title">Kesimpulan & Rekomendasi</h1>
+                    
+                    <div class="slide-text">
+                        <p><strong>Kesimpulan:</strong></p>
+                        <ul class="slide-list">
+                            <li>Heap Sort optimal untuk sistem rekomendasi Traveloka</li>
+                            <li>O(log n) performance scalable untuk big data</li>
+                            <li>Multiple criteria sorting yang kompleks</li>
+                            <li>Real-time capabilities untuk user experience</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slide-text">
+                        <p><strong>Rekomendasi:</strong></p>
+                        <ul class="slide-list">
+                            <li>Terus gunakan heap untuk real-time recommendations</li>
+                            <li>Explore hybrid approaches untuk use cases khusus</li>
+                            <li>Monitor performance secara kontinu</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn" id="restartBtn">
+                        <i class="fas fa-redo"></i> Mulai Presentasi Ulang
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <div class="nav-btn" id="prevBtn">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="nav-btn" id="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const slidesContainer = document.getElementById('slidesContainer');
+        const progressBar = document.getElementById('progressBar');
+        const agendaIndicator = document.getElementById('agendaIndicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const agendaList = document.getElementById('agendaList');
+        const startDemoBtn = document.getElementById('startDemoBtn');
+        const visualizeHeapifyBtn = document.getElementById('visualizeHeapifyBtn');
+        const runCodeBtn = document.getElementById('runCodeBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        // State
+        let currentSlide = 0;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        
+        // Slide titles for agenda indicator
+        const slideTitles = [
+            "Slide 1: Cover",
+            "Slide 2: Agenda Presentasi",
+            "Slide 3: Konsep Dasar Heap Sort",
+            "Slide 4: Pseudocode Heap Sort",
+            "Slide 5: Cara Kerja Heap Sort",
+            "Slide 6: Studi Kasus Traveloka",
+            "Slide 7: Implementasi Python",
+            "Slide 8: Demo Hasil Rekomendasi",
+            "Slide 9: Analisis Kompleksitas",
+            "Slide 10: Keunggulan Bisnis",
+            "Slide 11: Kesimpulan & Rekomendasi"
+        ];
+        
+        // Initialize
+        function init() {
+            updateProgressBar();
+            updateAgendaIndicator();
+            generateHeapVisualization();
+            generateSortingVisualization();
+            generateHotelResults();
+            generateComplexityChart();
+            
+            // Event listeners
+            prevBtn.addEventListener('click', goToPrevSlide);
+            nextBtn.addEventListener('click', goToNextSlide);
+            
+            // Agenda click events
+            if (agendaList) {
+                const agendaItems = agendaList.querySelectorAll('li');
+                agendaItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const slideIndex = parseInt(item.getAttribute('data-slide'));
+                        scrollToSlide(slideIndex);
+                    });
+                });
+            }
+            
+            startDemoBtn.addEventListener('click', startDemo);
+            visualizeHeapifyBtn.addEventListener('click', visualizeHeapify);
+            runCodeBtn.addEventListener('click', runCodeExample);
+            restartBtn.addEventListener('click', restartPresentation);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyPress);
+            
+            // Scroll snapping
+            slidesContainer.addEventListener('scroll', handleScroll);
+        }
+        
+        // Navigation functions
+        function goToPrevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                scrollToSlide(currentSlide);
+            }
+        }
+        
+        function goToNextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                scrollToSlide(currentSlide);
+            }
+        }
+        
+        function scrollToSlide(slideIndex) {
+            const slideWidth = slidesContainer.clientWidth;
+            slidesContainer.scrollTo({
+                left: slideWidth * slideIndex,
+                behavior: 'smooth'
+            });
+            currentSlide = slideIndex;
+            updateProgressBar();
+            updateAgendaIndicator();
+            updateAgendaList();
+        }
+        
+        function handleScroll() {
+            const slideWidth = slidesContainer.clientWidth;
+            const scrollPosition = slidesContainer.scrollLeft;
+            currentSlide = Math.round(scrollPosition / slideWidth);
+            updateProgressBar();
+            updateAgendaIndicator();
+            updateAgendaList();
+        }
+        
+        function updateProgressBar() {
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        function updateAgendaIndicator() {
+            if (currentSlide < slideTitles.length) {
+                agendaIndicator.textContent = slideTitles[currentSlide];
+            }
+        }
+        
+        function updateAgendaList() {
+            if (!agendaList) return;
+            
+            const agendaItems = agendaList.querySelectorAll('li');
+            agendaItems.forEach((item, index) => {
+                const slideIndex = parseInt(item.getAttribute('data-slide'));
+                
+                // Remove all classes
+                item.classList.remove('active', 'completed');
+                
+                // Add appropriate class based on current slide
+                if (slideIndex === currentSlide) {
+                    item.classList.add('active');
+                } else if (slideIndex < currentSlide) {
+                    item.classList.add('completed');
+                }
+            });
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'ArrowLeft') {
+                goToPrevSlide();
+            } else if (e.key === 'ArrowRight') {
+                goToNextSlide();
+            }
+        }
+        
+        // Demo functions
+        function startDemo() {
+            alert("Demo interaktif dimulai! Kita akan menjelajahi implementasi Heap Sort di Traveloka.");
+            goToNextSlide();
+        }
+        
+        function visualizeHeapify() {
+            const nodes = document.querySelectorAll('.tree-node');
+            let i = 0;
+            
+            const interval = setInterval(() => {
+                if (i < nodes.length) {
+                    nodes[i].classList.add('active');
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    
+                    // Reset after animation
+                    setTimeout(() => {
+                        nodes.forEach(node => node.classList.remove('active'));
+                    }, 1000);
+                }
+            }, 500);
+        }
+        
+        function runCodeExample() {
+            alert("Menjalankan kode Python... (simulasi)");
+            
+            // Simulate code execution with visual feedback
+            const codeBlock = document.querySelector('.code-block');
+            codeBlock.style.transform = 'scale(1.02)';
+            codeBlock.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+            
+            setTimeout(() => {
+                codeBlock.style.transform = 'scale(1)';
+                codeBlock.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+            }, 1000);
+        }
+        
+        function restartPresentation() {
+            currentSlide = 0;
+            scrollToSlide(0);
+        }
+        
+        // Visualization generation functions
+        function generateHeapVisualization() {
+            const container = document.getElementById('heapVisualization');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Create a simple heap tree visualization
+            const values = [100, 19, 36, 17, 3, 25];
+            const treeContainer = document.createElement('div');
+            treeContainer.style.position = 'relative';
+            treeContainer.style.height = '200px';
+            treeContainer.style.width = '300px';
+            
+            // Level 0
+            const root = createTreeNode(values[0], 150, 30);
+            treeContainer.appendChild(root.node);
+            
+            // Level 1
+            const left1 = createTreeNode(values[1], 90, 90);
+            const right1 = createTreeNode(values[2], 210, 90);
+            treeContainer.appendChild(left1.node);
+            treeContainer.appendChild(right1.node);
+            
+            // Connect level 0 to level 1
+            treeContainer.appendChild(createConnector(150, 60, 90, 90));
+            treeContainer.appendChild(createConnector(150, 60, 210, 90));
+            
+            // Level 2
+            const left2 = createTreeNode(values[3], 60, 150);
+            const right2 = createTreeNode(values[4], 120, 150);
+            const right3 = createTreeNode(values[5], 240, 150);
+            treeContainer.appendChild(left2.node);
+            treeContainer.appendChild(right2.node);
+            treeContainer.appendChild(right3.node);
+            
+            // Connect level 1 to level 2
+            treeContainer.appendChild(createConnector(90, 120, 60, 150));
+            treeContainer.appendChild(createConnector(90, 120, 120, 150));
+            treeContainer.appendChild(createConnector(210, 120, 240, 150));
+            
+            container.appendChild(treeContainer);
+        }
+        
+        function createTreeNode(value, x, y) {
+            const node = document.createElement('div');
+            node.className = 'tree-node';
+            node.textContent = value;
+            node.style.position = 'absolute';
+            node.style.left = `${x - 30}px`;
+            node.style.top = `${y}px`;
+            return { node, x, y };
+        }
+        
+        function createConnector(x1, y1, x2, y2) {
+            const connector = document.createElement('div');
+            connector.className = 'tree-connector';
+            
+            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            
+            connector.style.width = `${length}px`;
+            connector.style.left = `${x1}px`;
+            connector.style.top = `${y1}px`;
+            connector.style.transform = `rotate(${angle}deg)`;
+            connector.style.transformOrigin = '0 0';
+            
+            return connector;
+        }
+        
+        function generateSortingVisualization() {
+            const container = document.getElementById('sortingVisualization');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const values = [3, 19, 1, 14, 8, 7];
+            const steps = [
+                "Array Awal: [3, 19, 1, 14, 8, 7]",
+                "Build Max-Heap: [19, 14, 7, 3, 8, 1]",
+                "Swap Root dengan Elemen Terakhir: [1, 14, 7, 3, 8, 19]",
+                "Heapify: [14, 8, 7, 3, 1, 19]",
+                "Swap Root dengan Elemen Terakhir: [1, 8, 7, 3, 14, 19]",
+                "Heapify: [8, 3, 7, 1, 14, 19]",
+                "Array Terurut: [1, 3, 7, 8, 14, 19]"
+            ];
+            
+            const stepContainer = document.createElement('div');
+            stepContainer.style.textAlign = 'center';
+            
+            steps.forEach((step, index) => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'slide-text';
+                stepElement.textContent = step;
+                stepElement.style.margin = '10px 0';
+                stepElement.style.opacity = index === 0 ? '1' : '0.5';
+                stepContainer.appendChild(stepElement);
+            });
+            
+            container.appendChild(stepContainer);
+            
+            // Animate steps
+            let currentStep = 0;
+            const stepElements = stepContainer.querySelectorAll('.slide-text');
+            
+            const animationInterval = setInterval(() => {
+                stepElements.forEach((el, idx) => {
+                    el.style.opacity = idx === currentStep ? '1' : '0.5';
+                });
+                
+                currentStep++;
+                if (currentStep >= steps.length) {
+                    clearInterval(animationInterval);
+                }
+            }, 1500);
+        }
+        
+        function generateHotelResults() {
+            const container = document.getElementById('hotelResults');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const hotels = [
+                { name: "City Center Hotel", rating: 4.8, price: 150, popularity: 95, distance: 0.5 },
+                { name: "Beach Resort", rating: 4.7, price: 300, popularity: 90, distance: 5.0 },
+                { name: "Grand Luxury Hotel", rating: 4.5, price: 200, popularity: 85, distance: 2.5 },
+                { name: "Business Suites", rating: 4.3, price: 180, popularity: 80, distance: 1.8 },
+                { name: "Airport Transit Hotel", rating: 4.0, price: 120, popularity: 70, distance: 8.0 }
+            ];
+            
+            hotels.forEach((hotel, index) => {
+                const card = document.createElement('div');
+                card.className = 'hotel-card';
+                
+                // Add ranking badge
+                const rank = document.createElement('div');
+                rank.style.position = 'absolute';
+                rank.style.top = '10px';
+                rank.style.right = '10px';
+                rank.style.width = '30px';
+                rank.style.height = '30px';
+                rank.style.borderRadius = '50%';
+                rank.style.background = index < 3 ? 
+                    (index === 0 ? 'linear-gradient(135deg, #fdbb2d, #b21f1f)' : 
+                     index === 1 ? 'linear-gradient(135deg, #C0C0C0, #808080)' : 
+                     'linear-gradient(135deg, #CD7F32, #8B4513)') : 
+                    'linear-gradient(135deg, #1a2a6c, #b21f1f)';
+                rank.style.color = 'white';
+                rank.style.display = 'flex';
+                rank.style.justifyContent = 'center';
+                rank.style.alignItems = 'center';
+                rank.style.fontWeight = 'bold';
+                rank.textContent = index + 1;
+                
+                const name = document.createElement('div');
+                name.className = 'hotel-name';
+                name.textContent = hotel.name;
+                
+                const details = document.createElement('div');
+                details.className = 'hotel-details';
+                
+                const rating = document.createElement('div');
+                rating.className = 'hotel-detail';
+                rating.innerHTML = `<i class="fas fa-star"></i><span>Rating: ${hotel.rating}/5</span>`;
+                
+                const price = document.createElement('div');
+                price.className = 'hotel-detail';
+                price.innerHTML = `<i class="fas fa-dollar-sign"></i><span>Harga: $${hotel.price}</span>`;
+                
+                const popularity = document.createElement('div');
+                popularity.className = 'hotel-detail';
+                popularity.innerHTML = `<i class="fas fa-fire"></i><span>Popularitas: ${hotel.popularity}</span>`;
+                
+                const distance = document.createElement('div');
+                distance.className = 'hotel-detail';
+                distance.innerHTML = `<i class="fas fa-map-marker-alt"></i><span>Jarak: ${hotel.distance}km</span>`;
+                
+                details.appendChild(rating);
+                details.appendChild(price);
+                details.appendChild(popularity);
+                details.appendChild(distance);
+                
+                card.appendChild(rank);
+                card.appendChild(name);
+                card.appendChild(details);
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function generateComplexityChart() {
+            const container = document.getElementById('complexityChart');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const algorithms = [
+                { name: 'Heap Sort', complexity: 'O(n log n)', height: 160 },
+                { name: 'Quick Sort', complexity: 'O(n log n)', height: 160 },
+                { name: 'Merge Sort', complexity: 'O(n log n)', height: 160 },
+                { name: 'Insertion Sort', complexity: 'O(n²)', height: 220 },
+                { name: 'Bubble Sort', complexity: 'O(n²)', height: 220 }
+            ];
+            
+            algorithms.forEach(algo => {
+                const barContainer = document.createElement('div');
+                barContainer.style.display = 'flex';
+                barContainer.style.flexDirection = 'column';
+                barContainer.style.alignItems = 'center';
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = '0px';
+                
+                const label = document.createElement('div');
+                label.className = 'chart-label';
+                label.textContent = algo.name;
+                
+                barContainer.appendChild(bar);
+                barContainer.appendChild(label);
+                container.appendChild(barContainer);
+                
+                // Animate bar growth
+                setTimeout(() => {
+                    bar.style.height = `${algo.height}px`;
+                }, 500);
+            });
+        }
+        
+        // Initialize the presentation
+        window.onload = init;
+    </script>
+</body>
+</html>
