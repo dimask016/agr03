@@ -1005,47 +1005,124 @@
                 </div>
             </div>
 
-                                 <!-- Slide 9: Analisis Kompleksitas -->
+                           <!-- Slide 9: Analisis Kompleksitas -->
             <div class="slide" id="slide9">
                 <div class="slide-content">
                     <h1 class="slide-title">Analisis Kompleksitas Heap Sort</h1>
                     
                     <div class="slide-text">
-                        <!-- Summary Kompleksitas Utama -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                            <div style="text-align: center; background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 25px; border-radius: 15px; border: 2px solid #2196f3;">
-                                <div style="font-size: 2.5rem; font-weight: bold; color: #2196f3; margin-bottom: 10px;">O(log n)</div>
-                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Insert Operation</div>
-                                <div style="font-size: 0.9rem; color: #666;">
-                                    Tambah hotel baru ke sistem
+                        <!-- Ringkasan Visual Kompleksitas -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                            <div style="text-align: center; background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 20px; border-radius: 12px; border: 2px solid #2196f3;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #2196f3; margin-bottom: 8px;">O(log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 8px;">Insert Operation</div>
+                                <div style="font-size: 0.8rem; color: #666;">Tambah hotel baru</div>
+                            </div>
+                            <div style="text-align: center; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); padding: 20px; border-radius: 12px; border: 2px solid #4caf50;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #4caf50; margin-bottom: 8px;">O(k log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 8px;">Top-k Recommendations</div>
+                                <div style="font-size: 0.8rem; color: #666;">Ambil k rekomendasi</div>
+                            </div>
+                            <div style="text-align: center; background: linear-gradient(135deg, #fff3e0, #ffecb3); padding: 20px; border-radius: 12px; border: 2px solid #ff9800;">
+                                <div style="font-size: 2rem; font-weight: bold; color: #ff9800; margin-bottom: 8px;">O(n log n)</div>
+                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 8px;">Total Operations</div>
+                                <div style="font-size: 0.8rem; color: #666;">n operasi insert + sort</div>
+                            </div>
+                        </div>
+
+                        <!-- 3.3 Analisis Kompleksitas Total -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-left: 5px solid #1a2a6c; margin-bottom: 25px;">
+                            <div class="explanation-title">3.3 Analisis Kompleksitas Total</div>
+                            
+                            <!-- 3.3.1 Untuk n Operasi add_hotel -->
+                            <div style="margin-bottom: 20px;">
+                                <div class="step-title">3.3.1 Untuk n Operasi add_hotel</div>
+                                <div class="step-description">
+                                    Bayangkan Traveloka memiliki sistem rekomendasi bertingkat dengan n hotel:
+                                </div>
+                                <div class="calculation">
+                                    <strong>Satu Hotel Ditambahkan: O(log n)</strong><br>
+                                    • Sistem harus mencari posisi yang tepat untuk hotel baru<br>
+                                    • Membandingkan dengan hotel lain berdasarkan:<br>
+                                    &nbsp;&nbsp;○ <strong>Rating</strong> (prioritas utama)<br>
+                                    &nbsp;&nbsp;○ <strong>Popularity score</strong> (prioritas sekunder)<br>
+                                    &nbsp;&nbsp;○ <strong>Price</strong> (prioritas tersier)<br>
+                                    &nbsp;&nbsp;○ <strong>Distance</strong> (prioritas akhir)<br>
+                                    • Proses ini butuh waktu <strong>log n</strong> karena struktur heap yang terorganisir
+                                </div>
+                                <div class="calculation">
+                                    <strong>n Hotel Ditambahkan: O(n log n)</strong><br>
+                                    Hotel 1: O(log 1) = sangat cepat (database kosong)<br>
+                                    Hotel 2: O(log 2) = bandingkan dengan 1 hotel<br>
+                                    Hotel 3: O(log 3) = bandingkan dengan 2 hotel<br>
+                                    Hotel 4: O(log 4) = bandingkan dengan 3 hotel<br>
+                                    ...<br>
+                                    Hotel n: O(log n) = bandingkan dengan n-1 hotel<br>
+                                    <strong>Total waktu untuk n hotel ≈ O(n log n)</strong>
                                 </div>
                             </div>
-                            <div style="text-align: center; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); padding: 25px; border-radius: 15px; border: 2px solid #4caf50;">
-                                <div style="font-size: 2.5rem; font-weight: bold; color: #4caf50; margin-bottom: 10px;">O(k log n)</div>
-                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Top-k Recommendations</div>
-                                <div style="font-size: 0.9rem; color: #666;">
-                                    Ambil k rekomendasi terbaik
+
+                            <!-- 3.3.2 Untuk k Operasi get_top_recommendations -->
+                            <div style="margin-bottom: 20px;">
+                                <div class="step-title">3.3.2 Untuk k Operasi get_top_recommendations</div>
+                                <div class="calculation">
+                                    <strong>Mendapatkan Satu Rekomendasi: O(log n)</strong><br>
+                                    • Sistem mengambil hotel terbaik (root of heap)<br>
+                                    • Harus mengatur ulang heap:<br>
+                                    &nbsp;&nbsp;○ Elemen terakhir dipindah ke posisi pertama<br>
+                                    &nbsp;&nbsp;○ Bandingkan dengan anak-anaknya untuk mempertahankan struktur heap<br>
+                                    • Proses ini butuh <strong>log n</strong> langkah
+                                </div>
+                                <div class="calculation">
+                                    <strong>Mendapatkan k Rekomendasi: O(k log n)</strong><br>
+                                    Rekomendasi 1: O(log n) → atur ulang n-1 hotel<br>
+                                    Rekomendasi 2: O(log n-1) → atur ulang n-2 hotel<br>
+                                    Rekomendasi 3: O(log n-2) → atur ulang n-3 hotel<br>
+                                    ...<br>
+                                    Rekomendasi k: O(log n-k+1)<br>
+                                    <strong>Total waktu untuk k rekomendasi ≈ O(k log n)</strong>
                                 </div>
                             </div>
-                            <div style="text-align: center; background: linear-gradient(135deg, #fff3e0, #ffecb3); padding: 25px; border-radius: 15px; border: 2px solid #ff9800;">
-                                <div style="font-size: 2.5rem; font-weight: bold; color: #ff9800; margin-bottom: 10px;">O(n log n)</div>
-                                <div style="font-weight: bold; color: #1a2a6c; margin-bottom: 10px;">Total Operations</div>
-                                <div style="font-size: 0.9rem; color: #666;">
-                                    n operasi insert + sort
+
+                            <!-- 3.3.3 Contoh Nyata dengan 6 Hotel -->
+                            <div>
+                                <div class="step-title">3.3.3 Contoh Nyata dengan 6 Hotel</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div class="calculation">
+                                        <strong>Proses Penambahan:</strong><br>
+                                        Grand Luxury Hotel (4.5) → O(log 1) = 1 langkah<br>
+                                        Budget Inn (3.2) → O(log 2) = 2 langkah<br>
+                                        City Center Hotel (4.8) → O(log 3) = 2 langkah<br>
+                                        Airport Transit (4.0) → O(log 4) = 3 langkah<br>
+                                        Beach Resort (4.7) → O(log 5) = 3 langkah<br>
+                                        Business Suites (4.3) → O(log 6) = 3 langkah<br>
+                                        <strong>Total = 1 + 2 + 2 + 3 + 3 + 3 = 14 langkah</strong><br>
+                                        <strong>≈ O(n log n)</strong>
+                                    </div>
+                                    <div class="calculation">
+                                        <strong>Proses Rekomendasi (k=3):</strong><br>
+                                        Ambil City Center → O(log 6) = 3 langkah<br>
+                                        Ambil Beach Resort → O(log 5) = 3 langkah<br>
+                                        Ambil Grand Luxury → O(log 4) = 2 langkah<br>
+                                        <strong>Total = 3 + 3 + 2 = 8 langkah</strong><br>
+                                        <strong>≈ O(k log n)</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Perbandingan dengan Alternatif -->
-                        <div class="explanation-box" style="background: linear-gradient(135deg, #f5f5f5, #eeeeee); border-left: 5px solid #9c27b0; margin-bottom: 25px;">
-                            <div class="explanation-title">📊 Perbandingan Kompleksitas</div>
+                      
+
+                        <!-- Perbandingan dengan Alternatif Lain -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-left: 5px solid #9c27b0; margin-bottom: 25px;">
+                            <div class="explanation-title">📊 Perbandingan dengan Alternatif Lain</div>
                             <table class="comparison-table">
                                 <thead>
                                     <tr>
                                         <th>Operasi</th>
                                         <th>Heap (Traveloka)</th>
-                                        <th>Sorted Array</th>
-                                        <th>Sorted Linked List</th>
+                                        <th>Array Sorted</th>
+                                        <th>Linked List Sorted</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1071,97 +1148,234 @@
                             </table>
                         </div>
 
-                        <!-- Keunggulan Heap untuk Traveloka -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Kesimpulan Akhir -->
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 12px; color: white;">
+                            <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 10px;">🚀 Heap Sort: Solusi Optimal untuk Traveloka</div>
+                            <div style="font-size: 1rem; opacity: 0.9;">
+                                Dengan keunggulan O(n log n) yang konsisten, efisiensi memory, dan kemampuan multiple criteria sorting, 
+                                Heap Sort memberikan performa terbaik untuk sistem rekomendasi real-time dengan skala enterprise.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                       <!-- Slide 10: Keunggulan Bisnis -->
+            <div class="slide" id="slide10">
+                <div class="slide-content">
+                    <h1 class="slide-title">Keunggulan Heap untuk Traveloka</h1>
+                    
+                    <div class="slide-text">
+                        <!-- Grid Keunggulan Teknis dan Bisnis -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px;">
+                            
+                            <!-- Keunggulan Teknis Heap -->
                             <div class="explanation-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50;">
-                                <div class="explanation-title">✅ Keunggulan Heap</div>
+                                <div class="explanation-title">✅ Keunggulan Teknis Heap</div>
                                 <ul class="explanation-list">
-                                    <li><strong>Konsisten</strong>: Always O(n log n)</li>
-                                    <li><strong>Real-time</strong>: O(log n) untuk update</li>
-                                    <li><strong>Multiple Criteria</strong>: Support complex sorting</li>
-                                    <li><strong>Memory Efficient</strong>: In-place operations</li>
-                                    <li><strong>Scalable</strong>: Handle large datasets</li>
+                                    <li><strong>Konsisten</strong>: Always O(n log n) - tidak ada worst-case degradation</li>
+                                    <li><strong>Real-time</strong>: O(log n) untuk update - cocok untuk frequent changes</li>
+                                    <li><strong>Multiple Criteria</strong>: Support complex sorting - rating, price, popularity, distance</li>
+                                    <li><strong>Memory Efficient</strong>: In-place operations - tidak butuh extra memory signifikan</li>
+                                    <li><strong>Scalable</strong>: Handle large datasets - performa tetap optimal untuk data besar</li>
                                 </ul>
                             </div>
                             
+                            <!-- Untuk Use Case Traveloka -->
                             <div class="explanation-box" style="background: linear-gradient(135deg, #fff3e0, #ffecb3); border-left: 5px solid #ff9800;">
-                                <div class="explanation-title">🎯 Untuk Use Case Traveloka</div>
+                                <div class="explanation-title">🎯 Implementasi di Traveloka</div>
                                 <ul class="explanation-list">
-                                    <li><strong>970+ hotels</strong>: O(log n) = ~10 operations</li>
-                                    <li><strong>Response time &lt;2s</strong>: Optimized for speed</li>
-                                    <li><strong>Frequent updates</strong>: Efficient insert/remove</li>
-                                    <li><strong>Multiple filters</strong>: Complex priority handling</li>
-                                    <li><strong>User experience</strong>: Instant recommendations</li>
+                                    <li><strong>970+ hotels</strong>: O(log n) = ~10 operations - sangat efisien</li>
+                                    <li><strong>Response time &lt;2s</strong>: Optimized for speed - memenuhi SLA</li>
+                                    <li><strong>Frequent updates</strong>: Efficient insert/remove - harga & ketersediaan real-time</li>
+                                    <li><strong>Multiple filters</strong>: Complex priority handling - user preferences</li>
+                                    <li><strong>User experience</strong>: Instant recommendations - responsif & smooth</li>
                                 </ul>
+                            </div>
+                        </div>
+
+                        <!-- Impact Bisnis -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px;">
+                            
+                            <!-- Customer Experience -->
+                            <div class="explanation-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 5px solid #2196f3;">
+                                <div class="explanation-title">🌟 Customer Experience</div>
+                                <ul class="explanation-list">
+                                    <li><strong>Rekomendasi Personal</strong>: Menampilkan hotel terbaik di posisi pertama</li>
+                                    <li><strong>Waktu Response Cepat</strong>: &lt; 2 detik untuk hasil pencarian</li>
+                                    <li><strong>UI/UX Responsif</strong>: Pengalaman pencarian yang smooth</li>
+                                    <li><strong>Relevansi Tinggi</strong>: Hasil sesuai preferensi user</li>
+                                    <li><strong>Update Real-time</strong>: Harga dan ketersediaan terkini</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Business Impact -->
+                            <div class="explanation-box" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); border-left: 5px solid #e91e63;">
+                                <div class="explanation-title">📈 Business Impact</div>
+                                <ul class="explanation-list">
+                                    <li><strong>↑ Conversion rates</strong>: Pengguna mudah menemukan hotel sesuai</li>
+                                    <li><strong>↑ Customer retention</strong>: Pengalaman pencarian yang baik meningkatkan loyalitas</li>
+                                    <strong>↑ Competitive advantage</strong>: Teknologi recommendation yang canggih</li>
+                                    <li><strong>↓ Operational cost</strong>: Efisiensi resource dan infrastruktur</li>
+                                    <li><strong>↑ Revenue growth</strong>: Peningkatan booking dan transaksi</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Metrics Performance -->
+                        <div style="background: linear-gradient(135deg, #f5f5f5, #eeeeee); padding: 25px; border-radius: 12px; border-left: 5px solid #9c27b0; margin-bottom: 25px;">
+                            <div class="explanation-title" style="text-align: center; margin-bottom: 20px;">📊 Metrik Performa Sistem</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #2196f3; margin-bottom: 5px;">&lt;2s</div>
+                                    <div style="font-size: 0.9rem; color: #666;">Response Time</div>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #4caf50; margin-bottom: 5px;">970+</div>
+                                    <div style="font-size: 0.9rem; color: #666;">Hotels Processed</div>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #ff9800; margin-bottom: 5px;">O(log n)</div>
+                                    <div style="font-size: 0.9rem; color: #666;">Complexity</div>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #9c27b0; margin-bottom: 5px;">99.9%</div>
+                                    <div style="font-size: 0.9rem; color: #666;">Uptime</div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Kesimpulan Akhir -->
-                        <div style="text-align: center; margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 15px; color: white;">
-                            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 10px;">🚀 Heap Sort: Optimal untuk Sistem Real-time</div>
-                            <div style="font-size: 1.1rem; opacity: 0.9;">
-                                Dengan kompleksitas O(n log n) yang konsisten, Heap Sort memberikan performa terbaik 
-                                untuk aplikasi seperti Traveloka yang membutuhkan sorting real-time dengan multiple criteria.
+                        <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 15px; color: white;">
+                            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 15px;">🏆 Heap Sort: Competitive Advantage untuk Traveloka</div>
+                            <div style="font-size: 1.1rem; opacity: 0.9; line-height: 1.6;">
+                                Dengan kombinasi performa teknis yang unggul (O(log n) operations, multiple criteria sorting) 
+                                dan impact bisnis yang signifikan (↑ conversion, ↑ retention), Heap Sort memberikan 
+                                <strong>competitive advantage</strong> yang nyata dalam industri travel yang kompetitif.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Slide 10: Keunggulan Bisnis -->
-            <div class="slide" id="slide10">
-                <div class="slide-content">
-                    <h1 class="slide-title">Keunggulan untuk Traveloka</h1>
-                    
-                    <div class="slide-text">
-                        <p><strong>Customer Experience:</strong></p>
-                        <ul class="slide-list">
-                            <li>Rekomendasi personal & relevan</li>
-                            <li>Response time &lt; 2 detik</li>
-                            <li>UI/UX yang responsif</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="slide-text">
-                        <p><strong>Business Impact:</strong></p>
-                        <ul class="slide-list">
-                            <li>↑ Conversion rates</li>
-                            <li>↑ Customer retention</li>
-                            <li>↑ Competitive advantage</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="visualization">
-                        <div class="tree-node pulse" style="background: linear-gradient(135deg, #fdbb2d, #b21f1f);">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 11: Kesimpulan -->
+                    <!-- Slide 11: Kesimpulan & Rekomendasi -->
             <div class="slide" id="slide11">
                 <div class="slide-content">
                     <h1 class="slide-title">Kesimpulan & Rekomendasi</h1>
                     
                     <div class="slide-text">
-                        <p><strong>Kesimpulan:</strong></p>
-                        <ul class="slide-list">
-                            <li>Heap Sort optimal untuk sistem rekomendasi Traveloka</li>
-                            <li>O(log n) performance scalable untuk big data</li>
-                            <li>Multiple criteria sorting yang kompleks</li>
-                            <li>Real-time capabilities untuk user experience</li>
-                        </ul>
+                        <!-- Pernyataan Utama -->
+                        <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 25px; border-radius: 12px; border-left: 5px solid #2196f3; margin-bottom: 25px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #1a2a6c; margin-bottom: 15px; text-align: center;">
+                                🎯 Kesimpulan Utama
+                            </div>
+                            <div style="font-size: 1.1rem; line-height: 1.6; text-align: center;">
+                                Studi ini menyatakan bahwa struktur data Heap, terutama dalam konteks algoritma seperti Heap Sort, 
+                                adalah pilihan <strong>terbaik dan strategis</strong> untuk diterapkan di sistem inti Traveloka, 
+                                terutama pada layanan rekomendasi hotel dan penerbangan serta pencarian ranking secara real-time.
+                            </div>
+                        </div>
+
+                        <!-- Keunggulan Teknis dan Performa -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50; margin-bottom: 25px;">
+                            <div class="explanation-title">1. Keunggulan Teknis dan Performa</div>
+                            <div class="step-description">
+                                Penerapan Heap menawarkan fondasi teknis yang kuat, ditandai oleh:
+                            </div>
+                            <ul class="explanation-list">
+                                <li>
+                                    <strong>Performa yang Konsisten</strong>
+                                </li>
+                                <li>
+                                    <strong>Efisiensi dan Real-time</strong>
+                                </li>
+                                <li>
+                                    <strong>Superioritas Top-k Queries</strong>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Dampak Bisnis dan Keunggulan Kompetitif -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #fff3e0, #ffecb3); border-left: 5px solid #ff9800; margin-bottom: 25px;">
+                            <div class="explanation-title">2. Dampak Bisnis dan Keunggulan Kompetitif</div>
+                            <div class="step-description">
+                                Keunggulan teknis ini langsung berdampak pada manfaat bisnis yang signifikan:
+                            </div>
+                            <ul class="explanation-list">
+                                <li>
+                                    <strong>Peningkatan Pengalaman Pelanggan</strong>
+                                </li>
+                                <li>
+                                    <strong>Efisiensi Operasional</strong>
+                                </li>
+                                <li>
+                                    <strong>Keunggulan Kompetitif</strong>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Mitigasi dan Rekomendasi Penerapan -->
+                        <div class="explanation-box" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); border-left: 5px solid #e91e63; margin-bottom: 25px;">
+                            <div class="explanation-title">3. Mitigasi dan Rekomendasi Penerapan</div>
+                            <div class="step-description">
+                                Meskipun Heap lebih rumit dibandingkan metode pengurutan array sederhana dan memiliki potensi 
+                                masalah kinerja cache, kelemahan ini bisa diperbaiki melalui:
+                            </div>
+                            <ul class="explanation-list">
+                                <li>
+                                    <strong>Mitigasi Implementasi</strong>
+                                </li>
+                                <li>
+                                    <strong>Mitigasi Cache</strong>
+                                </li>
+                                <li>
+                                    <strong>Monitoring Berkelanjutan</strong>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Rekomendasi Strategis -->
+                        <div style="background: linear-gradient(135deg, #1a2a6c, #b21f1f); padding: 25px; border-radius: 12px; color: white; margin-bottom: 20px;">
+                            <div style="font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 15px;">
+                                🚀 Rekomendasi Strategis
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                                <div>
+                                    <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+                                    <div style="font-weight: bold;">Terapkan Heap</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">Untuk sistem rekomendasi real-time</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2.5rem; margin-bottom: 10px;">🔍</div>
+                                    <div style="font-weight: bold;">Explore Hybrid</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">Approach untuk use cases khusus</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2.5rem; margin-bottom: 10px;">📊</div>
+                                    <div style="font-weight: bold;">Monitor Performance</div>
+                                    <div style="font-size: 0.9rem; opacity: 0.9;">Secara kontinu dan proaktif</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kesimpulan Akhir -->
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #2e7d32, #4caf50); border-radius: 12px; color: white;">
+                            <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;">
+                                🏆 Kesimpulan Akhir
+                            </div>
+                            <div style="font-size: 1rem; opacity: 0.9; line-height: 1.6;">
+                                Secara keseluruhan, algoritma dan struktur data Heap memberikan 
+                                <strong>keunggulan kompetitif yang signifikan</strong> bagi Traveloka di bidang 
+                                kecepatan, keandalan sistem, dan kualitas pengalaman pengguna.
+                            </div>
+                        </div>
+
+                        <button class="btn" id="restartBtn" style="margin-top: 25px;">
+                            <i class="fas fa-redo"></i> Mulai Presentasi Ulang
+                        </button>
                     </div>
-                    
-                    <div class="slide-text">
-                        <p><strong>Rekomendasi:</strong></p>
-                        <ul class="slide-list">
-                            <li>Terus gunakan heap untuk real-time recommendations</li>
-                            <li>Explore hybrid approaches untuk use cases khusus</li>
-                            <li>Monitor performance secara kontinu</li>
-                        </ul>
-                    </div>
+                </div>
+            </div>
                     
                     <button class="btn" id="restartBtn">
                         <i class="fas fa-redo"></i> Mulai Presentasi Ulang
