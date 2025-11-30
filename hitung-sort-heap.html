@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Heap Sort dengan Posisi Title Tree yang Diperbaiki</title>
+    <title>Simulasi Heap Sort dengan Perbaikan State Management</title>
     <style>
         * {
             margin: 0;
@@ -168,13 +168,13 @@
             margin-bottom: 15px;
             text-align: center;
             font-size: 1.3rem;
-            order: 1; /* Title di atas tree */
+            order: 1;
         }
 
         .tree-container-wrapper {
             position: relative;
             height: 380px;
-            order: 2; /* Container di bawah title */
+            order: 2;
             flex: 1;
             border: 2px dashed #ddd;
             border-radius: 8px;
@@ -391,8 +391,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Simulasi Heap Sort dengan Posisi Title Tree yang Diperbaiki</h1>
-        <div class="subtitle">Title tree sekarang berada di atas visualisasi tree</div>
+        <h1>Simulasi Heap Sort </h1>
+        <div class="subtitle">Visualisasi Heap Sort </div>
         
         <div class="controls">
             <button class="btn" id="prevBtn">⏮️ Previous Step</button>
@@ -453,7 +453,7 @@
         let currentStep = 0;
         let autoPlayInterval = null;
         
-        // Node positions for tree visualization (improved layout with exact pixel positions)
+        // Node positions for tree visualization
         const nodePositions = [
             { x: 250, y: 80 },   // 0 - root
             { x: 125, y: 180 },  // 1 - left child of 0
@@ -462,10 +462,6 @@
             { x: 175, y: 280 },  // 4 - right child of 1
             { x: 325, y: 280 }   // 5 - left child of 2
         ];
-
-        // Tree container dimensions
-        const treeWidth = 500;
-        const treeHeight = 350;
 
         // Initialize simulation
         function initSimulation() {
@@ -477,10 +473,10 @@
             
             recordStep([...arr], "Array awal: " + arr.join(", "), [], [], "Initial State");
             
-            // Build max heap phase
+            // Build max heap phase dengan state management yang diperbaiki
             buildMaxHeap();
             
-            // Heap sort phase
+            // Heap sort phase dengan state management yang diperbaiki
             heapSort();
             
             updateDisplay();
@@ -512,108 +508,127 @@
             });
         }
 
-        // Build max heap function
+        // Build max heap function dengan state management yang diperbaiki
         function buildMaxHeap() {
             let n = arr.length;
-            recordStep([...arr], `Mulai Build Max-Heap. n = ${n}`, [], [], "Build Heap");
+            let buildArr = [...arr]; // Salinan array untuk build phase
+            
+            recordStep([...buildArr], `Mulai Build Max-Heap. n = ${n}`, [], [], "Build Heap");
             
             // Start from the last non-leaf node
             let startIdx = Math.floor(n / 2) - 1;
-            recordStep([...arr], 
-                `Leaf nodes: indices ${Math.floor(n/2)} hingga ${n-1}<br>Non-leaf terakhir: i = ${startIdx} (nilai: ${arr[startIdx]})`, 
+            recordStep([...buildArr], 
+                `Leaf nodes: indices ${Math.floor(n/2)} hingga ${n-1}<br>Non-leaf terakhir: i = ${startIdx} (nilai: ${buildArr[startIdx]})`, 
                 [startIdx], [], "Build Heap");
             
             for (let i = startIdx; i >= 0; i--) {
-                recordStep([...arr], `Heapify node i = ${i} (nilai: ${arr[i]})`, [i], [], "Heapify");
-                heapify(n, i, "build");
+                recordStep([...buildArr], `Heapify node i = ${i} (nilai: ${buildArr[i]})`, [i], [], "Heapify");
+                heapifyRecursive(buildArr, n, i, "build");
             }
             
-            recordStep([...arr], "Max-Heap berhasil dibangun!", [], [], "Complete");
+            // Update array utama setelah build selesai
+            arr = [...buildArr];
+            recordStep([...arr], "Max-Heap berhasil dibangun! Array: " + arr.join(", "), [], [], "Complete");
         }
 
-        // Heapify function
-        function heapify(n, i, phase) {
+        // Heapify function untuk build phase (bekerja pada array parameter)
+        function heapifyRecursive(array, n, i, phase) {
             let largest = i;
             let left = 2 * i + 1;
             let right = 2 * i + 2;
             
-            let message = `Heapify node ${i}:<br>`;
+            let message = `Heapify node ${i} (nilai: ${array[i]}):<br>`;
             message += `left = 2*${i}+1 = ${left}<br>`;
             message += `right = 2*${i}+2 = ${right}<br>`;
             
             let activeIndices = [i];
             
             if (left < n) {
-                message += `arr[${left}] = ${arr[left]}<br>`;
+                message += `arr[${left}] = ${array[left]}<br>`;
                 activeIndices.push(left);
             }
             if (right < n) {
-                message += `arr[${right}] = ${arr[right]}<br>`;
+                message += `arr[${right}] = ${array[right]}<br>`;
                 activeIndices.push(right);
             }
             
-            recordStep([...arr], message, activeIndices, [], "Heapify");
+            recordStep([...array], message, activeIndices, [], "Heapify");
             
             // Check if left child is larger than root
-            if (left < n && arr[left] > arr[largest]) {
+            if (left < n && array[left] > array[largest]) {
                 largest = left;
-                recordStep([...arr], 
-                    `Left child lebih besar: arr[${left}]=${arr[left]} > arr[${i}]=${arr[i]}<br>largest = ${left}`, 
+                recordStep([...array], 
+                    `Left child lebih besar: arr[${left}]=${array[left]} > arr[${i}]=${array[i]}<br>largest = ${left}`, 
                     [i, left], [], "Heapify");
             }
             
             // Check if right child is larger than current largest
-            if (right < n && arr[right] > arr[largest]) {
+            if (right < n && array[right] > array[largest]) {
                 largest = right;
-                recordStep([...arr], 
-                    `Right child lebih besar: arr[${right}]=${arr[right]} > arr[${largest}]=${arr[largest]}<br>largest = ${right}`, 
+                recordStep([...array], 
+                    `Right child lebih besar: arr[${right}]=${array[right]} > arr[${largest}]=${array[largest]}<br>largest = ${right}`, 
                     [i, right], [], "Heapify");
             }
             
             // If largest is not root, swap and continue heapifying
             if (largest !== i) {
-                recordStep([...arr], 
-                    `Swap diperlukan: arr[${i}]=${arr[i]} dengan arr[${largest}]=${arr[largest]}`, 
+                recordStep([...array], 
+                    `Swap diperlukan: arr[${i}]=${array[i]} dengan arr[${largest}]=${array[largest]}`, 
                     [], [i, largest], "Swap");
                 
                 // Swap
-                [arr[i], arr[largest]] = [arr[largest], arr[i]];
-                recordStep([...arr], 
-                    `Setelah swap: arr[${i}]=${arr[i]}, arr[${largest}]=${arr[largest]}`, 
+                [array[i], array[largest]] = [array[largest], array[i]];
+                recordStep([...array], 
+                    `Setelah swap: arr[${i}]=${array[i]}, arr[${largest}]=${array[largest]}<br>Array: ${array.join(", ")}`, 
                     [], [i, largest], "Swap");
                 
                 // Recursively heapify the affected sub-tree
-                heapify(n, largest, phase);
+                heapifyRecursive(array, n, largest, phase);
             } else {
-                recordStep([...arr], `Node ${i} sudah memenuhi sifat heap (tidak perlu swap)`, [i], [], "Heapify");
+                recordStep([...array], `Node ${i} sudah memenuhi sifat heap (tidak perlu swap)`, [i], [], "Heapify");
             }
         }
 
-        // Heap sort function
+        // Heap sort function dengan state management yang diperbaiki
         function heapSort() {
             let n = arr.length;
-            recordStep([...arr], "Mulai Heap Sort Phase", [], [], "Sort");
+            let sortArr = [...arr]; // Gunakan salinan untuk sorting phase
+            
+            recordStep([...sortArr], 
+                `Mulai Heap Sort Phase<br>Max-Heap awal: [${sortArr.join(', ')}]`, 
+                [], [], "Sort");
             
             for (let i = n - 1; i > 0; i--) {
-                recordStep([...arr], 
-                    `Iterasi ${n - i}: Pindah root (${arr[0]}) ke posisi ${i}`, 
-                    [0, i], [0, i], "Sort");
+                // Step sebelum swap
+                recordStep([...sortArr], 
+                    `Iterasi ${n - i}: Akan memindah root (${sortArr[0]}) ke posisi ${i} (bertukar dengan ${sortArr[i]})`, 
+                    [0, i], [], "Sort");
                 
                 // Move current root to end
-                [arr[0], arr[i]] = [arr[i], arr[0]];
-                recordStep([...arr], 
-                    `Setelah swap: ${arr.join(", ")}<br>Root ${arr[i]} dipindah ke akhir`, 
+                [sortArr[0], sortArr[i]] = [sortArr[i], sortArr[0]];
+                
+                // Step setelah swap
+                recordStep([...sortArr], 
+                    `Setelah swap: ${sortArr.join(", ")}<br>Elemen ${sortArr[i]} (root sebelumnya) sekarang di posisi terakhir`, 
                     [], [0, i], "Swap");
                 
-                // Call heapify on the reduced heap
-                recordStep([...arr], 
-                    `Heapify root pada heap tereduksi (size=${i})`, 
-                    [0], [], "Heapify");
-                heapify(i, 0, "sort");
+                // Call heapify on the reduced heap (hanya jika masih ada elemen yang perlu diatur)
+                if (i > 1) {
+                    recordStep([...sortArr], 
+                        `Heapify root ${sortArr[0]} pada heap tereduksi (size=${i})`, 
+                        [0], [], "Heapify");
+                    heapifyRecursive(sortArr, i, 0, "sort");
+                } else {
+                    recordStep([...sortArr], 
+                        `Heap size=1, tidak perlu heapify<br>Array hampir terurut: ${sortArr.join(", ")}`, 
+                        [], [], "Heapify");
+                }
             }
             
+            // Update array utama setelah sort selesai
+            arr = [...sortArr];
             recordStep([...arr], 
-                "Heap Sort selesai!<br>Array terurut: " + arr.join(", "), 
+                "Heap Sort selesai!<br>Array terurut secara ascending: " + arr.join(", "), 
                 [], [], "Complete");
         }
 
@@ -738,7 +753,7 @@
             });
         }
 
-        // Draw connector between nodes (IMPROVED - using exact pixel calculations)
+        // Draw connector between nodes
         function drawConnector(from, to) {
             const treeContainer = document.getElementById('treeContainer');
             const connector = document.createElement('div');
@@ -934,6 +949,12 @@
         // Update log
         function updateLog(step) {
             const logContent = document.getElementById('logContent');
+            
+            // Clear log jika ini adalah step pertama setelah reset
+            if (currentStep === 0) {
+                logContent.innerHTML = '';
+            }
+            
             const logEntry = document.createElement('div');
             logEntry.className = `log-entry ${step.stepType.toLowerCase()}`;
             
@@ -952,16 +973,16 @@
             
             if (step.stepType === "Leaf") {
                 statusElement.className = 'status leaf';
-                statusElement.innerHTML = `Status: Identifikasi Leaf Nodes - ${step.message}`;
+                statusElement.innerHTML = `Status: Identifikasi Leaf Nodes - ${step.message.replace(/<br>/g, ' ')}`;
             } else if (step.stepType === "Build Heap" || step.stepType === "Heapify") {
                 statusElement.className = 'status build';
-                statusElement.innerHTML = `Status: Build Max-Heap - ${step.message}`;
+                statusElement.innerHTML = `Status: Build Max-Heap - ${step.message.replace(/<br>/g, ' ')}`;
             } else if (step.stepType === "Sort" || step.stepType === "Swap") {
                 statusElement.className = 'status sort';
-                statusElement.innerHTML = `Status: Heap Sort - ${step.message}`;
+                statusElement.innerHTML = `Status: Heap Sort - ${step.message.replace(/<br>/g, ' ')}`;
             } else if (step.stepType === "Complete") {
                 statusElement.className = 'status';
-                statusElement.innerHTML = `Status: Selesai - ${step.message}`;
+                statusElement.innerHTML = `Status: Selesai - ${step.message.replace(/<br>/g, ' ')}`;
             } else {
                 statusElement.className = 'status';
                 statusElement.innerHTML = `Status: ${step.message}`;
