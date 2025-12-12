@@ -159,21 +159,23 @@
         .code-block {
             background: #2d2d2d;
             color: #f8f8f2;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
-            font-family: 'Courier New', monospace;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             overflow-x: auto;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             flex: 1;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .code-section-title {
             color: #ff79c6;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-size: 1.1rem;
             border-bottom: 1px solid #444;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
         }
 
         .code-keyword {
@@ -195,6 +197,14 @@
 
         .code-string {
             color: #f1fa8c;
+        }
+
+        .code-number {
+            color: #bd93f9;
+        }
+
+        .code-operator {
+            color: #f8f8f2;
         }
 
         .code-section {
@@ -307,18 +317,20 @@
             background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             margin: 8px;
+            font-weight: bold;
         }
 
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #b21f1f, #1a2a6c);
         }
 
         .btn:active {
@@ -367,11 +379,12 @@
         .hotel-card {
             background: white;
             border-radius: 10px;
-            padding: 15px;
-            margin: 12px 0;
+            padding: 20px;
+            margin: 15px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border-left: 5px solid #1a2a6c;
+            position: relative;
         }
 
         .hotel-card:hover {
@@ -380,27 +393,60 @@
         }
 
         .hotel-name {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: #1a2a6c;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .hotel-details {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 5px;
         }
 
         .hotel-detail {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.95rem;
         }
 
         .hotel-detail i {
             color: #b21f1f;
+            width: 20px;
+            text-align: center;
+        }
+
+        .hotel-rank {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #fdbb2d, #ff9800); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #808080); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: white; }
+        .rank-4, .rank-5 { background: linear-gradient(135deg, #1a2a6c, #b21f1f); color: white; }
+
+        .distance-badge {
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
         }
 
         .complexity-chart {
@@ -555,7 +601,7 @@
             }
             
             .code-block {
-                padding: 10px;
+                padding: 12px;
                 font-size: 0.8rem;
             }
             
@@ -921,7 +967,7 @@
                         <div style="background: linear-gradient(135deg, #1a2a6c, #b21f1f); padding: 20px; border-radius: 15px; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
                             <h3 style="margin-bottom: 15px; color: white;">🚀 Ilustrasi / Visualisasi Heap Sort!</h3>
                             <p style="margin-bottom: 20px; font-size: 1.1rem;">Lihat proses Heap Sort secara live dengan perhitungan langkah demi langkah</p>
-                            <a href="hitung-sort-heap.html" target="_blank"
+                            <a href="hitung-heap-sort-hotel.html" target="_blank"
                                style="display: inline-block; 
                                       background: linear-gradient(135deg, #fdbb2d, #ff9800); 
                                       color: #1a2a6c; 
@@ -969,23 +1015,23 @@
                             <!-- Hotel Card Example -->
                             <div class="visualization">
                                 <div class="hotel-card">
-                                    <div class="hotel-name">City Center Hotel</div>
+                                    <div class="hotel-name">Four Points by Sheraton Makassar</div>
                                     <div class="hotel-details">
                                         <div class="hotel-detail">
                                             <i class="fas fa-star"></i>
-                                            <span>Rating: 4.8/5</span>
+                                            <span>Rating: 4.7/5</span>
                                         </div>
                                         <div class="hotel-detail">
                                             <i class="fas fa-dollar-sign"></i>
-                                            <span>Harga: $150</span>
+                                            <span>Harga: $110</span>
                                         </div>
                                         <div class="hotel-detail">
                                             <i class="fas fa-fire"></i>
-                                            <span>Popularitas: 95</span>
+                                            <span>Popularitas: 94</span>
                                         </div>
                                         <div class="hotel-detail">
                                             <i class="fas fa-map-marker-alt"></i>
-                                            <span>Jarak: 0.5km</span>
+                                            <span>Jarak: 1.0km</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1068,52 +1114,278 @@
                 </div>
             </div>
 
-            <!-- Slide 7: Implementasi Python -->
+            <!-- Slide 7: Implementasi Python (DIUPDATE) -->
             <div class="slide" id="slide7">
                 <div class="slide-content">
-                    <h1 class="slide-title">Implementasi Python</h1>
+                    <h1 class="slide-title">Implementasi Python untuk Hotel Makassar</h1>
+                    
                     <div class="code-block">
-                        <pre><code><span class="code-keyword">class</span> <span class="code-function">Hotel</span>:
-    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-variable">self</span>, name, price, rating, popularity, distance):
+                        <pre><code><span class="code-keyword">import</span> heapq
+
+<span class="code-keyword">class</span> <span class="code-function">Hotel</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-variable">self</span>, name, price, rating, popularity_score, distance_from_center):
         <span class="code-variable">self</span>.name = name
         <span class="code-variable">self</span>.price = price
-        <span class="code-variable">self</span>.rating = rating
-        <span class="code-variable">self</span>.popularity_score = popularity
-        <span class="code-variable">self</span>.distance_from_center = distance
-    
+        <span class="code-variable">self</span>.rating = rating  <span class="code-comment"># 1-5 stars</span>
+        <span class="code-variable">self</span>.popularity_score = popularity_score  <span class="code-comment"># 1-100</span>
+        <span class="code-variable">self</span>.distance_from_center = distance_from_center  <span class="code-comment"># in km</span>
+
     <span class="code-keyword">def</span> <span class="code-function">__lt__</span>(<span class="code-variable">self</span>, other):
-        <span class="code-comment"># Priority 1: Rating (higher = better)</span>
+        <span class="code-comment">"""Untuk max-heap: hotel lebih prioritas harus 'lebih kecil' dalam min-heap"""</span>
+        <span class="code-comment"># Priority 1: Rating (lebih tinggi = lebih prioritas)</span>
         <span class="code-keyword">if</span> <span class="code-variable">self</span>.rating != other.rating:
-            <span class="code-keyword">return</span> <span class="code-variable">self</span>.rating > other.rating
-        <span class="code-comment"># Priority 2: Popularity</span>
+            <span class="code-keyword">return</span> <span class="code-variable">self</span>.rating > other.rating  <span class="code-comment"># Balik tanda untuk max-heap behavior</span>
+        <span class="code-comment"># Priority 2: Popularity (lebih tinggi = lebih prioritas)</span>
         <span class="code-keyword">if</span> <span class="code-variable">self</span>.popularity_score != other.popularity_score:
             <span class="code-keyword">return</span> <span class="code-variable">self</span>.popularity_score > other.popularity_score
-        <span class="code-comment"># Priority 3: Price (cheaper = better)</span>
+        <span class="code-comment"># Priority 3: Price (lebih murah = lebih prioritas)</span>
         <span class="code-keyword">if</span> <span class="code-variable">self</span>.price != other.price:
             <span class="code-keyword">return</span> <span class="code-variable">self</span>.price < other.price
-        <span class="code-comment"># Priority 4: Distance (closer = better)</span>
-        <span class="code-keyword">return</span> <span class="code-variable">self</span>.distance_from_center < other.distance_from_center</code></pre>
+        <span class="code-comment"># Priority 4: Distance (lebih dekat = lebih prioritas)</span>
+        <span class="code-keyword">return</span> <span class="code-variable">self</span>.distance_from_center < other.distance_from_center
+
+    <span class="code-keyword">def</span> <span class="code-function">__str__</span>(<span class="code-variable">self</span>):
+        <span class="code-keyword">return</span> <span class="code-string">f"</span><span class="code-variable">{</span><span class="code-variable">self</span>.name<span class="code-variable">}</span><span class="code-string"> (Rating: </span><span class="code-variable">{</span><span class="code-variable">self</span>.rating<span class="code-variable">}</span><span class="code-string">, Price: $</span><span class="code-variable">{</span><span class="code-variable">self</span>.price<span class="code-variable">}</span><span class="code-string">, Popularity: </span><span class="code-variable">{</span><span class="code-variable">self</span>.popularity_score<span class="code-variable">}</span><span class="code-string">, Distance: </span><span class="code-variable">{</span><span class="code-variable">self</span>.distance_from_center<span class="code-variable">}</span><span class="code-string">km)"</span>
+
+<span class="code-keyword">class</span> <span class="code-function">TravelokaSearchEngine</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-variable">self</span>):
+        <span class="code-variable">self</span>.hotels = []
+
+    <span class="code-keyword">def</span> <span class="code-function">add_hotel</span>(<span class="code-variable">self</span>, hotel):
+        <span class="code-comment"># Gunakan min-heap dengan priority tuple</span>
+        priority_tuple = (
+            -hotel.rating,  <span class="code-comment"># Negasi untuk max-heap behavior</span>
+            -hotel.popularity_score,
+            hotel.price,
+            hotel.distance_from_center,
+            hotel.name  <span class="code-comment"># Untuk tie-breaker</span>
+        )
+        heapq.heappush(<span class="code-variable">self</span>.hotels, (priority_tuple, hotel))
+
+    <span class="code-keyword">def</span> <span class="code-function">get_top_recommendations</span>(<span class="code-variable">self</span>, k=<span class="code-number">5</span>):
+        recommendations = []
+        temp_heap = <span class="code-variable">self</span>.hotels.copy()
+
+        <span class="code-keyword">for</span> _ <span class="code-keyword">in</span> range(min(k, len(temp_heap))):
+            <span class="code-keyword">if</span> temp_heap:
+                priority, hotel = heapq.heappop(temp_heap)
+                recommendations.append(hotel)
+
+        <span class="code-keyword">return</span> recommendations
+
+    <span class="code-keyword">def</span> <span class="code-function">print_top_hotels</span>(<span class="code-variable">self</span>, k=<span class="code-number">3</span>):
+        print(<span class="code-string">f"Top {k} Recommended Hotels di Makassar:"</span>)
+        top_hotels = <span class="code-variable">self</span>.get_top_recommendations(k)
+        <span class="code-keyword">for</span> i, hotel <span class="code-keyword">in</span> enumerate(top_hotels, <span class="code-number">1</span>):
+            print(<span class="code-string">f"{i}. {hotel}"</span>)
+
+<span class="code-comment"># Contoh penggunaan dengan hotel-hotel di sekitar Makassar</span>
+<span class="code-keyword">def</span> <span class="code-function">demo_traveloka_search</span>():
+    traveloka = TravelokaSearchEngine()
+
+    print(<span class="code-string">"Hotel tersedia di database Makassar:"</span>)
+    hotels = [
+        Hotel(<span class="code-string">"Aston Makassar Hotel"</span>, <span class="code-number">85</span>, <span class="code-number">4.5</span>, <span class="code-number">88</span>, <span class="code-number">1.2</span>),
+        Hotel(<span class="code-string">"Swiss-Belhotel Harbour Bay"</span>, <span class="code-number">120</span>, <span class="code-number">4.6</span>, <span class="code-number">92</span>, <span class="code-number">0.8</span>),
+        Hotel(<span class="code-string">"Clarion Makassar"</span>, <span class="code-number">75</span>, <span class="code-number">4.2</span>, <span class="code-number">82</span>, <span class="code-number">2.5</span>),
+        Hotel(<span class="code-string">"Santika Premiere Makassar"</span>, <span class="code-number">95</span>, <span class="code-number">4.4</span>, <span class="code-number">86</span>, <span class="code-number">1.5</span>),
+        Hotel(<span class="code-string">"Four Points by Sheraton Makassar"</span>, <span class="code-number">110</span>, <span class="code-number">4.7</span>, <span class="code-number">94</span>, <span class="code-number">1.0</span>),
+        Hotel(<span class="code-string">"Losari Beach Hotel"</span>, <span class="code-number">65</span>, <span class="code-number">4.0</span>, <span class="code-number">78</span>, <span class="code-number">3.0</span>),
+        Hotel(<span class="code-string">"Hotel Makassar Golden"</span>, <span class="code-number">50</span>, <span class="code-number">3.8</span>, <span class="code-number">72</span>, <span class="code-number">2.0</span>),
+        Hotel(<span class="code-string">"Ibis Makassar City Center"</span>, <span class="code-number">55</span>, <span class="code-number">3.9</span>, <span class="code-number">75</span>, <span class="code-number">1.8</span>)
+    ]
+
+    <span class="code-keyword">for</span> hotel <span class="code-keyword">in</span> hotels:
+        print(<span class="code-string">f"  - {hotel}"</span>)
+        traveloka.add_hotel(hotel)
+
+    print(<span class="code-string">"\n"</span> + <span class="code-string">"="</span>*<span class="code-number">60</span>)
+    traveloka.print_top_hotels(<span class="code-number">5</span>)
+
+<span class="code-comment"># Menjalankan demo</span>
+<span class="code-keyword">if</span> <span class="code-variable">__name__</span> == <span class="code-string">"__main__"</span>:
+    demo_traveloka_search()</code></pre>
                     </div>
+                    
+                    <div class="explanation-box">
+                        <div class="explanation-title">📝 Penjelasan Kode:</div>
+                        <ul class="explanation-list">
+                            <li><strong>Class Hotel</strong>: Mewakili data hotel dengan properti rating, harga, popularitas, dan jarak.</li>
+                            <li><strong>Method __lt__</strong>: Mengimplementasikan perbandingan untuk priority queue.</li>
+                            <li><strong>TravelokaSearchEngine</strong>: Menggunakan heapq (min-heap) untuk mengelola rekomendasi hotel.</li>
+                            <li><strong>Priority Tuple</strong>: Menggunakan tuple untuk multiple criteria sorting.</li>
+                            <li><strong>Complexity</strong>: O(log n) untuk insert, O(k log n) untuk get top-k recommendations.</li>
+                        </ul>
+                    </div>
+                    
                     <button class="btn" id="runCodeBtn">
                         <i class="fas fa-code"></i> Jalankan Kode Contoh
                     </button>
                 </div>
             </div>
 
-            <!-- Slide 8: Demo Hasil -->
+            <!-- Slide 8: Demo Hasil Rekomendasi (DIUPDATE) -->
             <div class="slide" id="slide8">
                 <div class="slide-content">
-                    <h1 class="slide-title">Demo: Hasil Rekomendasi</h1>
+                    <h1 class="slide-title">Demo: Hasil Rekomendasi Hotel Makassar</h1>
+                    
                     <div class="slide-text">
-                        <p>Berikut adalah hasil rekomendasi hotel berdasarkan algoritma Heap Sort:</p>
+                        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 25px;">
+                            <strong>Top 5 Recommended Hotels di Makassar </strong>
+                        </p>
                     </div>
                     
                     <div id="hotelResults">
-                        <!-- Hotel results will be generated by JavaScript -->
+                        <!-- Hotel Card 1 -->
+                        <div class="hotel-card">
+                            <div class="hotel-rank rank-1">1</div>
+                            <div class="hotel-name">Four Points by Sheraton Makassar</div>
+                            <div class="hotel-details">
+                                <div class="hotel-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span><strong>Rating:</strong> 4.7/5</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span><strong>Harga:</strong> $110</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-fire"></i>
+                                    <span><strong>Popularitas:</strong> 94</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong>Jarak:</strong> 1.0km</span>
+                                </div>
+                            </div>
+                            <div class="distance-badge">
+                                <i class="fas fa-trophy"></i> Jarak Terdekat ke Pusat Kota
+                            </div>
+                        </div>
+                        
+                        <!-- Hotel Card 2 -->
+                        <div class="hotel-card">
+                            <div class="hotel-rank rank-2">2</div>
+                            <div class="hotel-name">Swiss-Belhotel Harbour Bay</div>
+                            <div class="hotel-details">
+                                <div class="hotel-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span><strong>Rating:</strong> 4.6/5</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span><strong>Harga:</strong> $120</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-fire"></i>
+                                    <span><strong>Popularitas:</strong> 92</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong>Jarak:</strong> 0.8km</span>
+                                </div>
+                            </div>
+                            <div class="distance-badge">
+                                <i class="fas fa-map-marker"></i> Sangat Dekat dengan Pelabuhan
+                            </div>
+                        </div>
+                        
+                        <!-- Hotel Card 3 -->
+                        <div class="hotel-card">
+                            <div class="hotel-rank rank-3">3</div>
+                            <div class="hotel-name">Aston Makassar Hotel</div>
+                            <div class="hotel-details">
+                                <div class="hotel-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span><strong>Rating:</strong> 4.5/5</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span><strong>Harga:</strong> $85</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-fire"></i>
+                                    <span><strong>Popularitas:</strong> 88</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong>Jarak:</strong> 1.2km</span>
+                                </div>
+                            </div>
+                            <div class="distance-badge">
+                                <i class="fas fa-award"></i> Harga Terbaik dalam Jarak Dekat
+                            </div>
+                        </div>
+                        
+                        <!-- Hotel Card 4 -->
+                        <div class="hotel-card">
+                            <div class="hotel-rank rank-4">4</div>
+                            <div class="hotel-name">Santika Premiere Makassar</div>
+                            <div class="hotel-details">
+                                <div class="hotel-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span><strong>Rating:</strong> 4.4/5</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span><strong>Harga:</strong> $95</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-fire"></i>
+                                    <span><strong>Popularitas:</strong> 86</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong>Jarak:</strong> 1.5km</span>
+                                </div>
+                            </div>
+                            <div class="distance-badge">
+                                <i class="fas fa-thumbs-up"></i> Rating Konsisten & Populer
+                            </div>
+                        </div>
+                        
+                        <!-- Hotel Card 5 -->
+                        <div class="hotel-card">
+                            <div class="hotel-rank rank-5">5</div>
+                            <div class="hotel-name">Clarion Makassar</div>
+                            <div class="hotel-details">
+                                <div class="hotel-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span><strong>Rating:</strong> 4.2/5</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span><strong>Harga:</strong> $75</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-fire"></i>
+                                    <span><strong>Popularitas:</strong> 82</span>
+                                </div>
+                                <div class="hotel-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span><strong>Jarak:</strong> 2.5km</span>
+                                </div>
+                            </div>
+                            <div class="distance-badge">
+                                <i class="fas fa-wallet"></i> Harga Paling Ekonomis
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="slide-text">
-                        <p>Algoritma berhasil mengurutkan hotel berdasarkan multiple criteria dengan efisien!</p>
+                    <div class="explanation-box" style="margin-top: 30px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50;">
+                        <div class="explanation-title">✅ Analisis Hasil Rekomendasi:</div>
+                        <ul class="explanation-list">
+                            <li><strong>Heap berhasil mengurutkan berdasarkan multiple criteria:</strong> rating → popularitas → harga → jarak</li>
+                            <li><strong>Prioritas utama:</strong> Hotel dengan rating tertinggi (Four Points: 4.7)</li>
+                            <li><strong>Jika rating sama:</strong> Dipertimbangkan popularitas (Swiss-Belhotel: 92 vs Aston: 88)</li>
+                            <li><strong>Jika rating & popularitas sama:</strong> Harga lebih murah diutamakan</li>
+                            <li><strong>Tie-breaker akhir:</strong> Jarak terdekat ke pusat kota</li>
+                            <li><strong>Performance:</strong> Algoritma berjalan dengan kompleksitas O(k log n) untuk k=5 rekomendasi</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="slide-text" style="margin-top: 20px; text-align: center; padding: 15px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 10px; color: white;">
+                        <p><strong>Kesimpulan:</strong> Algoritma Heap berhasil mengurutkan 8 hotel di Makassar berdasarkan 4 kriteria sekaligus (rating, popularitas, harga, jarak) dengan efisien dan menghasilkan rekomendasi yang optimal!</p>
                     </div>
                 </div>
             </div>
@@ -1197,27 +1469,31 @@
                                 </div>
                             </div>
 
-                            <!-- 3.3.3 Contoh Nyata dengan 6 Hotel -->
+                            <!-- 3.3.3 Contoh Nyata dengan 8 Hotel Makassar -->
                             <div>
-                                <div class="step-title">3.3.3 Contoh Nyata dengan 6 Hotel</div>
+                                <div class="step-title">3.3.3 Contoh Nyata dengan 8 Hotel Makassar</div>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                     <div class="calculation">
                                         <strong>Proses Penambahan:</strong><br>
-                                        Grand Luxury Hotel (4.5) → O(log 1) = 1 langkah<br>
-                                        Budget Inn (3.2) → O(log 2) = 2 langkah<br>
-                                        City Center Hotel (4.8) → O(log 3) = 2 langkah<br>
-                                        Airport Transit (4.0) → O(log 4) = 3 langkah<br>
-                                        Beach Resort (4.7) → O(log 5) = 3 langkah<br>
-                                        Business Suites (4.3) → O(log 6) = 3 langkah<br>
-                                        <strong>Total = 1 + 2 + 2 + 3 + 3 + 3 = 14 langkah</strong><br>
+                                        Four Points (4.7) → O(log 1) = 1 langkah<br>
+                                        Swiss-Belhotel (4.6) → O(log 2) = 2 langkah<br>
+                                        Aston (4.5) → O(log 3) = 2 langkah<br>
+                                        Santika (4.4) → O(log 4) = 3 langkah<br>
+                                        Clarion (4.2) → O(log 5) = 3 langkah<br>
+                                        Losari (4.0) → O(log 6) = 3 langkah<br>
+                                        Ibis (3.9) → O(log 7) = 3 langkah<br>
+                                        Golden (3.8) → O(log 8) = 3 langkah<br>
+                                        <strong>Total = 1 + 2 + 2 + 3 + 3 + 3 + 3 + 3 = 20 langkah</strong><br>
                                         <strong>≈ O(n log n)</strong>
                                     </div>
                                     <div class="calculation">
-                                        <strong>Proses Rekomendasi (k=3):</strong><br>
-                                        Ambil City Center → O(log 6) = 3 langkah<br>
-                                        Ambil Beach Resort → O(log 5) = 3 langkah<br>
-                                        Ambil Grand Luxury → O(log 4) = 2 langkah<br>
-                                        <strong>Total = 3 + 3 + 2 = 8 langkah</strong><br>
+                                        <strong>Proses Rekomendasi (k=5):</strong><br>
+                                        Ambil Four Points → O(log 8) = 3 langkah<br>
+                                        Ambil Swiss-Belhotel → O(log 7) = 3 langkah<br>
+                                        Ambil Aston → O(log 6) = 3 langkah<br>
+                                        Ambil Santika → O(log 5) = 3 langkah<br>
+                                        Ambil Clarion → O(log 4) = 2 langkah<br>
+                                        <strong>Total = 3 + 3 + 3 + 3 + 2 = 14 langkah</strong><br>
                                         <strong>≈ O(k log n)</strong>
                                     </div>
                                 </div>
@@ -1536,7 +1812,6 @@
             updateProgressBar();
             updateAgendaIndicator();
             generateHeapVisualization();
-            generateHotelResults();
             
             // Event listeners
             prevBtn.addEventListener('click', goToPrevSlide);
@@ -1675,6 +1950,22 @@
             setTimeout(() => {
                 codeBlock.style.transform = 'scale(1)';
                 codeBlock.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+                
+                // Show hotel recommendations
+                const hotelCards = document.querySelectorAll('.hotel-card');
+                hotelCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.transform = 'translateY(-10px)';
+                        card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.2)';
+                    }, index * 200);
+                });
+                
+                setTimeout(() => {
+                    hotelCards.forEach(card => {
+                        card.style.transform = 'translateY(0)';
+                        card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                    });
+                }, 3000);
             }, 1000);
         }
         
@@ -1751,80 +2042,6 @@
             connector.style.transformOrigin = '0 0';
             
             return connector;
-        }
-        
-        function generateHotelResults() {
-            const container = document.getElementById('hotelResults');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            const hotels = [
-                { name: "City Center Hotel", rating: 4.8, price: 150, popularity: 95, distance: 0.5 },
-                { name: "Beach Resort", rating: 4.7, price: 300, popularity: 90, distance: 5.0 },
-                { name: "Grand Luxury Hotel", rating: 4.5, price: 200, popularity: 85, distance: 2.5 },
-                { name: "Business Suites", rating: 4.3, price: 180, popularity: 80, distance: 1.8 },
-                { name: "Airport Transit Hotel", rating: 4.0, price: 120, popularity: 70, distance: 8.0 }
-            ];
-            
-            hotels.forEach((hotel, index) => {
-                const card = document.createElement('div');
-                card.className = 'hotel-card';
-                
-                // Add ranking badge
-                const rank = document.createElement('div');
-                rank.style.position = 'absolute';
-                rank.style.top = '10px';
-                rank.style.right = '10px';
-                rank.style.width = '30px';
-                rank.style.height = '30px';
-                rank.style.borderRadius = '50%';
-                rank.style.background = index < 3 ? 
-                    (index === 0 ? 'linear-gradient(135deg, #fdbb2d, #b21f1f)' : 
-                     index === 1 ? 'linear-gradient(135deg, #C0C0C0, #808080)' : 
-                     'linear-gradient(135deg, #CD7F32, #8B4513)') : 
-                    'linear-gradient(135deg, #1a2a6c, #b21f1f)';
-                rank.style.color = 'white';
-                rank.style.display = 'flex';
-                rank.style.justifyContent = 'center';
-                rank.style.alignItems = 'center';
-                rank.style.fontWeight = 'bold';
-                rank.textContent = index + 1;
-                
-                const name = document.createElement('div');
-                name.className = 'hotel-name';
-                name.textContent = hotel.name;
-                
-                const details = document.createElement('div');
-                details.className = 'hotel-details';
-                
-                const rating = document.createElement('div');
-                rating.className = 'hotel-detail';
-                rating.innerHTML = `<i class="fas fa-star"></i><span>Rating: ${hotel.rating}/5</span>`;
-                
-                const price = document.createElement('div');
-                price.className = 'hotel-detail';
-                price.innerHTML = `<i class="fas fa-dollar-sign"></i><span>Harga: $${hotel.price}</span>`;
-                
-                const popularity = document.createElement('div');
-                popularity.className = 'hotel-detail';
-                popularity.innerHTML = `<i class="fas fa-fire"></i><span>Popularitas: ${hotel.popularity}</span>`;
-                
-                const distance = document.createElement('div');
-                distance.className = 'hotel-detail';
-                distance.innerHTML = `<i class="fas fa-map-marker-alt"></i><span>Jarak: ${hotel.distance}km</span>`;
-                
-                details.appendChild(rating);
-                details.appendChild(price);
-                details.appendChild(popularity);
-                details.appendChild(distance);
-                
-                card.appendChild(rank);
-                card.appendChild(name);
-                card.appendChild(details);
-                
-                container.appendChild(card);
-            });
         }
         
         // Initialize the presentation
