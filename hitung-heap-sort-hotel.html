@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Heap Sort Hotel - Priority Fixed</title>
+    <title>Simulasi Heap Sort Hotel Makassar - Posisi Tree Terpusat</title>
     <style>
+        /* CSS tetap sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -42,15 +43,15 @@
             font-size: 1.2rem;
         }
 
-        .priority-correction {
-            background: #e8f5e9;
+        .algorithm-explanation {
+            background: #fff8e1;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 30px;
-            border-left: 5px solid #4caf50;
+            border-left: 5px solid #ff9800;
         }
 
-        .priority-table {
+        .criteria-table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
@@ -60,25 +61,20 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
-        .priority-table th {
+        .criteria-table th {
             background: #0c2461;
             color: white;
             padding: 12px;
-            text-align: center;
+            text-align: left;
         }
 
-        .priority-table td {
+        .criteria-table td {
             padding: 10px;
             border-bottom: 1px solid #eee;
-            text-align: center;
         }
 
-        .priority-table tr.correct-order {
-            background: #f1f8e9;
-        }
-
-        .priority-table tr.incorrect-order {
-            background: #ffebee;
+        .criteria-table tr:nth-child(even) {
+            background: #f8f9fa;
         }
 
         .hotel-grid {
@@ -120,12 +116,6 @@
             box-shadow: 0 0 20px rgba(156, 39, 176, 0.3);
         }
 
-        .hotel-card.sorted {
-            border-color: #00b894;
-            box-shadow: 0 0 20px rgba(0, 184, 148, 0.3);
-            background: #f1f8e9;
-        }
-
         .node-index {
             position: absolute;
             top: 10px;
@@ -146,6 +136,12 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
+        }
+
+        @keyframes nodeHighlight {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(229, 80, 57, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(229, 80, 57, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(229, 80, 57, 0.3); }
         }
 
         .hotel-name {
@@ -268,6 +264,7 @@
             border-color: #e55039;
             box-shadow: 0 0 20px rgba(229, 80, 57, 0.4);
             transform: scale(1.05);
+            animation: nodeHighlight 1s infinite;
         }
 
         .tree-node.swap {
@@ -286,12 +283,6 @@
             box-shadow: 0 0 20px rgba(156, 39, 176, 0.4);
         }
 
-        .tree-node.sorted {
-            border-color: #00b894;
-            box-shadow: 0 0 20px rgba(0, 184, 148, 0.4);
-            background: #f1f8e9;
-        }
-
         .tree-connector {
             position: absolute;
             background: #0c2461;
@@ -299,6 +290,18 @@
             z-index: 1;
             transform-origin: 0 0;
             opacity: 0.7;
+        }
+
+        .tree-connector::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 8px solid #0c2461;
         }
 
         .priority-list {
@@ -315,6 +318,29 @@
             transition: all 0.3s ease;
         }
 
+        .priority-item.active {
+            border-left-color: #e55039;
+            background: #fff5f3;
+        }
+
+        .priority-item.leaf-node {
+            border-left-color: #9c27b0;
+            background: #f3e5f5;
+        }
+
+        .priority-rank {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #0c2461;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
         .status {
             text-align: center;
             margin: 20px 0;
@@ -324,6 +350,21 @@
             font-weight: bold;
             color: #2e7d32;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status.build {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status.sort {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status.leaf {
+            background: #f3e5f5;
+            color: #7b1fa2;
         }
 
         .log {
@@ -341,6 +382,9 @@
             font-size: 1.3rem;
             border-bottom: 2px solid #0c2461;
             padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .log-entry {
@@ -353,12 +397,35 @@
             font-size: 0.95rem;
         }
 
+        .log-entry.heapify {
+            border-left-color: #e55039;
+            background: #fff5f3;
+        }
+
+        .log-entry.swap {
+            border-left-color: #4cd137;
+            background: #f1f8e9;
+        }
+
+        .log-entry.complete {
+            border-left-color: #8c7ae6;
+            background: #f3e5f5;
+        }
+
+        .log-entry.leaf {
+            border-left-color: #9c27b0;
+            background: #f3e5f5;
+        }
+
         .section-title {
             color: #0c2461;
             margin: 20px 0 10px 0;
             font-size: 1.4rem;
             border-bottom: 2px solid #eee;
             padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .step-counter {
@@ -369,6 +436,14 @@
             font-size: 0.9rem;
         }
 
+        .heap-property {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+
         .calculation-box {
             background: #f9f9f9;
             border-radius: 8px;
@@ -377,124 +452,154 @@
             border: 1px dashed #ccc;
             font-family: 'Courier New', monospace;
         }
+
+        .tree-level-line {
+            position: absolute;
+            height: 1px;
+            background: rgba(0,0,0,0.1);
+            width: 90%;
+            left: 5%;
+            z-index: 0;
+        }
+
+        .level-label {
+            position: absolute;
+            left: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .phase-indicator {
+            background: #e55039;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Simulasi Heap Sort Hotel - Priority Fixed</h1>
-        <div class="subtitle">Perbaikan Urutan Priority: Aston (4.5⭐) → Santika (4.4⭐)</div>
+        <h1>Simulasi Heap Sort Hotel Makassar</h1>
+        <div class="subtitle">Visualisasi Heap Tree dengan Posisi Terpusat</div>
         
-        <div class="priority-correction">
-            <h3>🔧 PERBAIKAN RUMUS PRIORITY</h3>
-            <table class="priority-table">
+        <div class="algorithm-explanation">
+            <h3>📋 Struktur Heap Tree (Max-Heap)</h3>
+            <table class="criteria-table">
                 <tr>
+                    <th>Index</th>
                     <th>Hotel</th>
-                    <th>Rating</th>
-                    <th>Popularity</th>
-                    <th>Price</th>
-                    <th>Distance</th>
                     <th>Priority Value</th>
-                    <th>Urutan</th>
+                    <th>Level</th>
+                    <th>Keterangan</th>
                 </tr>
-                <tr class="correct-order">
+                <tr>
+                    <td>0</td>
                     <td><strong>Four Points</strong></td>
-                    <td>4.7 ⭐</td>
-                    <td>94</td>
-                    <td>$110</td>
-                    <td>1.0 km</td>
-                    <td><strong>-56289.0</strong></td>
-                    <td>1 (Root)</td>
+                    <td>-4789.0</td>
+                    <td>Root</td>
+                    <td>⭐ Rating tertinggi (4.7)</td>
                 </tr>
-                <tr class="correct-order">
-                    <td><strong>Swiss-Belhotel</strong></td>
-                    <td>4.6 ⭐</td>
-                    <td>92</td>
-                    <td>$120</td>
-                    <td>0.8 km</td>
-                    <td><strong>-55079.2</strong></td>
+                <tr>
+                    <td>1</td>
+                    <td>Swiss-Belhotel</td>
+                    <td>-4688.8</td>
+                    <td>Level 1 (Left)</td>
+                    <td>Child dari root</td>
+                </tr>
+                <tr>
                     <td>2</td>
+                    <td><strong>Aston Makassar</strong></td>
+                    <td>-5293.8</td>
+                    <td>Level 1 (Right)</td>
+                    <td>Child dari root (Non-leaf)</td>
                 </tr>
-                <tr class="correct-order">
-                    <td><strong>Aston</strong> ✅</td>
-                    <td>4.5 ⭐</td>
-                    <td>88</td>
-                    <td>$85</td>
-                    <td>1.2 km</td>
-                    <td><strong>-53713.8</strong></td>
+                <tr>
                     <td>3</td>
+                    <td>Santika Premiere</td>
+                    <td>-5163.5</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Heapify dimulai dari sini</td>
                 </tr>
-                <tr class="correct-order">
-                    <td><strong>Santika</strong></td>
-                    <td>4.4 ⭐</td>
-                    <td>86</td>
-                    <td>$95</td>
-                    <td>1.5 km</td>
-                    <td><strong>-52503.5</strong></td>
+                <tr>
                     <td>4</td>
-                </tr>
-                <tr>
                     <td>Clarion</td>
-                    <td>4.2 ⭐</td>
-                    <td>82</td>
-                    <td>$75</td>
-                    <td>2.5 km</td>
-                    <td>-50122.5</td>
-                    <td>5</td>
+                    <td>-4175.5</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Tidak perlu di-heapify</td>
                 </tr>
                 <tr>
+                    <td>5</td>
                     <td>Losari</td>
-                    <td>4.0 ⭐</td>
-                    <td>78</td>
-                    <td>$65</td>
-                    <td>3.0 km</td>
-                    <td>-47732.0</td>
-                    <td>6</td>
+                    <td>-4060.0</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Tidak perlu di-heapify</td>
                 </tr>
             </table>
             
-            <div class="calculation-box">
-                <strong>Rumus Priority Baru:</strong><br>
-                Priority = (-rating × 10000) + (-popularity × 100) + price + distance<br>
-                <em>Semakin kecil nilai = semakin prioritas</em>
+            <div class="heap-property">
+                <strong>Heap Property (Max-Heap):</strong><br>
+                • Parent node HARUS lebih prioritas dari child nodes<br>
+                • Priority Value = (-rating×1000) + (-popularity×10) + price + distance<br>
+                • <strong>Heapify dimulai dari node 2 (Aston Makassar)</strong> karena floor(6/2)-1 = 2
             </div>
         </div>
         
-        <div class="status" id="status">Status: Inisialisasi dengan priority fix...</div>
+        <div class="status" id="status">Status: Inisialisasi data hotel...</div>
         
         <div class="controls">
-            <button class="btn" id="prevBtn">⏮️ Previous</button>
-            <button class="btn" id="nextBtn">Next ⏭️</button>
-            <button class="btn" id="autoBtn">▶️ Auto Play</button>
-            <button class="btn" id="resetBtn">🔄 Reset</button>
+            <button class="btn" id="prevBtn">⏮️ Langkah Sebelumnya</button>
+            <button class="btn" id="nextBtn">Langkah Berikutnya ⏭️</button>
+            <button class="btn" id="autoBtn">▶️ Jalankan Otomatis (2 detik)</button>
+            <button class="btn" id="resetBtn">🔄 Ulang Simulasi</button>
+            <button class="btn" id="speedUpBtn">⚡ Percepat (1 detik)</button>
+            <button class="btn" id="speedDownBtn">🐢 Perlambat (3 detik)</button>
         </div>
         
         <div class="section-title">
-            Data Hotel dengan Priority Fixed
+            Data Hotel Makassar (n = 6)
             <span class="step-counter" id="stepCounter">Step: 0/0</span>
         </div>
         <div class="hotel-grid" id="hotelGrid"></div>
         
         <div class="simulation-area">
             <div class="tree-display">
-                <div class="section-title">Heap Tree Structure</div>
+                <div class="section-title">
+                    Struktur Heap Tree (Posisi Terpusat)
+                    <span class="phase-indicator" id="phaseIndicator">Build Max-Heap</span>
+                </div>
                 <div id="treeContainer"></div>
             </div>
             
             <div class="priority-display">
-                <div class="section-title">Priority Order</div>
-                <div id="calculationsContent"></div>
+                <div class="section-title">Urutan Prioritas & Proses Heapify</div>
+                <div id="calculationsContent">
+                    <div class="calculation-box">
+                        <strong>Menghitung Leaf Nodes:</strong><br>
+                        n = 6, leaf mulai dari index = floor(6/2) = 3<br>
+                        Leaf nodes: index 3, 4, 5 (tidak perlu di-heapify)
+                    </div>
+                </div>
                 <ul class="priority-list" id="priorityList"></ul>
             </div>
         </div>
         
         <div class="log">
-            <div class="log-title">Heap Sort Log</div>
+            <div class="log-title">
+                Log Proses Heap Sort
+                <span id="logPhaseIndicator">Phase: Build Max-Heap</span>
+            </div>
             <div id="logContent"></div>
         </div>
     </div>
 
     <script>
-        // ==================== DATA HOTEL DENGAN PRIORITY FIXED ====================
+        // ==================== DATA HOTEL ====================
         const hotels = [
             {
                 name: "Four Points by Sheraton Makassar",
@@ -503,8 +608,7 @@
                 popularity: 94,
                 distance: 1.0,
                 priority: 0,
-                isLeaf: false,
-                isSorted: false
+                isLeaf: false
             },
             {
                 name: "Swiss-Belhotel Harbour Bay",
@@ -513,28 +617,25 @@
                 popularity: 92,
                 distance: 0.8,
                 priority: 0,
-                isLeaf: false,
-                isSorted: false
+                isLeaf: false
             },
             {
-                name: "Aston Makassar Hotel",  // SEHARUSNYA URUTAN 3, BUKAN 4
+                name: "Aston Makassar Hotel",
                 price: 85,
                 rating: 4.5,
                 popularity: 88,
                 distance: 1.2,
                 priority: 0,
-                isLeaf: true,
-                isSorted: false
+                isLeaf: false  // Index 2 adalah NON-LEAF
             },
             {
-                name: "Santika Premiere Makassar",  // SEHARUSNYA URUTAN 4, BUKAN 3
+                name: "Santika Premiere Makassar",
                 price: 95,
                 rating: 4.4,
                 popularity: 86,
                 distance: 1.5,
                 priority: 0,
-                isLeaf: false,
-                isSorted: false
+                isLeaf: true  // Index 3 adalah LEAF
             },
             {
                 name: "Clarion Makassar",
@@ -543,8 +644,7 @@
                 popularity: 82,
                 distance: 2.5,
                 priority: 0,
-                isLeaf: true,
-                isSorted: false
+                isLeaf: true
             },
             {
                 name: "Losari Beach Hotel",
@@ -553,8 +653,7 @@
                 popularity: 78,
                 distance: 3.0,
                 priority: 0,
-                isLeaf: true,
-                isSorted: false
+                isLeaf: true
             }
         ];
 
@@ -563,26 +662,31 @@
         let steps = [];
         let currentStep = 0;
         let autoPlayInterval = null;
+        let autoPlaySpeed = 2000;
 
-        // ==================== POSISI NODE ====================
+        // ==================== POSISI NODE TERPUSAT ====================
         const NODE_POSITIONS_CENTERED = [
-            { x: 400, y: 80, level: 0 },   // 0 - Four Points (Root)
-            { x: 250, y: 200, level: 1 },  // 1 - Swiss-Belhotel
-            { x: 550, y: 200, level: 1 },  // 2 - Santika
-            { x: 150, y: 320, level: 2 },  // 3 - Aston
-            { x: 350, y: 320, level: 2 },  // 4 - Clarion
-            { x: 450, y: 320, level: 2 }   // 5 - Losari
+            // Index: 0 - ROOT (Four Points) - TENGAH ATAS
+            { x: 400, y: 80, level: 0 },
+            // Index: 1 - Swiss-Belhotel - KIRI TENGAH
+            { x: 250, y: 200, level: 1 },
+            // Index: 2 - Aston - KANAN TENGAH (Heapify mulai dari sini - NON-LEAF)
+            { x: 550, y: 200, level: 1 },
+            // Index: 3 - Santika - KIRI BAWAH (LEAF)
+            { x: 150, y: 320, level: 2 },
+            // Index: 4 - Clarion - TENGAH BAWAH (LEAF)
+            { x: 350, y: 320, level: 2 },
+            // Index: 5 - Losari - KANAN BAWAH (LEAF)
+            { x: 450, y: 320, level: 2 }
         ];
 
-        // ==================== FUNGSI UTILITAS DIPERBAIKI ====================
+        // ==================== FUNGSI UTILITAS ====================
         function calculatePriority(hotel) {
-            // PERBAIKAN: Gunakan bobot yang lebih besar untuk rating
-            // rating × 10000 agar rating 4.5 lebih baik dari 4.4
             const priorityValue = 
-                (-hotel.rating * 10000) +      // Rating paling penting
-                (-hotel.popularity * 100) +    // Popularitas
-                hotel.price +                  // Harga (makin murah makin baik)
-                hotel.distance;                // Jarak (makin dekat makin baik)
+                (-hotel.rating * 1000) + 
+                (-hotel.popularity * 10) + 
+                hotel.price + 
+                hotel.distance;
             
             return {
                 rating: -hotel.rating,
@@ -607,8 +711,8 @@
             const names = {
                 "Four Points by Sheraton Makassar": "Four Points",
                 "Swiss-Belhotel Harbour Bay": "Swiss-Belhotel",
+                "Santika Premiere Makassar": "Santika Premiere",
                 "Aston Makassar Hotel": "Aston",
-                "Santika Premiere Makassar": "Santika",
                 "Clarion Makassar": "Clarion",
                 "Losari Beach Hotel": "Losari"
             };
@@ -624,31 +728,18 @@
             const n = currentHotels.length;
             const leafIndices = identifyLeafNodes(n);
             
-            // Hitung priority dengan rumus baru
             currentHotels.forEach((hotel, index) => {
                 hotel.priority = calculatePriority(hotel);
                 hotel.isLeaf = leafIndices.includes(index);
-                hotel.isSorted = false;
             });
             
-            // Urutkan array berdasarkan priority untuk memastikan root benar
-            currentHotels.sort((a, b) => a.priority.total - b.priority.total);
-            
-            // Step 0: Inisialisasi dengan priority fix
-            recordStep(
-                `🏁 INISIALISASI DENGAN PRIORITY FIX<br>` +
-                `Rumus baru: (-rating×10000) + (-popularity×100) + price + distance<br>` +
-                `Hasil priority:<br>` +
-                `${currentHotels.map((h, i) => 
-                    `${i+1}. ${h.name.split(' ')[0]}: ${h.priority.total.toFixed(1)}`
-                ).join('<br>')}`,
-                [], [], "Initial"
-            );
+            // Step 0: Inisialisasi
+            recordStep("🏁 INISIALISASI: Data hotel Makassar", [], [], "Initial");
             
             // Step 1: Identifikasi leaf nodes
             const leafHotels = leafIndices.map(i => currentHotels[i].name);
             recordStep(
-                `🍃 IDENTIFIKASI LEAF NODES:<br>n = ${n}, leaf mulai dari index = floor(${n}/2) = ${Math.floor(n/2)}<br>Leaf nodes: index ${leafIndices.join(', ')}`,
+                `🍃 IDENTIFIKASI LEAF NODES:<br>n = ${n}, leaf mulai dari index = floor(${n}/2) = ${Math.floor(n/2)}<br>Leaf nodes: index ${leafIndices.join(', ')}<br>Hotel: ${leafHotels.map(getShortHotelName).join(', ')}`,
                 leafIndices, [], "Leaf"
             );
             
@@ -672,15 +763,12 @@
             let startIdx = Math.floor(n / 2) - 1;
             
             for (let i = startIdx; i >= 0; i--) {
-                const heapifyMessage = `🔄 HEAPIFY Node ${i}: ${currentHotels[i].name}<br>Priority: ${currentHotels[i].priority.total.toFixed(1)}`;
+                const heapifyMessage = `🔄 HEAPIFY Node ${i}: ${getShortHotelName(currentHotels[i].name)}<br>Priority: ${currentHotels[i].priority.total.toFixed(1)}`;
                 recordStep(heapifyMessage, [i], [], "Heapify");
                 heapify(n, i, "build");
             }
             
-            recordStep(
-                `✅ MAX-HEAP BERHASIL DIBANGUN!<br>Root: ${currentHotels[0].name} (${currentHotels[0].priority.total.toFixed(1)})`,
-                [], [], "Complete"
-            );
+            recordStep("✅ MAX-HEAP BERHASIL DIBANGUN!", [], [], "Complete");
         }
 
         function heapify(n, i, phase) {
@@ -688,59 +776,57 @@
             let left = 2 * i + 1;
             let right = 2 * i + 2;
             
-            let message = `🔍 ANALISIS Node ${i} (${currentHotels[i].name}):<br>`;
+            const leftInfo = left < n ? 
+                `${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)})` : 
+                "tidak ada";
+            const rightInfo = right < n ? 
+                `${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)})` : 
+                "tidak ada";
+            
+            let message = `🔍 ANALISIS Node ${i} (${getShortHotelName(currentHotels[i].name)}):<br>`;
             message += `• Priority: ${currentHotels[i].priority.total.toFixed(1)}<br>`;
+            message += `• Left child [${left}]: ${leftInfo}<br>`;
+            message += `• Right child [${right}]: ${rightInfo}`;
             
             let activeIndices = [i];
-            
-            if (left < n) {
-                message += `• Left child [${left}]: ${currentHotels[left].name} (${currentHotels[left].priority.total.toFixed(1)})<br>`;
-                activeIndices.push(left);
-            }
-            
-            if (right < n) {
-                message += `• Right child [${right}]: ${currentHotels[right].name} (${currentHotels[right].priority.total.toFixed(1)})<br>`;
-                activeIndices.push(right);
-            }
+            if (left < n) activeIndices.push(left);
+            if (right < n) activeIndices.push(right);
             
             recordStep(message, activeIndices, [], "Heapify");
             
-            // Bandingkan dengan left child
             if (left < n && currentHotels[left].priority.total < currentHotels[largest].priority.total) {
                 largest = left;
                 recordStep(
-                    `👈 LEFT CHILD LEBIH PRIORITAS:<br>${currentHotels[left].name} (${currentHotels[left].priority.total.toFixed(1)}) < ${currentHotels[i].name} (${currentHotels[i].priority.total.toFixed(1)})`,
+                    `👈 LEFT CHILD LEBIH PRIORITAS:<br>${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)}) < ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>Set largest = ${left}`,
                     [i, left], [], "Heapify"
                 );
             }
             
-            // Bandingkan dengan right child
             if (right < n && currentHotels[right].priority.total < currentHotels[largest].priority.total) {
                 largest = right;
                 recordStep(
-                    `👉 RIGHT CHILD LEBIH PRIORITAS:<br>${currentHotels[right].name} (${currentHotels[right].priority.total.toFixed(1)}) < ${currentHotels[largest].name} (${currentHotels[largest].priority.total.toFixed(1)})`,
+                    `👉 RIGHT CHILD LEBIH PRIORITAS:<br>${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)}) < ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})<br>Set largest = ${right}`,
                     [i, right], [], "Heapify"
                 );
             }
             
-            // Jika largest bukan i, lakukan swap
             if (largest !== i) {
                 recordStep(
-                    `🔄 PERLU SWAP: ${currentHotels[i].name} ⇄ ${currentHotels[largest].name}`,
+                    `🔄 PERLU SWAP: ${getShortHotelName(currentHotels[i].name)} ⇄ ${getShortHotelName(currentHotels[largest].name)}<br>Karena child lebih prioritas dari parent`,
                     [], [i, largest], "Swap"
                 );
                 
                 [currentHotels[i], currentHotels[largest]] = [currentHotels[largest], currentHotels[i]];
                 
                 recordStep(
-                    `✅ SETELAH SWAP:<br>Index ${i}: ${currentHotels[i].name}<br>Index ${largest}: ${currentHotels[largest].name}`,
+                    `✅ SETELAH SWAP:<br>• Index ${i}: ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>• Index ${largest}: ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})`,
                     [], [i, largest], "Swap"
                 );
                 
                 heapify(n, largest, phase);
             } else {
                 recordStep(
-                    `✓ Node ${i} SUDAH memenuhi heap property`,
+                    `✓ Node ${i} (${getShortHotelName(currentHotels[i].name)}) SUDAH memenuhi heap property<br>Tidak perlu swap`,
                     [i], [], "Heapify"
                 );
             }
@@ -748,46 +834,46 @@
 
         function heapSort() {
             let n = currentHotels.length;
+            let sortedHotels = [];
             
             recordStep(
-                `🎯 MULAI HEAP SORT PHASE<br>Max-Heap awal: ${currentHotels[0].name} sebagai root`,
+                `🎯 MULAI HEAP SORT PHASE<br>Array saat ini (max-heap):<br>${currentHotels.map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
                 [], [], "Sort"
             );
             
             for (let i = n - 1; i >= 0; i--) {
                 const iteration = n - i;
                 
-                // Swap root dengan elemen terakhir
                 recordStep(
-                    `📦 ITERASI ${iteration}: Swap root dengan elemen terakhir [${i}]<br>` +
-                    `Root: ${currentHotels[0].name} ↔ Elemen ${i}: ${currentHotels[i].name}`,
+                    `📦 ITERASI ${iteration}: Swap root dengan elemen terakhir<br>• Root [0]: ${getShortHotelName(currentHotels[0].name)} (${currentHotels[0].priority.total.toFixed(1)})<br>• Last [${i}]: ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})`,
                     [0, i], [0, i], "Sort"
                 );
                 
                 [currentHotels[0], currentHotels[i]] = [currentHotels[i], currentHotels[0]];
-                currentHotels[i].isSorted = true;
+                sortedHotels.unshift(currentHotels[i]);
                 
                 recordStep(
-                    `✅ Setelah swap:<br>${currentHotels[i].name} pindah ke posisi ${i}`,
-                    [], [0, i], "Swap"
+                    `✅ Setelah swap iterasi ${iteration}:<br>• Root baru: ${getShortHotelName(currentHotels[0].name)}<br>• Elemen ${getShortHotelName(currentHotels[i].name)} pindah ke posisi akhir`,
+                    [], [0, i], "Sort"
                 );
                 
-                // Heapify root baru jika masih ada elemen
                 if (i > 0) {
                     recordStep(
-                        `🔄 Heapify root baru: ${currentHotels[0].name}`,
+                        `🔄 Heapify root baru (${getShortHotelName(currentHotels[0].name)}) pada heap size=${i}`,
                         [0], [], "Heapify"
                     );
                     heapify(i, 0, "sort");
+                } else {
+                    recordStep(
+                        `🏁 Heap size=1, sorting selesai!`,
+                        [], [], "Complete"
+                    );
                 }
             }
             
+            currentHotels = sortedHotels;
             recordStep(
-                `🎉 HEAP SORT SELESAI!<br>` +
-                `Urutan akhir berdasarkan priority:<br>` +
-                `${currentHotels.map((h, i) => 
-                    `${i+1}. ${h.name} (${h.priority.total.toFixed(1)})`
-                ).join('<br>')}`,
+                `🎉 HEAP SORT SELESAI!<br>Hotel terurut berdasarkan prioritas:<br>${currentHotels.map((h, idx) => `${idx+1}. ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
                 [], [], "Complete"
             );
         }
@@ -798,7 +884,8 @@
                 message: message,
                 activeIndices: [...activeIndices],
                 swapIndices: [...swapIndices],
-                stepType: stepType
+                stepType: stepType,
+                stepNumber: steps.length
             });
         }
 
@@ -815,6 +902,7 @@
             updateLog(step);
             updateStatus(step);
             updateButtons();
+            updateStepCounter();
         }
 
         function updateHotelCards(step) {
@@ -832,7 +920,6 @@
                 if (step.swapIndices.includes(index)) card.classList.add('swap');
                 if (index === 0) card.classList.add('root');
                 if (leafIndices.includes(index)) card.classList.add('leaf');
-                if (hotel.isSorted) card.classList.add('sorted');
                 
                 card.innerHTML = `
                     <div class="node-index">${index}</div>
@@ -862,7 +949,7 @@
                     <div style="margin-top: 10px; font-size: 0.85rem; color: #666; font-family: 'Courier New', monospace;">
                         ${hotel.priority.tuple}
                     </div>
-                    ${hotel.isLeaf ? '<div style="margin-top: 5px; color: #9c27b0; font-size: 0.8rem;">🍃 Leaf Node</div>' : ''}
+                    ${leafIndices.includes(index) ? '<div style="margin-top: 5px; color: #9c27b0; font-size: 0.8rem;">🍃 Leaf Node</div>' : ''}
                 `;
                 
                 hotelGrid.appendChild(card);
@@ -873,25 +960,61 @@
             const treeContainer = document.getElementById('treeContainer');
             treeContainer.innerHTML = '';
             
+            // Tambahkan garis level
+            drawLevelLines();
+            
             // Gambar konektor
             step.hotels.forEach((hotel, index) => {
                 const leftChild = 2 * index + 1;
                 const rightChild = 2 * index + 2;
                 
-                if (leftChild < step.hotels.length && !step.hotels[leftChild].isSorted) {
+                if (leftChild < step.hotels.length) {
                     drawConnector(index, leftChild, step.activeIndices.includes(index));
                 }
-                if (rightChild < step.hotels.length && !step.hotels[rightChild].isSorted) {
+                if (rightChild < step.hotels.length) {
                     drawConnector(index, rightChild, step.activeIndices.includes(index));
                 }
             });
             
             // Gambar node
             step.hotels.forEach((hotel, index) => {
-                if (NODE_POSITIONS_CENTERED[index] && !hotel.isSorted) {
+                if (NODE_POSITIONS_CENTERED[index]) {
                     createTreeNode(hotel, index, step);
                 }
             });
+        }
+
+        function drawLevelLines() {
+            const treeContainer = document.getElementById('treeContainer');
+            
+            // Level 1 (y = 200)
+            const level1 = document.createElement('div');
+            level1.className = 'tree-level-line';
+            level1.style.top = '200px';
+            level1.style.width = '90%';
+            level1.style.left = '5%';
+            
+            const label1 = document.createElement('div');
+            label1.className = 'level-label';
+            label1.style.top = '195px';
+            label1.textContent = 'Level 1';
+            
+            // Level 2 (y = 320)
+            const level2 = document.createElement('div');
+            level2.className = 'tree-level-line';
+            level2.style.top = '320px';
+            level2.style.width = '90%';
+            level2.style.left = '5%';
+            
+            const label2 = document.createElement('div');
+            label2.className = 'level-label';
+            label2.style.top = '315px';
+            label2.textContent = 'Level 2 (Leaf)';
+            
+            treeContainer.appendChild(level1);
+            treeContainer.appendChild(label1);
+            treeContainer.appendChild(level2);
+            treeContainer.appendChild(label2);
         }
 
         function drawConnector(fromIndex, toIndex, isActive) {
@@ -904,10 +1027,11 @@
             
             if (!from || !to) return;
             
+            // Hitung dari tengah node atas ke atas node bawah
             const fromCenterX = from.x;
-            const fromCenterY = from.y + 55;
+            const fromCenterY = from.y + 55; // Tengah node (110px/2)
             const toCenterX = to.x;
-            const toCenterY = to.y;
+            const toCenterY = to.y; // Atas node
             
             const deltaX = toCenterX - fromCenterX;
             const deltaY = toCenterY - fromCenterY;
@@ -920,6 +1044,8 @@
             connector.style.transform = `rotate(${angle}deg)`;
             connector.style.transformOrigin = '0 0';
             connector.style.background = isActive ? '#e55039' : '#0c2461';
+            connector.style.height = isActive ? '4px' : '3px';
+            connector.style.opacity = isActive ? '0.9' : '0.7';
             
             treeContainer.appendChild(connector);
         }
@@ -929,32 +1055,74 @@
             const node = document.createElement('div');
             node.className = 'tree-node';
             
-            if (step.activeIndices.includes(index)) node.classList.add('active');
-            if (step.swapIndices.includes(index)) node.classList.add('swap');
-            if (index === 0) node.classList.add('root');
-            if (hotel.isLeaf) node.classList.add('leaf');
+            const isActive = step.activeIndices.includes(index);
+            const isSwapping = step.swapIndices.includes(index);
+            const isRoot = index === 0;
+            const leafIndices = identifyLeafNodes(step.hotels.length);
+            const isLeaf = leafIndices.includes(index);
+            
+            if (isActive) node.classList.add('active');
+            if (isSwapping) node.classList.add('swap');
+            if (isRoot) node.classList.add('root');
+            if (isLeaf) node.classList.add('leaf');
             
             const position = NODE_POSITIONS_CENTERED[index];
             node.style.left = `${position.x - 90}px`;
             node.style.top = `${position.y}px`;
             
+            // Tentukan warna border
+            let borderColor = '#0c2461';
+            if (isActive) borderColor = '#e55039';
+            if (isSwapping) borderColor = '#4cd137';
+            if (isRoot) borderColor = '#8c7ae6';
+            if (isLeaf) borderColor = '#9c27b0';
+            
+            node.style.borderColor = borderColor;
+            node.style.boxShadow = `0 0 15px ${borderColor}40`;
+            
             const shortName = getShortHotelName(hotel.name);
             
             node.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-weight: bold; color: #0c2461; margin-bottom: 5px;">
+                <div style="position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+                      background: ${borderColor}; color: white; padding: 4px 12px; 
+                      border-radius: 15px; font-size: 0.85rem; font-weight: bold; z-index: 20;
+                      white-space: nowrap; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">
+                    [${index}] ${isRoot ? 'ROOT' : isLeaf ? 'LEAF' : 'NODE'}
+                </div>
+                
+                <div style="text-align: center; padding: 12px 10px;">
+                    <div style="font-weight: bold; color: #0c2461; font-size: 1.1rem; 
+                          margin-bottom: 10px; line-height: 1.2; height: 2.4em; display: flex; 
+                          align-items: center; justify-content: center;">
                         ${shortName}
                     </div>
-                    <div style="font-size: 0.8rem;">
-                        ⭐ ${hotel.rating} | ${hotel.popularity}/100<br>
-                        $${hotel.price} | ${hotel.distance}km<br>
-                        <strong>${hotel.priority.total.toFixed(1)}</strong>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; 
+                          font-size: 0.85rem; margin-top: 5px;">
+                        <div style="text-align: left; color: #555;">
+                            <div>⭐ ${hotel.rating}</div>
+                            <div>👍 ${hotel.popularity}</div>
+                        </div>
+                        <div style="text-align: right; color: #555;">
+                            <div>💰 $${hotel.price}</div>
+                            <div>📍 ${hotel.distance}km</div>
+                        </div>
                     </div>
-                    <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); 
-                          background: #0c2461; color: white; padding: 2px 8px; border-radius: 10px; 
-                          font-size: 0.7rem;">
-                        [${index}]
+                    
+                    <div style="margin-top: 10px; padding: 6px; background: #f8f9fa; 
+                          border-radius: 8px; font-size: 0.8rem; border: 1px solid #eee;">
+                        <strong style="color: ${borderColor};">Priority:</strong> 
+                        <span style="font-weight: bold; color: #e55039;">${hotel.priority.total.toFixed(1)}</span>
                     </div>
+                    
+                    ${isActive ? 
+                        `<div style="position: absolute; bottom: -25px; left: 0; right: 0; 
+                              text-align: center; color: #e55039; font-size: 0.75rem; 
+                              font-weight: bold; animation: nodeHighlight 1s infinite;
+                              background: white; padding: 3px; border-radius: 10px;
+                              box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                            🔍 SEDANG DIPROSES
+                        </div>` : ''}
                 </div>
             `;
             
@@ -965,20 +1133,30 @@
             const priorityList = document.getElementById('priorityList');
             priorityList.innerHTML = '';
             
-            // Urutkan berdasarkan priority
             const sortedHotels = [...step.hotels].sort((a, b) => a.priority.total - b.priority.total);
+            const leafIndices = identifyLeafNodes(step.hotels.length);
             
             sortedHotels.forEach((hotel, index) => {
                 const originalIndex = step.hotels.findIndex(h => h.name === hotel.name);
                 const item = document.createElement('li');
                 item.className = 'priority-item';
                 
+                if (step.activeIndices.includes(originalIndex)) item.classList.add('active');
+                if (leafIndices.includes(originalIndex)) item.classList.add('leaf-node');
+                
                 item.innerHTML = `
-                    <strong>${index + 1}. ${hotel.name}</strong><br>
-                    <span style="font-size: 0.9rem; color: #666;">
-                        Priority: ${hotel.priority.total.toFixed(1)} | 
-                        Index: [${originalIndex}]
-                    </span>
+                    <span class="priority-rank">${index + 1}</span>
+                    <div>
+                        <strong>${getShortHotelName(hotel.name)}</strong>
+                        <div style="font-size: 0.85rem; color: #666; margin-top: 3px;">
+                            Priority: <strong>${hotel.priority.total.toFixed(1)}</strong> | 
+                            Index: [${originalIndex}] | 
+                            ${leafIndices.includes(originalIndex) ? '🍃 Leaf' : '🌿 Non-leaf'}
+                        </div>
+                        <div style="font-size: 0.75rem; color: #888; font-family: 'Courier New'; margin-top: 2px;">
+                            ${hotel.priority.tuple}
+                        </div>
+                    </div>
                 `;
                 
                 priorityList.appendChild(item);
@@ -987,16 +1165,55 @@
 
         function updateCalculations(step) {
             const calculationsContent = document.getElementById('calculationsContent');
+            const n = step.hotels.length;
             
-            if (step.stepType === "Initial") {
+            if (step.stepType === "Leaf") {
+                const leafIndices = identifyLeafNodes(n);
                 calculationsContent.innerHTML = `
                     <div class="calculation-box">
-                        <strong>RUMUS PRIORITY FIXED:</strong><br>
-                        (-rating × 10000) + (-popularity × 100) + price + distance<br><br>
-                        <strong>Contoh perhitungan:</strong><br>
-                        • Aston: (-4.5×10000) + (-88×100) + 85 + 1.2 = -53713.8<br>
-                        • Santika: (-4.4×10000) + (-86×100) + 95 + 1.5 = -52503.5<br>
-                        → Aston lebih prioritas karena -53713.8 < -52503.5
+                        <strong>🍃 ANALISIS LEAF NODES:</strong><br>
+                        • n = ${n} hotel<br>
+                        • Leaf mulai dari: floor(${n}/2) = ${Math.floor(n/2)}<br>
+                        • Leaf indices: ${leafIndices.join(', ')}<br>
+                        • Leaf hotels: ${leafIndices.map(i => getShortHotelName(step.hotels[i].name)).join(', ')}<br><br>
+                        <em>Leaf nodes tidak perlu di-heapify karena tidak memiliki child nodes.</em>
+                    </div>
+                `;
+            } else if (step.stepType === "Heapify" && step.activeIndices[0] === 2) {
+                const leftChild = 2 * 2 + 1; // index 5
+                const rightChild = 2 * 2 + 2; // index 6 (tidak ada)
+                
+                calculationsContent.innerHTML = `
+                    <div class="calculation-box">
+                        <strong>🔄 HEAPIFY NODE 2 (Aston Makassar):</strong><br><br>
+                        <strong>Mengapa mulai dari node 2?</strong><br>
+                        • startIdx = floor(n/2) - 1 = floor(${n}/2) - 1 = ${Math.floor(n/2)-1}<br>
+                        • Algoritma bekerja BOTTOM-UP dari non-leaf terakhir<br><br>
+                        
+                        <strong>Struktur subtree node 2:</strong><br>
+                        • Parent: Aston [2]<br>
+                        • Left child: Losari [5] (2×2+1)<br>
+                        • Right child: tidak ada (2×2+2=6 ≥ n)<br><br>
+                        
+                        <strong>Perbandingan priority:</strong><br>
+                        • Aston: ${step.hotels[2].priority.total.toFixed(1)}<br>
+                        • Losari: ${step.hotels[5] ? step.hotels[5].priority.total.toFixed(1) : 'N/A'}<br><br>
+                        
+                        <strong>Keputusan:</strong><br>
+                        ${step.hotels[5] && step.hotels[5].priority.total < step.hotels[2].priority.total ? 
+                          'Perlu SWAP (child lebih prioritas)' : 
+                          'Tidak perlu swap (parent sudah lebih prioritas)'}
+                    </div>
+                `;
+            } else if (step.stepType === "Build") {
+                calculationsContent.innerHTML = `
+                    <div class="calculation-box">
+                        <strong>🔨 BUILD MAX-HEAP PROCESS:</strong><br><br>
+                        • n = ${n} elements<br>
+                        • Leaf nodes: ${identifyLeafNodes(n).join(', ')}<br>
+                        • Non-leaf nodes: ${Array.from({length: Math.floor(n/2)}, (_, i) => i).join(', ')}<br>
+                        • Build order: ${Array.from({length: Math.floor(n/2)}, (_, i) => Math.floor(n/2)-1-i).join(' → ')}<br><br>
+                        <em>Setiap node di-heapify untuk memastikan heap property terpenuhi.</em>
                     </div>
                 `;
             }
@@ -1010,25 +1227,74 @@
             }
             
             const logEntry = document.createElement('div');
-            logEntry.className = 'log-entry';
-            logEntry.innerHTML = `<strong>Step ${currentStep}:</strong> ${step.message}`;
+            logEntry.className = `log-entry ${step.stepType.toLowerCase()}`;
+            
+            const stepNum = step.stepNumber.toString().padStart(2, '0');
+            logEntry.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <strong>Step ${stepNum}: ${step.stepType}</strong>
+                    <span style="font-size: 0.8rem; color: #666;">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}</span>
+                </div>
+                <div>${step.message}</div>
+            `;
             
             logContent.appendChild(logEntry);
+            logContent.scrollTop = logContent.scrollHeight;
         }
 
         function updateStatus(step) {
             const statusElement = document.getElementById('status');
-            statusElement.textContent = step.message.split('<br>')[0];
-        }
-
-        function updateButtons() {
-            document.getElementById('prevBtn').disabled = currentStep === 0;
-            document.getElementById('nextBtn').disabled = currentStep === steps.length - 1;
+            const phaseIndicator = document.getElementById('phaseIndicator');
+            const logPhaseIndicator = document.getElementById('logPhaseIndicator');
+            
+            let statusClass = 'status';
+            let phaseText = '';
+            
+            switch(step.stepType) {
+                case 'Leaf':
+                    statusClass = 'status leaf';
+                    phaseText = 'Identifikasi Leaf Nodes';
+                    break;
+                case 'Build':
+                case 'Heapify':
+                    statusClass = 'status build';
+                    phaseText = 'Build Max-Heap';
+                    break;
+                case 'Sort':
+                case 'Swap':
+                    statusClass = 'status sort';
+                    phaseText = 'Heap Sort';
+                    break;
+                case 'Complete':
+                    phaseText = 'Selesai';
+                    break;
+                default:
+                    phaseText = 'Inisialisasi';
+            }
+            
+            statusElement.className = statusClass;
+            statusElement.innerHTML = step.message.split('<br>')[0];
+            
+            if (phaseIndicator) phaseIndicator.textContent = phaseText;
+            if (logPhaseIndicator) logPhaseIndicator.textContent = `Phase: ${phaseText}`;
         }
 
         function updateStepCounter() {
             const stepCounter = document.getElementById('stepCounter');
             stepCounter.textContent = `Step: ${currentStep + 1}/${steps.length}`;
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('nextBtn').disabled = currentStep === steps.length - 1;
+            
+            if (currentStep === steps.length - 1) {
+                document.getElementById('autoBtn').textContent = '▶️ Jalankan Otomatis';
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                    autoPlayInterval = null;
+                }
+            }
         }
 
         // ==================== EVENT HANDLERS ====================
@@ -1050,9 +1316,9 @@
             if (autoPlayInterval) {
                 clearInterval(autoPlayInterval);
                 autoPlayInterval = null;
-                document.getElementById('autoBtn').textContent = '▶️ Auto Play';
+                document.getElementById('autoBtn').textContent = '▶️ Jalankan Otomatis';
             } else {
-                document.getElementById('autoBtn').textContent = '⏸️ Stop';
+                document.getElementById('autoBtn').textContent = '⏸️ Berhenti';
                 autoPlayInterval = setInterval(() => {
                     if (currentStep < steps.length - 1) {
                         currentStep++;
@@ -1060,9 +1326,41 @@
                     } else {
                         clearInterval(autoPlayInterval);
                         autoPlayInterval = null;
-                        document.getElementById('autoBtn').textContent = '▶️ Auto Play';
+                        document.getElementById('autoBtn').textContent = '▶️ Jalankan Otomatis';
                     }
-                }, 2000);
+                }, autoPlaySpeed);
+            }
+        });
+
+        document.getElementById('speedUpBtn').addEventListener('click', () => {
+            autoPlaySpeed = Math.max(500, autoPlaySpeed - 500);
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => {
+                    if (currentStep < steps.length - 1) {
+                        currentStep++;
+                        updateDisplay();
+                    } else {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                    }
+                }, autoPlaySpeed);
+            }
+        });
+
+        document.getElementById('speedDownBtn').addEventListener('click', () => {
+            autoPlaySpeed = Math.min(5000, autoPlaySpeed + 500);
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => {
+                    if (currentStep < steps.length - 1) {
+                        currentStep++;
+                        updateDisplay();
+                    } else {
+                        clearInterval(autoPlayInterval);
+                        autoPlayInterval = null;
+                    }
+                }, autoPlaySpeed);
             }
         });
 
@@ -1070,6 +1368,7 @@
             if (autoPlayInterval) {
                 clearInterval(autoPlayInterval);
                 autoPlayInterval = null;
+                document.getElementById('autoBtn').textContent = '▶️ Jalankan Otomatis';
             }
             initSimulation();
         });
