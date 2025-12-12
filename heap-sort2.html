@@ -419,25 +419,51 @@
             text-align: center;
         }
 
-        .hotel-rank {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
+.hotel-rank {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
 
-        .rank-1 { background: linear-gradient(135deg, #fdbb2d, #ff9800); color: white; }
-        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #808080); color: white; }
-        .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: white; }
-        .rank-4, .rank-5 { background: linear-gradient(135deg, #1a2a6c, #b21f1f); color: white; }
-
+.rank-1 { 
+    background: linear-gradient(135deg, #FFD700, #FF8C00); /* Emas - Oranye */
+    color: #1a2a6c;
+    border: 2px solid #FFA500;
+}
+.rank-2 { 
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0); /* Perak */
+    color: #333;
+    border: 2px solid #B0B0B0;
+}
+.rank-3 { 
+    background: linear-gradient(135deg, #CD7F32, #B87333); /* Perunggu */
+    color: white;
+    border: 2px solid #A0522D;
+}
+.rank-4 { 
+    background: linear-gradient(135deg, #2196F3, #0D47A1); /* Biru */
+    color: white;
+    border: 2px solid #1976D2;
+}
+.rank-5 { 
+    background: linear-gradient(135deg, #4CAF50, #1B5E20); /* Hijau */
+    color: white;
+    border: 2px solid #388E3C;
+}
+.rank-6 { 
+    background: linear-gradient(135deg, #9C27B0, #4A148C); /* Ungu */
+    color: white;
+    border: 2px solid #7B1FA2;
+}
         .distance-badge {
             background: linear-gradient(135deg, #4caf50, #2e7d32);
             color: white;
@@ -1224,171 +1250,198 @@
                 </div>
             </div>
 
-            <!-- Slide 8: Demo Hasil Rekomendasi (DIUPDATE) -->
-            <div class="slide" id="slide8">
-                <div class="slide-content">
-                    <h1 class="slide-title">Demo: Hasil Rekomendasi Hotel Makassar</h1>
-                    
-                    <div class="slide-text">
-                        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 25px;">
-                            <strong>Top 5 Recommended Hotels di Makassar </strong>
-                        </p>
+<!-- Slide 8: Demo Hasil Rekomendasi (DIUPDATE) -->
+<div class="slide" id="slide8">
+    <div class="slide-content">
+        <h1 class="slide-title">Demo: Hasil Rekomendasi Hotel Makassar</h1>
+        
+        <div class="slide-text">
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 25px;">
+                <strong>Top 6 Recommended Hotels di Makassar </strong>
+            </p>
+        </div>
+        
+        <div id="hotelResults">
+            <!-- Hotel Card 1 -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-1">1</div>
+                <div class="hotel-name">Four Points by Sheraton Makassar</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4.7/5</span>
                     </div>
-                    
-                    <div id="hotelResults">
-                        <!-- Hotel Card 1 -->
-                        <div class="hotel-card">
-                            <div class="hotel-rank rank-1">1</div>
-                            <div class="hotel-name">Four Points by Sheraton Makassar</div>
-                            <div class="hotel-details">
-                                <div class="hotel-detail">
-                                    <i class="fas fa-star"></i>
-                                    <span><strong>Rating:</strong> 4.7/5</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span><strong>Harga:</strong> $110</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-fire"></i>
-                                    <span><strong>Popularitas:</strong> 94</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong>Jarak:</strong> 1.0km</span>
-                                </div>
-                            </div>
-                            <div class="distance-badge">
-                                <i class="fas fa-trophy"></i> Jarak Terdekat ke Pusat Kota
-                            </div>
-                        </div>
-                        
-                        <!-- Hotel Card 2 -->
-                        <div class="hotel-card">
-                            <div class="hotel-rank rank-2">2</div>
-                            <div class="hotel-name">Swiss-Belhotel Harbour Bay</div>
-                            <div class="hotel-details">
-                                <div class="hotel-detail">
-                                    <i class="fas fa-star"></i>
-                                    <span><strong>Rating:</strong> 4.6/5</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span><strong>Harga:</strong> $120</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-fire"></i>
-                                    <span><strong>Popularitas:</strong> 92</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong>Jarak:</strong> 0.8km</span>
-                                </div>
-                            </div>
-                            <div class="distance-badge">
-                                <i class="fas fa-map-marker"></i> Sangat Dekat dengan Pelabuhan
-                            </div>
-                        </div>
-                        
-                        <!-- Hotel Card 3 -->
-                        <div class="hotel-card">
-                            <div class="hotel-rank rank-3">3</div>
-                            <div class="hotel-name">Aston Makassar Hotel</div>
-                            <div class="hotel-details">
-                                <div class="hotel-detail">
-                                    <i class="fas fa-star"></i>
-                                    <span><strong>Rating:</strong> 4.5/5</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span><strong>Harga:</strong> $85</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-fire"></i>
-                                    <span><strong>Popularitas:</strong> 88</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong>Jarak:</strong> 1.2km</span>
-                                </div>
-                            </div>
-                            <div class="distance-badge">
-                                <i class="fas fa-award"></i> Harga Terbaik dalam Jarak Dekat
-                            </div>
-                        </div>
-                        
-                        <!-- Hotel Card 4 -->
-                        <div class="hotel-card">
-                            <div class="hotel-rank rank-4">4</div>
-                            <div class="hotel-name">Santika Premiere Makassar</div>
-                            <div class="hotel-details">
-                                <div class="hotel-detail">
-                                    <i class="fas fa-star"></i>
-                                    <span><strong>Rating:</strong> 4.4/5</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span><strong>Harga:</strong> $95</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-fire"></i>
-                                    <span><strong>Popularitas:</strong> 86</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong>Jarak:</strong> 1.5km</span>
-                                </div>
-                            </div>
-                            <div class="distance-badge">
-                                <i class="fas fa-thumbs-up"></i> Rating Konsisten & Populer
-                            </div>
-                        </div>
-                        
-                        <!-- Hotel Card 5 -->
-                        <div class="hotel-card">
-                            <div class="hotel-rank rank-5">5</div>
-                            <div class="hotel-name">Clarion Makassar</div>
-                            <div class="hotel-details">
-                                <div class="hotel-detail">
-                                    <i class="fas fa-star"></i>
-                                    <span><strong>Rating:</strong> 4.2/5</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    <span><strong>Harga:</strong> $75</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-fire"></i>
-                                    <span><strong>Popularitas:</strong> 82</span>
-                                </div>
-                                <div class="hotel-detail">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span><strong>Jarak:</strong> 2.5km</span>
-                                </div>
-                            </div>
-                            <div class="distance-badge">
-                                <i class="fas fa-wallet"></i> Harga Paling Ekonomis
-                            </div>
-                        </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $110</span>
                     </div>
-                    
-                    <div class="explanation-box" style="margin-top: 30px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50;">
-                        <div class="explanation-title">✅ Analisis Hasil Rekomendasi:</div>
-                        <ul class="explanation-list">
-                            <li><strong>Heap berhasil mengurutkan berdasarkan multiple criteria:</strong> rating → popularitas → harga → jarak</li>
-                            <li><strong>Prioritas utama:</strong> Hotel dengan rating tertinggi (Four Points: 4.7)</li>
-                            <li><strong>Jika rating sama:</strong> Dipertimbangkan popularitas (Swiss-Belhotel: 92 vs Aston: 88)</li>
-                            <li><strong>Jika rating & popularitas sama:</strong> Harga lebih murah diutamakan</li>
-                            <li><strong>Tie-breaker akhir:</strong> Jarak terdekat ke pusat kota</li>
-                            <li><strong>Performance:</strong> Algoritma berjalan dengan kompleksitas O(k log n) untuk k=5 rekomendasi</li>
-                        </ul>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 94</span>
                     </div>
-                    
-                    <div class="slide-text" style="margin-top: 20px; text-align: center; padding: 15px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 10px; color: white;">
-                        <p><strong>Kesimpulan:</strong> Algoritma Heap berhasil mengurutkan 8 hotel di Makassar berdasarkan 4 kriteria sekaligus (rating, popularitas, harga, jarak) dengan efisien dan menghasilkan rekomendasi yang optimal!</p>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 1.0km</span>
                     </div>
                 </div>
+                <div class="distance-badge">
+                    <i class="fas fa-trophy"></i> Jarak Terdekat ke Pusat Kota
+                </div>
             </div>
+            
+            <!-- Hotel Card 2 -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-2">2</div>
+                <div class="hotel-name">Swiss-Belhotel Harbour Bay</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4.6/5</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $120</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 92</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 0.8km</span>
+                    </div>
+                </div>
+                <div class="distance-badge">
+                    <i class="fas fa-map-marker"></i> Sangat Dekat dengan Pelabuhan
+                </div>
+            </div>
+            
+            <!-- Hotel Card 3 -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-3">3</div>
+                <div class="hotel-name">Aston Makassar Hotel</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4.5/5</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $85</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 88</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 1.2km</span>
+                    </div>
+                </div>
+                <div class="distance-badge">
+                    <i class="fas fa-award"></i> Harga Terbaik dalam Jarak Dekat
+                </div>
+            </div>
+            
+            <!-- Hotel Card 4 -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-4">4</div>
+                <div class="hotel-name">Santika Premiere Makassar</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4.4/5</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $95</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 86</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 1.5km</span>
+                    </div>
+                </div>
+                <div class="distance-badge">
+                    <i class="fas fa-thumbs-up"></i> Rating Konsisten & Populer
+                </div>
+            </div>
+            
+            <!-- Hotel Card 5 -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-5">5</div>
+                <div class="hotel-name">Clarion Makassar</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4.2/5</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $75</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 82</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 2.5km</span>
+                    </div>
+                </div>
+                <div class="distance-badge">
+                    <i class="fas fa-wallet"></i> Harga Paling Ekonomis
+                </div>
+            </div>
+            
+            <!-- Hotel Card 6 (YANG DITAMBAHKAN) -->
+            <div class="hotel-card">
+                <div class="hotel-rank rank-6">6</div>
+                <div class="hotel-name">Losari Beach Hotel</div>
+                <div class="hotel-details">
+                    <div class="hotel-detail">
+                        <i class="fas fa-star"></i>
+                        <span><strong>Rating:</strong> 4/5</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span><strong>Harga:</strong> $65</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-fire"></i>
+                        <span><strong>Popularitas:</strong> 78</span>
+                    </div>
+                    <div class="hotel-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span><strong>Jarak:</strong> 3km</span>
+                    </div>
+                </div>
+                <div class="distance-badge">
+                    <i class="fas fa-umbrella-beach"></i> Tepi Pantai Losari
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation-box" style="margin-top: 30px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 5px solid #4caf50;">
+            <div class="explanation-title">✅ Analisis Hasil Rekomendasi:</div>
+            <ul class="explanation-list">
+                  <li><strong>Heap berhasil mengurutkan berdasarkan multiple criteria:</strong> rating → popularitas → harga → jarak</li>
+        <li><strong>Prioritas utama:</strong> Hotel dengan rating tertinggi (Four Points: 4.7) ditempatkan di posisi 1</li>
+        <li><strong>Urutan berdasarkan rating:</strong> Four Points (4.7) → Swiss-Belhotel (4.6) → Aston (4.5) → Santika (4.4) → Clarion (4.2) → Losari (4.0)</li>
+        <li><strong>Pengurutan sempurna:</strong> Tidak ada hotel dengan rating sama dalam 6 besar, sehingga kriteria lain (popularitas, harga, jarak) tidak digunakan sebagai tie-breaker</li>
+        <li><strong>Pattern yang jelas:</strong> Heap menghasilkan urutan descending berdasarkan rating sebagai kriteria utama</li>
+        <li><strong>Performance:</strong> Algoritma berjalan dengan kompleksitas O(k log n) untuk k=6 rekomendasi dari total 8 hotel</li>
+            </ul>
+        </div>
+        
+        <div class="slide-text" style="margin-top: 20px; text-align: center; padding: 15px; background: linear-gradient(135deg, #1a2a6c, #b21f1f); border-radius: 10px; color: white;">
+             <p><strong>Kesimpulan:</strong> Algoritma Heap berhasil mengurutkan 8 hotel di Makassar berdasarkan kriteria utama (rating) dengan efisien dan menghasilkan rekomendasi 6 hotel terbaik yang sudah terurut secara sempurna berdasarkan rating!</p>
+        </div>
+    </div>
+</div>
 
             <!-- Slide 9: Analisis Kompleksitas -->
             <div class="slide" id="slide9">
@@ -1487,14 +1540,15 @@
                                         <strong>≈ O(n log n)</strong>
                                     </div>
                                     <div class="calculation">
-                                        <strong>Proses Rekomendasi (k=5):</strong><br>
-                                        Ambil Four Points → O(log 8) = 3 langkah<br>
-                                        Ambil Swiss-Belhotel → O(log 7) = 3 langkah<br>
-                                        Ambil Aston → O(log 6) = 3 langkah<br>
-                                        Ambil Santika → O(log 5) = 3 langkah<br>
-                                        Ambil Clarion → O(log 4) = 2 langkah<br>
-                                        <strong>Total = 3 + 3 + 3 + 3 + 2 = 14 langkah</strong><br>
-                                        <strong>≈ O(k log n)</strong>
+                                       <strong>Proses Rekomendasi (k=6):</strong><br>
+											Ambil Four Points → O(log 8) = 3 langkah<br>
+											Ambil Swiss-Belhotel → O(log 7) = 3 langkah<br>
+											Ambil Aston → O(log 6) = 3 langkah<br>
+											Ambil Santika → O(log 5) = 3 langkah<br>
+											Ambil Clarion → O(log 4) = 2 langkah<br>
+											Ambil Losari → O(log 3) = 2 langkah<br>
+											<strong>Total = 3 + 3 + 3 + 3 + 2 + 2 = 16 langkah</strong><br>
+										<strong>≈ O(k log n) dimana k=6, n=8</strong>
                                     </div>
                                 </div>
                             </div>
