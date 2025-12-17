@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulasi Heap Sort Hotel Makassar - Posisi Tree Terpusat</title>
     <style>
-        /* CSS tetap sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -491,61 +490,62 @@
         <div class="algorithm-explanation">
             <h3>📋 Struktur Heap Tree (Max-Heap)</h3>
             <table class="criteria-table">
-    <tr>
-        <th>Index</th>
-        <th>Hotel</th>
-        <th>Priority Value</th>
-        <th>Level</th>
-        <th>Keterangan</th>
-    </tr>
-    <tr>
-        <td>0</td>
-        <td><strong>Four Points</strong></td>
-        <td>-5529.0</td> <!-- DIPERBAIKI: dari -4789.0 menjadi -5529.0 -->
-        <td>Root</td>
-        <td>⭐ Rating tertinggi (4.7)</td>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>Swiss-Belhotel</td>
-        <td>-5399.2</td> <!-- DIPERBAIKI: dari -4688.8 menjadi -5399.2 -->
-        <td>Level 1 (Left)</td>
-        <td>Child dari root</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td><strong>Aston Makassar</strong></td>
-        <td>-5293.8</td> <!-- SUDAH BENAR -->
-        <td>Level 1 (Right)</td>
-        <td>Heapify dimulai dari sini</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>Santika Premiere</td>
-        <td>-5163.5</td> <!-- SUDAH BENAR -->
-        <td>Level 2 (Leaf)</td>
-        <td>Tidak perlu di-heapify</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>Clarion</td>
-        <td>-4942.5</td> <!-- DIPERBAIKI: dari -4175.5 menjadi -4942.5 -->
-        <td>Level 2 (Leaf)</td>
-        <td>Tidak perlu di-heapify</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>Losari</td>
-        <td>-4712.0</td> <!-- DIPERBAIKI: dari -4060.0 menjadi -4712.0 -->
-        <td>Level 2 (Leaf)</td>
-        <td>Tidak perlu di-heapify</td>
-    </tr>
-</table>
+                <tr>
+                    <th>Index</th>
+                    <th>Hotel</th>
+                    <th>Priority Value</th>
+                    <th>Level</th>
+                    <th>Keterangan</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td><strong>Four Points</strong></td>
+                    <td>5529.0</td>
+                    <td>Root</td>
+                    <td>⭐ Rating tertinggi (4.7) - Nilai TERBESAR</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Swiss-Belhotel</td>
+                    <td>5399.2</td>
+                    <td>Level 1 (Left)</td>
+                    <td>Child dari root</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>Aston Makassar</strong></td>
+                    <td>5293.8</td>
+                    <td>Level 1 (Right)</td>
+                    <td>Heapify dimulai dari sini</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Santika Premiere</td>
+                    <td>5163.5</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Tidak perlu di-heapify</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Clarion</td>
+                    <td>4942.5</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Tidak perlu di-heapify</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Losari</td>
+                    <td>4712.0</td>
+                    <td>Level 2 (Leaf)</td>
+                    <td>Tidak perlu di-heapify</td>
+                </tr>
+            </table>
             
             <div class="heap-property">
                 <strong>Heap Property (Max-Heap):</strong><br>
-                • Parent node HARUS lebih prioritas dari child nodes<br>
-                • Priority Value = (-rating×1000) + (-popularity×10) + price + distance<br>
+                • Parent node HARUS lebih prioritas (nilai lebih BESAR) dari child nodes<br>
+                • Priority Value = (rating×1000) + (popularity×10) - price - distance<br>
+                • Nilai lebih BESAR = lebih prioritas<br>
                 • <strong>Heapify dimulai dari node 2 (Aston Makassar)</strong> karena floor(6/2)-1 = 2
             </div>
         </div>
@@ -682,19 +682,20 @@
 
         // ==================== FUNGSI UTILITAS ====================
         function calculatePriority(hotel) {
+            // Priority Value = (rating×1000) + (popularity×10) - price - distance
             const priorityValue = 
-                (-hotel.rating * 1000) + 
-                (-hotel.popularity * 10) + 
-                hotel.price + 
+                (hotel.rating * 1000) + 
+                (hotel.popularity * 10) - 
+                hotel.price - 
                 hotel.distance;
             
             return {
-                rating: -hotel.rating,
-                popularity: -hotel.popularity,
+                rating: hotel.rating,
+                popularity: hotel.popularity,
                 price: hotel.price,
                 distance: hotel.distance,
                 total: priorityValue,
-                tuple: `(${-hotel.rating.toFixed(1)}, ${-hotel.popularity}, ${hotel.price}, ${hotel.distance})`
+                tuple: `(${hotel.rating.toFixed(1)}×1000 + ${hotel.popularity}×10 - ${hotel.price} - ${hotel.distance})`
             };
         }
 
@@ -746,7 +747,7 @@
             // Build Max-Heap phase
             buildMaxHeap();
             
-            // Heap Sort phase
+            // Heap Sort phase - MODIFIKASI untuk descending order
             heapSort();
             
             updateDisplay();
@@ -765,13 +766,13 @@
             for (let i = startIdx; i >= 0; i--) {
                 const heapifyMessage = `🔄 HEAPIFY Node ${i}: ${getShortHotelName(currentHotels[i].name)}<br>Priority: ${currentHotels[i].priority.total.toFixed(1)}`;
                 recordStep(heapifyMessage, [i], [], "Heapify");
-                heapify(n, i, "build");
+                maxHeapify(n, i, "build");
             }
             
-            recordStep("✅ MAX-HEAP BERHASIL DIBANGUN!", [], [], "Complete");
+            recordStep("✅ MAX-HEAP BERHASIL DIBANGUN!<br>Root (Four Points) memiliki nilai priority tertinggi: 5529.0", [], [], "Complete");
         }
 
-        function heapify(n, i, phase) {
+        function maxHeapify(n, i, phase) {
             let largest = i;
             let left = 2 * i + 1;
             let right = 2 * i + 2;
@@ -794,25 +795,26 @@
             
             recordStep(message, activeIndices, [], "Heapify");
             
-            if (left < n && currentHotels[left].priority.total < currentHotels[largest].priority.total) {
+            // Cari child dengan nilai TERBESAR (karena ini Max-Heap)
+            if (left < n && currentHotels[left].priority.total > currentHotels[largest].priority.total) {
                 largest = left;
                 recordStep(
-                    `👈 LEFT CHILD LEBIH PRIORITAS:<br>${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)}) < ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>Set largest = ${left}`,
+                    `👈 LEFT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)}) > ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>Set largest = ${left}`,
                     [i, left], [], "Heapify"
                 );
             }
             
-            if (right < n && currentHotels[right].priority.total < currentHotels[largest].priority.total) {
+            if (right < n && currentHotels[right].priority.total > currentHotels[largest].priority.total) {
                 largest = right;
                 recordStep(
-                    `👉 RIGHT CHILD LEBIH PRIORITAS:<br>${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)}) < ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})<br>Set largest = ${right}`,
+                    `👉 RIGHT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)}) > ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})<br>Set largest = ${right}`,
                     [i, right], [], "Heapify"
                 );
             }
             
             if (largest !== i) {
                 recordStep(
-                    `🔄 PERLU SWAP: ${getShortHotelName(currentHotels[i].name)} ⇄ ${getShortHotelName(currentHotels[largest].name)}<br>Karena child lebih prioritas dari parent`,
+                    `🔄 PERLU SWAP: ${getShortHotelName(currentHotels[i].name)} ⇄ ${getShortHotelName(currentHotels[largest].name)}<br>Karena child memiliki nilai priority yang lebih BESAR`,
                     [], [i, largest], "Swap"
                 );
                 
@@ -823,10 +825,10 @@
                     [], [i, largest], "Swap"
                 );
                 
-                heapify(n, largest, phase);
+                maxHeapify(n, largest, phase);
             } else {
                 recordStep(
-                    `✓ Node ${i} (${getShortHotelName(currentHotels[i].name)}) SUDAH memenuhi heap property<br>Tidak perlu swap`,
+                    `✓ Node ${i} (${getShortHotelName(currentHotels[i].name)}) SUDAH memenuhi max-heap property<br>Parent (${currentHotels[i].priority.total.toFixed(1)}) ≥ children`,
                     [i], [], "Heapify"
                 );
             }
@@ -834,10 +836,13 @@
 
         function heapSort() {
             let n = currentHotels.length;
-            let sortedHotels = [];
+            
+            // Simpan heap awal untuk visualisasi
+            let heapArray = JSON.parse(JSON.stringify(currentHotels));
+            let sortedResult = []; // Array untuk menyimpan hasil akhir (DESCENDING)
             
             recordStep(
-                `🎯 MULAI HEAP SORT PHASE<br>Array saat ini (max-heap):<br>${currentHotels.map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
+                `🎯 MULAI HEAP SORT PHASE<br>Max-Heap saat ini:<br>${heapArray.map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
                 [], [], "Sort"
             );
             
@@ -845,37 +850,66 @@
                 const iteration = n - i;
                 
                 recordStep(
-                    `📦 ITERASI ${iteration}: Swap root dengan elemen terakhir<br>• Root [0]: ${getShortHotelName(currentHotels[0].name)} (${currentHotels[0].priority.total.toFixed(1)})<br>• Last [${i}]: ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})`,
-                    [0, i], [0, i], "Sort"
+                    `📦 ITERASI ${iteration}: Ambil root (nilai TERBESAR) ${getShortHotelName(heapArray[0].name)} dan pindahkan ke hasil akhir`,
+                    [0], [], "Sort"
                 );
                 
-                [currentHotels[0], currentHotels[i]] = [currentHotels[i], currentHotels[0]];
-                sortedHotels.unshift(currentHotels[i]);
+                // Root (nilai TERBESAR) dipindahkan ke hasil akhir
+                const maxElement = heapArray[0];
+                sortedResult.push(maxElement); // Tambahkan ke array hasil
                 
                 recordStep(
-                    `✅ Setelah swap iterasi ${iteration}:<br>• Root baru: ${getShortHotelName(currentHotels[0].name)}<br>• Elemen ${getShortHotelName(currentHotels[i].name)} pindah ke posisi akhir`,
-                    [], [0, i], "Sort"
+                    `✅ Root ${getShortHotelName(maxElement.name)} (${maxElement.priority.total.toFixed(1)}) dipindahkan ke posisi ke-${iteration} dalam hasil akhir`,
+                    [], [0], "Sort"
                 );
                 
                 if (i > 0) {
+                    // Pindahkan elemen terakhir ke root
+                    heapArray[0] = heapArray[i];
+                    
                     recordStep(
-                        `🔄 Heapify root baru (${getShortHotelName(currentHotels[0].name)}) pada heap size=${i}`,
-                        [0], [], "Heapify"
+                        `🔄 Elemen terakhir (${getShortHotelName(heapArray[i].name)}) dipindahkan ke root untuk di-heapify`,
+                        [0, i], [0, i], "Swap"
                     );
-                    heapify(i, 0, "sort");
-                } else {
+                    
+                    // Heapify root baru
+                    maxHeapifyForSort(heapArray, i, 0);
+                    
                     recordStep(
-                        `🏁 Heap size=1, sorting selesai!`,
-                        [], [], "Complete"
+                        `🔄 Heapify root baru (${getShortHotelName(heapArray[0].name)}) pada heap size=${i}`,
+                        [0], [], "Heapify"
                     );
                 }
             }
             
-            currentHotels = sortedHotels;
+            // Hasil saat ini adalah urutan ASCENDING (dari terkecil ke terbesar)
+            // Tapi kita ingin DESCENDING (dari terbesar ke terkecil)
+            // Jadi kita reverse hasilnya
+            currentHotels = sortedResult; // Sekarang sudah benar: Four Points pertama, Losari terakhir
+            
             recordStep(
-                `🎉 HEAP SORT SELESAI!<br>Hotel terurut berdasarkan prioritas:<br>${currentHotels.map((h, idx) => `${idx+1}. ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
+                `🎉 HEAP SORT SELESAI!<br><br><strong>Hotel terurut berdasarkan prioritas (rating tertinggi pertama):</strong><br>${currentHotels.map((h, idx) => `${idx+1}. ${getShortHotelName(h.name)} - Priority: ${h.priority.total.toFixed(1)} (Rating: ${h.rating}⭐)`).join('<br>')}`,
                 [], [], "Complete"
             );
+        }
+        
+        function maxHeapifyForSort(arr, n, i) {
+            let largest = i;
+            let left = 2 * i + 1;
+            let right = 2 * i + 2;
+            
+            if (left < n && arr[left].priority.total > arr[largest].priority.total) {
+                largest = left;
+            }
+            
+            if (right < n && arr[right].priority.total > arr[largest].priority.total) {
+                largest = right;
+            }
+            
+            if (largest !== i) {
+                [arr[i], arr[largest]] = [arr[largest], arr[i]];
+                maxHeapifyForSort(arr, n, largest);
+            }
         }
 
         function recordStep(message, activeIndices, swapIndices, stepType) {
@@ -1133,7 +1167,8 @@
             const priorityList = document.getElementById('priorityList');
             priorityList.innerHTML = '';
             
-            const sortedHotels = [...step.hotels].sort((a, b) => a.priority.total - b.priority.total);
+            // Urutkan dari TERBESAR ke TERKECIL (rating tertinggi pertama)
+            const sortedHotels = [...step.hotels].sort((a, b) => b.priority.total - a.priority.total);
             const leafIndices = identifyLeafNodes(step.hotels.length);
             
             sortedHotels.forEach((hotel, index) => {
@@ -1191,18 +1226,14 @@
                         • Algoritma bekerja BOTTOM-UP dari non-leaf terakhir<br><br>
                         
                         <strong>Struktur subtree node 2:</strong><br>
-                        • Parent: Aston [2]<br>
-                        • Left child: Losari [5] (2×2+1)<br>
+                        • Parent: Aston [2] (${step.hotels[2].priority.total.toFixed(1)})<br>
+                        • Left child: Losari [5] (2×2+1) (${step.hotels[5] ? step.hotels[5].priority.total.toFixed(1) : 'N/A'})<br>
                         • Right child: tidak ada (2×2+2=6 ≥ n)<br><br>
                         
-                        <strong>Perbandingan priority:</strong><br>
-                        • Aston: ${step.hotels[2].priority.total.toFixed(1)}<br>
-                        • Losari: ${step.hotels[5] ? step.hotels[5].priority.total.toFixed(1) : 'N/A'}<br><br>
-                        
                         <strong>Keputusan:</strong><br>
-                        ${step.hotels[5] && step.hotels[5].priority.total < step.hotels[2].priority.total ? 
-                          'Perlu SWAP (child lebih prioritas)' : 
-                          'Tidak perlu swap (parent sudah lebih prioritas)'}
+                        ${step.hotels[5] && step.hotels[5].priority.total > step.hotels[2].priority.total ? 
+                          'Perlu SWAP karena child (Losari) memiliki nilai lebih BESAR' : 
+                          'Tidak perlu swap (Aston sudah memiliki nilai yang lebih BESAR dari child)'}
                     </div>
                 `;
             } else if (step.stepType === "Build") {
@@ -1213,7 +1244,7 @@
                         • Leaf nodes: ${identifyLeafNodes(n).join(', ')}<br>
                         • Non-leaf nodes: ${Array.from({length: Math.floor(n/2)}, (_, i) => i).join(', ')}<br>
                         • Build order: ${Array.from({length: Math.floor(n/2)}, (_, i) => Math.floor(n/2)-1-i).join(' → ')}<br><br>
-                        <em>Setiap node di-heapify untuk memastikan heap property terpenuhi.</em>
+                        <em>Setiap node di-heapify untuk memastikan parent memiliki nilai lebih BESAR dari children.</em>
                     </div>
                 `;
             }
