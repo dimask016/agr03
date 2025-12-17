@@ -747,7 +747,7 @@
             // Build Max-Heap phase
             buildMaxHeap();
             
-            // Heap Sort phase - MODIFIKASI untuk descending order
+            // Heap Sort phase - YANG DIPERBAIKI untuk ASCENDING order
             heapSort();
             
             updateDisplay();
@@ -834,61 +834,92 @@
             }
         }
 
+        // ==================== HEAP SORT YANG DIPERBAIKI ====================
         function heapSort() {
             let n = currentHotels.length;
             
             // Simpan heap awal untuk visualisasi
             let heapArray = JSON.parse(JSON.stringify(currentHotels));
-            let sortedResult = []; // Array untuk menyimpan hasil akhir (DESCENDING)
             
             recordStep(
                 `🎯 MULAI HEAP SORT PHASE<br>Max-Heap saat ini:<br>${heapArray.map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
                 [], [], "Sort"
             );
             
-            for (let i = n - 1; i >= 0; i--) {
+            // ALGORITMA HEAP SORT STANDAR UNTUK MAX-HEAP:
+            // 1. Max-Heap sudah dibangun (root = elemen terbesar)
+            // 2. Swap root dengan elemen terakhir
+            // 3. Kurangi ukuran heap dan heapify root
+            // 4. Ulangi sampai semua elemen terurut
+            
+            for (let i = n - 1; i > 0; i--) {
                 const iteration = n - i;
                 
                 recordStep(
-                    `📦 ITERASI ${iteration}: Ambil root (nilai TERBESAR) ${getShortHotelName(heapArray[0].name)} dan pindahkan ke hasil akhir`,
-                    [0], [], "Sort"
+                    `📦 ITERASI ${iteration}: Swap root [0] (${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.total.toFixed(1)}) dengan elemen terakhir [${i}] (${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.total.toFixed(1)})`,
+                    [0, i], [0, i], "Sort"
                 );
                 
-                // Root (nilai TERBESAR) dipindahkan ke hasil akhir
-                const maxElement = heapArray[0];
-                sortedResult.push(maxElement); // Tambahkan ke array hasil
+                // Swap root dengan elemen terakhir
+                [heapArray[0], heapArray[i]] = [heapArray[i], heapArray[0]];
                 
                 recordStep(
-                    `✅ Root ${getShortHotelName(maxElement.name)} (${maxElement.priority.total.toFixed(1)}) dipindahkan ke posisi ke-${iteration} dalam hasil akhir`,
-                    [], [0], "Sort"
+                    `✅ SETELAH SWAP:<br>• Index ${i} (posisi akhir): ${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.total.toFixed(1)}<br>• Index 0 (root baru): ${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.total.toFixed(1)}`,
+                    [0, i], [0, i], "Swap"
                 );
                 
-                if (i > 0) {
-                    // Pindahkan elemen terakhir ke root
-                    heapArray[0] = heapArray[i];
-                    
-                    recordStep(
-                        `🔄 Elemen terakhir (${getShortHotelName(heapArray[i].name)}) dipindahkan ke root untuk di-heapify`,
-                        [0, i], [0, i], "Swap"
-                    );
-                    
-                    // Heapify root baru
-                    maxHeapifyForSort(heapArray, i, 0);
-                    
-                    recordStep(
-                        `🔄 Heapify root baru (${getShortHotelName(heapArray[0].name)}) pada heap size=${i}`,
-                        [0], [], "Heapify"
-                    );
-                }
+                // Heapify root baru dengan ukuran heap yang dikurangi
+                recordStep(
+                    `🔄 HEAPIFY root baru (${getShortHotelName(heapArray[0].name)}) pada heap size = ${i}`,
+                    [0], [], "Heapify"
+                );
+                
+                maxHeapifyForSort(heapArray, i, 0);
+                
+                // Tampilkan state heap setelah heapify
+                recordStep(
+                    `📊 STATE SETELAH HEAPIFY (size=${i}):<br>${heapArray.slice(0, i).map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
+                    [], [], "Heapify"
+                );
             }
             
-            // Hasil saat ini adalah urutan ASCENDING (dari terkecil ke terbesar)
-            // Tapi kita ingin DESCENDING (dari terbesar ke terkecil)
-            // Jadi kita reverse hasilnya
-            currentHotels = sortedResult; // Sekarang sudah benar: Four Points pertama, Losari terakhir
+            // Setelah loop, heapArray sudah terurut ASCENDING
+            currentHotels = heapArray;
             
+            // Tambahkan step penjelasan hasil akhir
             recordStep(
-                `🎉 HEAP SORT SELESAI!<br><br><strong>Hotel terurut berdasarkan prioritas (rating tertinggi pertama):</strong><br>${currentHotels.map((h, idx) => `${idx+1}. ${getShortHotelName(h.name)} - Priority: ${h.priority.total.toFixed(1)} (Rating: ${h.rating}⭐)`).join('<br>')}`,
+                `🎉 HEAP SORT SELESAI!<br><br>
+                <strong>📊 HASIL AKHIR HEAP SORT (MAX-HEAP):</strong><br><br>
+                
+                <strong>ALUR ALGORITMA HEAP SORT STANDAR:</strong><br>
+                1. Build Max-Heap: root memiliki nilai TERBESAR<br>
+                2. Swap root dengan elemen terakhir<br>
+                3. Kurangi ukuran heap (heap size - 1)<br>
+                4. Heapify root baru<br>
+                5. Ulangi langkah 2-4 sampai semua elemen terurut<br><br>
+                
+                <strong>URUTAN ASCENDING (dari terkecil ke terbesar):</strong><br>
+                ${currentHotels.map((h, idx) => 
+                    `${idx}. ${getShortHotelName(h.name)} - Priority: ${h.priority.total.toFixed(1)} ` +
+                    `(Rating: ${h.rating}⭐)`
+                ).join('<br>')}<br><br>
+                
+                <strong>⚡ PENJELASAN HASIL AKHIR:</strong><br>
+                • <span style="color: #e55039;">Losari (4712.0)</span> → TERKECIL (posisi [0])<br>
+                • <span style="color: #e55039;">Clarion (4942.5)</span> → posisi [1]<br>
+                • <span style="color: #e55039;">Santika (5163.5)</span> → posisi [2]<br>
+                • <span style="color: #e55039;">Aston (5293.8)</span> → posisi [3]<br>
+                • <span style="color: #e55039;">Swiss-Belhotel (5399.2)</span> → posisi [4]<br>
+                • <span style="color: #e55039;">Four Points (5529.0)</span> → TERBESAR (posisi [5])<br><br>
+                
+                <strong>💡 KENAPA ASCENDING?</strong><br>
+                • Max-Heap Sort: Elemen TERBESAR (root) selalu di-swap ke posisi AKHIR<br>
+                • Setiap iterasi: elemen terbesar ditempatkan di akhir array<br>
+                • Hasil akhir: array terurut ASCENDING (dari kecil ke besar)<br><br>
+                
+                <strong>🔁 Jika ingin DESCENDING (rating tertinggi pertama):</strong><br>
+                • Gunakan Min-Heap, atau<br>
+                • Reverse array hasil (currentHotels.reverse())</strong>`,
                 [], [], "Complete"
             );
         }
