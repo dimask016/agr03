@@ -76,6 +76,90 @@
             background: #f8f9fa;
         }
 
+        .initial-array-container {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .initial-array-title {
+            color: #0c2461;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .array-visualization {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .array-element {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            width: 180px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid #2196f3;
+            transition: all 0.3s ease;
+        }
+
+        .array-element:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .array-index {
+            background: #2196f3;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .array-element-name {
+            font-weight: bold;
+            color: #0c2461;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .array-element-details {
+            font-size: 0.85rem;
+            color: #555;
+            text-align: center;
+        }
+
+        .array-element-details div {
+            margin: 3px 0;
+        }
+
+        .array-priority {
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
         .hotel-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -480,12 +564,42 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
+
+        .initial-note {
+            color: #e55039;
+            font-weight: bold;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3e0;
+            border-radius: 8px;
+            border-left: 4px solid #e55039;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Simulasi Heap Sort Hotel Makassar</h1>
         <div class="subtitle">Visualisasi Heap Tree dengan Posisi Terpusat</div>
+        
+        <!-- TAMBAHAN: Data Array Sebelum Max-Heap -->
+        <div class="initial-array-container">
+            <div class="initial-array-title">
+                <span>📋 Data Array Sebelum Max-Heap (Kondisi Awal)</span>
+                <span style="background: #2196f3; color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.9rem;">
+                    Urutan Awal: Index [0] sampai [5]
+                </span>
+            </div>
+            
+            <div class="array-visualization" id="initialArrayVisualization">
+                <!-- Array akan diisi oleh JavaScript -->
+            </div>
+            
+            <div class="initial-note">
+                ⚠️ <strong>CATATAN:</strong> Array ini menunjukkan urutan awal SEBELUM proses Build Max-Heap. 
+                Proses heapify akan mengubah struktur ini menjadi Max-Heap dengan root (index 0) 
+                memiliki nilai priority tertinggi (5529.0 = Four Points).
+            </div>
+        </div>
         
         <div class="algorithm-explanation">
             <h3>📋 Struktur Heap Tree (Max-Heap)</h3>
@@ -599,7 +713,65 @@
     </div>
 
     <script>
-        // ==================== DATA HOTEL ====================
+        // ==================== DATA HOTEL AWAL (SEBELUM MAX-HEAP) ====================
+        const initialHotelsData = [
+            {
+                name: "Aston Makassar Hotel",
+                price: 85,
+                rating: 4.5,
+                popularity: 88,
+                distance: 1.2,
+                priority: 0,
+                isLeaf: false
+            },
+            {
+                name: "Swiss-Belhotel Harbour Bay",
+                price: 120,
+                rating: 4.6,
+                popularity: 92,
+                distance: 0.8,
+                priority: 0,
+                isLeaf: false
+            },
+            {
+                name: "Clarion Makassar",
+                price: 75,
+                rating: 4.2,
+                popularity: 82,
+                distance: 2.5,
+                priority: 0,
+                isLeaf: false
+            },
+            {
+                name: "Santika Premiere Makassar",
+                price: 95,
+                rating: 4.4,
+                popularity: 86,
+                distance: 1.5,
+                priority: 0,
+                isLeaf: true
+            },
+            {
+                name: "Four Points by Sheraton Makassar",
+                price: 110,
+                rating: 4.7,
+                popularity: 94,
+                distance: 1.0,
+                priority: 0,
+                isLeaf: true
+            },
+            {
+                name: "Losari Beach Hotel",
+                price: 65,
+                rating: 4.0,
+                popularity: 78,
+                distance: 3.0,
+                priority: 0,
+                isLeaf: true
+            }
+        ];
+
+        // Data untuk simulasi (akan diubah menjadi Four Points di root setelah build max-heap)
         const hotels = [
             {
                 name: "Four Points by Sheraton Makassar",
@@ -626,7 +798,7 @@
                 popularity: 88,
                 distance: 1.2,
                 priority: 0,
-                isLeaf: false  // Index 2 adalah NON-LEAF
+                isLeaf: false
             },
             {
                 name: "Santika Premiere Makassar",
@@ -635,7 +807,7 @@
                 popularity: 86,
                 distance: 1.5,
                 priority: 0,
-                isLeaf: true  // Index 3 adalah LEAF
+                isLeaf: true
             },
             {
                 name: "Clarion Makassar",
@@ -656,6 +828,71 @@
                 isLeaf: true
             }
         ];
+
+        // ==================== FUNGSI TAMPILKAN ARRAY AWAL ====================
+        function displayInitialArray() {
+            const initialArrayContainer = document.getElementById('initialArrayVisualization');
+            initialArrayContainer.innerHTML = '';
+            
+            initialHotelsData.forEach((hotel, index) => {
+                const priority = calculatePriority(hotel);
+                
+                const arrayElement = document.createElement('div');
+                arrayElement.className = 'array-element';
+                
+                // Warna border berdasarkan posisi
+                let borderColor = '#2196f3'; // Default blue
+                if (index === 0) borderColor = '#ff9800'; // Orange untuk root
+                if (index === 2) borderColor = '#e55039'; // Red untuk start heapify
+                if (index >= 3) borderColor = '#9c27b0'; // Purple untuk leaf
+                
+                arrayElement.style.borderColor = borderColor;
+                arrayElement.style.boxShadow = `0 4px 8px ${borderColor}40`;
+                
+                const shortName = getShortHotelName(hotel.name);
+                
+                arrayElement.innerHTML = `
+                    <div class="array-index">${index}</div>
+                    <div class="array-element-name">${shortName}</div>
+                    <div class="array-element-details">
+                        <div>⭐ ${hotel.rating} / 5.0</div>
+                        <div>👍 ${hotel.popularity}%</div>
+                        <div>💰 $${hotel.price}</div>
+                        <div>📍 ${hotel.distance} km</div>
+                    </div>
+                    <div class="array-priority" style="background: ${borderColor}">
+                        Priority: ${priority.total.toFixed(1)}
+                    </div>
+                    ${index === 0 ? '<div style="color: #ff9800; font-size: 0.8rem; margin-top: 5px;">⚠️ BUKAN root sebenarnya</div>' : ''}
+                    ${index === 2 ? '<div style="color: #e55039; font-size: 0.8rem; margin-top: 5px;">↩️ Heapify dimulai di sini</div>' : ''}
+                    ${index >= 3 ? '<div style="color: #9c27b0; font-size: 0.8rem; margin-top: 5px;">🍃 Leaf node</div>' : ''}
+                `;
+                
+                initialArrayContainer.appendChild(arrayElement);
+            });
+            
+            // Tambahkan penjelasan array
+            const explanation = document.createElement('div');
+            explanation.style.marginTop = '20px';
+            explanation.style.padding = '15px';
+            explanation.style.background = '#f5f5f5';
+            explanation.style.borderRadius = '10px';
+            explanation.style.fontSize = '0.9rem';
+            explanation.innerHTML = `
+                <strong>📝 Penjelasan Array Awal:</strong><br>
+                • <span style="color: #ff9800;">Index 0 (Aston)</span>: Prioritas = ${calculatePriority(initialHotelsData[0]).total.toFixed(1)}<br>
+                • <span style="color: #2196f3;">Index 1 (Swiss-Belhotel)</span>: Prioritas = ${calculatePriority(initialHotelsData[1]).total.toFixed(1)}<br>
+                • <span style="color: #e55039;">Index 2 (Clarion)</span>: Prioritas = ${calculatePriority(initialHotelsData[2]).total.toFixed(1)}<br>
+                • <span style="color: #9c27b0;">Index 3-5 (Santika, Four Points, Losari)</span>: Leaf nodes<br><br>
+                
+                <strong>🔁 Proses Build Max-Heap akan:</strong><br>
+                1. Mengubah array ini menjadi struktur heap<br>
+                2. Memindahkan Four Points (${calculatePriority(initialHotelsData[4]).total.toFixed(1)}) ke root<br>
+                3. Memastikan parent ≥ children di seluruh tree
+            `;
+            
+            initialArrayContainer.appendChild(explanation);
+        }
 
         // ==================== STATE MANAGEMENT ====================
         let currentHotels = JSON.parse(JSON.stringify(hotels));
@@ -722,6 +959,9 @@
 
         // ==================== FUNGSI SIMULASI ====================
         function initSimulation() {
+            // Tampilkan array awal
+            displayInitialArray();
+            
             currentHotels = JSON.parse(JSON.stringify(hotels));
             steps = [];
             currentStep = 0;
@@ -747,7 +987,7 @@
             // Build Max-Heap phase
             buildMaxHeap();
             
-            // Heap Sort phase - YANG DIPERBAIKI untuk ASCENDING order
+            // Heap Sort phase
             heapSort();
             
             updateDisplay();
@@ -834,7 +1074,7 @@
             }
         }
 
-        // ==================== HEAP SORT YANG DIPERBAIKI ====================
+        // ==================== HEAP SORT ====================
         function heapSort() {
             let n = currentHotels.length;
             
@@ -847,11 +1087,6 @@
             );
             
             // ALGORITMA HEAP SORT STANDAR UNTUK MAX-HEAP:
-            // 1. Max-Heap sudah dibangun (root = elemen terbesar)
-            // 2. Swap root dengan elemen terakhir
-            // 3. Kurangi ukuran heap dan heapify root
-            // 4. Ulangi sampai semua elemen terurut
-            
             for (let i = n - 1; i > 0; i--) {
                 const iteration = n - i;
                 
@@ -891,35 +1126,17 @@
                 `🎉 HEAP SORT SELESAI!<br><br>
                 <strong>📊 HASIL AKHIR HEAP SORT (MAX-HEAP):</strong><br><br>
                 
-                <strong>ALUR ALGORITMA HEAP SORT STANDAR:</strong><br>
-                1. Build Max-Heap: root memiliki nilai TERBESAR<br>
-                2. Swap root dengan elemen terakhir<br>
-                3. Kurangi ukuran heap (heap size - 1)<br>
-                4. Heapify root baru<br>
-                5. Ulangi langkah 2-4 sampai semua elemen terurut<br><br>
-                
                 <strong>URUTAN ASCENDING (dari terkecil ke terbesar):</strong><br>
                 ${currentHotels.map((h, idx) => 
                     `${idx}. ${getShortHotelName(h.name)} - Priority: ${h.priority.total.toFixed(1)} ` +
                     `(Rating: ${h.rating}⭐)`
                 ).join('<br>')}<br><br>
                 
-                <strong>⚡ PENJELASAN HASIL AKHIR:</strong><br>
-                • <span style="color: #e55039;">Losari (4712.0)</span> → TERKECIL (posisi [0])<br>
-                • <span style="color: #e55039;">Clarion (4942.5)</span> → posisi [1]<br>
-                • <span style="color: #e55039;">Santika (5163.5)</span> → posisi [2]<br>
-                • <span style="color: #e55039;">Aston (5293.8)</span> → posisi [3]<br>
-                • <span style="color: #e55039;">Swiss-Belhotel (5399.2)</span> → posisi [4]<br>
-                • <span style="color: #e55039;">Four Points (5529.0)</span> → TERBESAR (posisi [5])<br><br>
-                
-                <strong>💡 KENAPA ASCENDING?</strong><br>
-                • Max-Heap Sort: Elemen TERBESAR (root) selalu di-swap ke posisi AKHIR<br>
-                • Setiap iterasi: elemen terbesar ditempatkan di akhir array<br>
-                • Hasil akhir: array terurut ASCENDING (dari kecil ke besar)<br><br>
-                
-                <strong>🔁 Jika ingin DESCENDING (rating tertinggi pertama):</strong><br>
-                • Gunakan Min-Heap, atau<br>
-                • Reverse array hasil (currentHotels.reverse())</strong>`,
+                <strong>⚡ PERBANDINGAN DENGAN ARRAY AWAL:</strong><br>
+                • Array Awal: [Aston, Swiss-Belhotel, Clarion, Santika, Four Points, Losari]<br>
+                • Array Hasil: [Losari, Clarion, Santika, Aston, Swiss-Belhotel, Four Points]<br>
+                • Four Points (rating tertinggi) sekarang di akhir array<br>
+                • Losari (rating terendah) sekarang di awal array`,
                 [], [], "Complete"
             );
         }
