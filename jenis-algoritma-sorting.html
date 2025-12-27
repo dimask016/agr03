@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma Sorting: Contoh Aplikasi Valid</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --accent: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --info: #0891b2;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.95;
+            max-width: 900px;
+            margin: 0 auto 25px;
+            font-weight: 300;
+        }
+
+        .table-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .sorting-table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: linear-gradient(to bottom, var(--primary), #1d4ed8);
+            color: white;
+            padding: 20px 18px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.05rem;
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 20px 18px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #f0f9ff;
+            transform: translateX(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .algorithm-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .algorithm-icon {
+            font-size: 1.8rem;
+        }
+
+        .algorithm-name {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1.15rem;
+        }
+
+        .complexity {
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: inline-block;
+            min-width: 90px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .best { background-color: #dcfce7; color: #166534; border-color: #86efac; }
+        .average { background-color: #fef9c3; color: #854d0e; border-color: #fde047; }
+        .worst { background-color: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+        .space { background-color: #e0f2fe; color: #0c4a6e; border-color: #7dd3fc; }
+
+        .stable-yes {
+            color: #166534;
+            font-weight: 700;
+            background-color: #dcfce7;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 2px solid #86efac;
+        }
+
+        .stable-no {
+            color: #991b1b;
+            font-weight: 700;
+            background-color: #fee2e2;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 2px solid #fca5a5;
+        }
+
+        .apps-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .app-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .app-icon {
+            font-size: 2.5rem;
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            flex-shrink: 0;
+        }
+
+        .app-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .app-platform {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .app-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .algorithm-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 2px solid #bae6fd;
+            align-self: flex-start;
+        }
+
+        .app-description {
+            color: var(--gray);
+            margin-bottom: 20px;
+            line-height: 1.8;
+            flex-grow: 1;
+        }
+
+        .use-case {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .use-case-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .use-case-desc {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        .real-note {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid var(--warning);
+            font-size: 0.9rem;
+            color: #92400e;
+        }
+
+        .real-note strong {
+            color: #92400e;
+        }
+
+        .complexity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .time-best { background: #dcfce7; color: #166534; }
+        .time-avg { background: #fef9c3; color: #854d0e; }
+        .time-worst { background: #fee2e2; color: #991b1b; }
+        .space { background: #e0f2fe; color: #0c4a6e; }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .legend-title {
+            width: 100%;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 40px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .disclaimer-title {
+            font-weight: 700;
+            color: var(--danger);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        .disclaimer-content {
+            color: #7f1d1d;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .apps-container {
+                padding: 25px;
+            }
+            
+            th, td {
+                padding: 15px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Algoritma Sorting: Contoh Aplikasi Valid</h1>
+            <p class="subtitle">Implementasi real algoritma sorting dalam berbagai bidang teknologi</p>
+        </header>
+
+        <!-- TABLE SECTION -->
+        <div class="table-section">
+            <h2 class="section-title">📊 Tabel Perbandingan Algoritma Sorting</h2>
+            
+            <div class="sorting-table-container">
+                <table id="sortingTable">
+                    <thead>
+                        <tr>
+                            <th>Algoritma</th>
+                            <th>Kompleksitas Terbaik</th>
+                            <th>Kompleksitas Rata-rata</th>
+                            <th>Kompleksitas Terburuk</th>
+                            <th>Kompleksitas Ruang</th>
+                            <th>Stabil</th>
+                            <th>Metode</th>
+                            <th>Karakteristik</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-title">Keterangan Kompleksitas:</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #dcfce7;"></div>
+                    <span>Kompleksitas Terbaik</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #fef9c3;"></div>
+                    <span>Kompleksitas Rata-rata</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #fee2e2;"></div>
+                    <span>Kompleksitas Terburuk</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e0f2fe;"></div>
+                    <span>Kompleksitas Ruang</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- APPS SECTION -->
+        <div class="apps-container">
+            <h2 class="section-title">🎯 Contoh Aplikasi Valid dalam Teknologi</h2>
+            
+            <div class="app-grid" id="appsGrid">
+                <!-- Kartu aplikasi akan diisi oleh JavaScript -->
+            </div>
+
+            <div class="disclaimer">
+                <div class="disclaimer-title">⚠️ Catatan Penting</div>
+                <div class="disclaimer-content">
+                    <p><strong>Platform besar seperti Traveloka, Tokopedia, atau Shopee TIDAK menggunakan algoritma sorting murni seperti di atas.</strong></p>
+                    <p>Dalam produksi skala enterprise, implementasi sebenarnya menggunakan:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li><strong>Hybrid Algorithms</strong>: Timsort (Python), Introsort (C++), pdqsort (Rust)</li>
+                        <li><strong>Search Engines</strong>: Elasticsearch, Solr dengan algoritma relevance scoring</li>
+                        <li><strong>Machine Learning</strong>: Model ranking personalisasi</li>
+                        <li><strong>Database Indexing</strong>: B-tree indexes, hash indexes untuk optimasi</li>
+                        <li><strong>Distributed Systems</strong>: Parallel processing untuk data besar</li>
+                    </ul>
+                    <p style="margin-top: 15px;">Contoh di atas menunjukkan penggunaan algoritma murni dalam konteks <strong>terbatas dan spesifik</strong>.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2024 Analisis Algoritma Sorting | Contoh aplikasi berdasarkan implementasi nyata dalam berbagai bidang teknologi</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data algoritma sorting dengan contoh VALID
+        const sortingAlgorithms = [
+            {
+                name: "Bubble Sort",
+                icon: "🫧",
+                best: "O(n)",
+                average: "O(n²)",
+                worst: "O(n²)",
+                space: "O(1)",
+                stable: "Ya",
+                method: "Pertukaran",
+                description: "Algoritma sederhana yang membandingkan dan menukar elemen berdekatan berulang kali. Efisien hanya untuk dataset kecil atau data yang sudah hampir terurut.",
+                
+                applications: [
+                    {
+                        title: "Sistem Pendidikan & Visualisasi",
+                        description: "Digunakan dalam tool visualisasi algoritma untuk pembelajaran konsep sorting dasar. Cocok untuk demo karena mudah dipahami dan divisualisasikan."
+                    },
+                    {
+                        title: "Embedded Systems & IoT",
+                        description: "Pada microcontroller dengan RAM terbatas (Arduino, ESP32) untuk sorting data sensor 10-50 elemen. Efisien karena memory footprint kecil."
+                    },
+                    {
+                        title: "Data Validation Tools",
+                        description: "Validasi apakah dataset sudah terurut (dengan early exit optimization). Berguna dalam quality assurance tools."
+                    },
+                    {
+                        title: "Prototyping & Testing",
+                        description: "Implementasi cepat untuk proof-of-concept atau unit testing dengan data kecil sebelum optimasi."
+                    }
+                ],
+                
+                realNote: "TIDAK digunakan di platform e-commerce besar. Untuk produksi, digunakan Timsort/Introsort."
+            },
+            {
+                name: "Merge Sort",
+                icon: "🔀",
+                best: "O(n log n)",
+                average: "O(n log n)",
+                worst: "O(n log n)",
+                space: "O(n)",
+                stable: "Ya",
+                method: "Divide and Conquer",
+                description: "Membagi data menjadi bagian kecil, mengurutkan, lalu menggabungkan. Stabil dan predictable performance.",
+                
+                applications: [
+                    {
+                        title: "External Sorting (Big Data)",
+                        description: "Sorting file besar yang tidak muat di memory (external merge sort). Digunakan dalam database systems dan big data processing."
+                    },
+                    {
+                        title: "Version Control Systems (Git)",
+                        description: "Merge kode dari berbagai branch. Algoritma merges digunakan dalam three-way merge Git."
+                    },
+                    {
+                        title: "Inversion Counting",
+                        description: "Menghitung inversions dalam array untuk analisis similarity (bioinformatika, finance analytics)."
+                    },
+                    {
+                        title: "Stable Sorting Requirement",
+                        description: "Aplikasi yang memerlukan stable sort seperti sorting objects dengan multiple keys (misal: sort by name, then by date)."
+                    }
+                ],
+                
+                realNote: "Bagian dari Timsort (Python/Java). Digunakan ketika stabilitas dan predictable performance penting."
+            },
+            {
+                name: "Quick Sort",
+                icon: "⚡",
+                best: "O(n log n)",
+                average: "O(n log n)",
+                worst: "O(n²)",
+                space: "O(log n)",
+                stable: "Tidak",
+                method: "Divide and Conquer",
+                description: "Memilih pivot, mempartisi data, dan mengurutkan rekursif. Biasanya tercepat untuk data acak dalam praktik.",
+                
+                applications: [
+                    {
+                        title: "Standard Library Implementations",
+                        description: "C++ std::sort() menggunakan Introsort (Quick Sort + Heap Sort). JavaScript V8 engine juga mengoptimasi array sorting."
+                    },
+                    {
+                        title: "Numerical Computing",
+                        description: "Sorting data numerik besar dalam scientific computing (MATLAB, NumPy). Optimasi cache locality penting."
+                    },
+                    {
+                        title: "k-th Order Statistics",
+                        description: "Quickselect (varian Quick Sort) untuk mencari median atau percentiles secara efisien."
+                    },
+                    {
+                        title: "Game Development",
+                        description: "Sorting game objects berdasarkan depth/Z-order untuk rendering. Optimasi dengan spatial partitioning."
+                    }
+                ],
+                
+                realNote: "Introsort (hybrid) lebih umum dalam produksi untuk menghindari worst-case O(n²)."
+            },
+            {
+                name: "Selection Sort",
+                icon: "🎯",
+                best: "O(n²)",
+                average: "O(n²)",
+                worst: "O(n²)",
+                space: "O(1)",
+                stable: "Tidak",
+                method: "Seleksi",
+                description: "Mencari elemen terkecil dan menukar dengan posisi yang sesuai. Swapping minimal, cocok ketika write operation mahal.",
+                
+                applications: [
+                    {
+                        title: "Memory-Constrained Environments",
+                        description: "Sistem dengan NAND flash memory dimana write operations lebih mahal dari read operations."
+                    },
+                    {
+                        title: "Hardware Sorting Networks",
+                        description: "Implementasi dalam hardware (FPGA) untuk sorting fixed-size arrays dengan circuit sederhana."
+                    },
+                    {
+                        title: "Educational Purposes",
+                        description: "Pengajaran konsep dasar sorting dan analisis kompleksitas untuk pemula."
+                    },
+                    {
+                        title: "Small Dataset Optimization",
+                        description: "Untuk array sangat kecil (< 10 elemen), selection sort bisa lebih cepat karena overhead algoritma kompleks."
+                    }
+                ],
+                
+                realNote: "Sangat jarang digunakan dalam produksi kecuali untuk kasus spesifik dengan constraints ekstrem."
+            },
+            {
+                name: "Insertion Sort",
+                icon: "📥",
+                best: "O(n)",
+                average: "O(n²)",
+                worst: "O(n²)",
+                space: "O(1)",
+                stable: "Ya",
+                method: "Penyisipan",
+                description: "Membangun array terurut dengan menyisipkan elemen satu per satu. Sangat efisien untuk data kecil atau hampir terurut.",
+                
+                applications: [
+                    {
+                        title: "Online Algorithms",
+                        description: "Memproses streaming data real-time (network packets, sensor data) yang datang berurutan."
+                    },
+                    {
+                        title: "Hybrid Algorithms Component",
+                        description: "Bagian dari Timsort dan Introsort untuk sorting subarrays kecil (biasanya < 16-64 elemen)."
+                    },
+                    {
+                        title: "Database Query Optimization",
+                        description: "Inserting new records into already sorted database tables atau indexes."
+                    },
+                    {
+                        title: "Interactive Applications",
+                        description: "Aplikasi dengan incremental data updates seperti spreadsheet atau data entry systems."
+                    }
+                ],
+                
+                realNote: "Sering digunakan sebagai bagian dari algoritma hybrid, jarang standalone di produksi."
+            },
+            {
+                name: "Heap Sort",
+                icon: "📊",
+                best: "O(n log n)",
+                average: "O(n log n)",
+                worst: "O(n log n)",
+                space: "O(1)",
+                stable: "Tidak",
+                method: "Selection berbasis Heap",
+                description: "Membangun heap dan mengekstrak elemen terbesar. Guaranteed O(n log n) dan in-place.",
+                
+                applications: [
+                    {
+                        title: "Priority Queue Implementations",
+                        description: "Sistem operasi (Linux kernel scheduler), network routers (QoS), dan real-time systems."
+                    },
+                    {
+                        title: "Memory Management",
+                        description: "Memory allocators yang perlu menjaga track of free memory blocks secara efisien."
+                    },
+                    {
+                        title: "External Sorting Variants",
+                        description: "Heapsort variant untuk external sorting dengan memory constraints."
+                    },
+                    {
+                        title: "k-way Merge",
+                        description: "Merging multiple sorted streams dengan min-heap (digunakan dalam external sorting)."
+                    }
+                ],
+                
+                realNote: "Bagian dari Introsort. Digunakan ketika worst-case guarantee lebih penting daripada average-case speed."
+            }
+        ];
+
+        // Fungsi untuk mengisi tabel
+        function populateTable() {
+            const tableBody = document.querySelector('#sortingTable tbody');
+            
+            sortingAlgorithms.forEach(algorithm => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>
+                        <div class="algorithm-header">
+                            <span class="algorithm-icon">${algorithm.icon}</span>
+                            <span class="algorithm-name">${algorithm.name}</span>
+                        </div>
+                    </td>
+                    <td><span class="complexity best">${algorithm.best}</span></td>
+                    <td><span class="complexity average">${algorithm.average}</span></td>
+                    <td><span class="complexity worst">${algorithm.worst}</span></td>
+                    <td><span class="complexity space">${algorithm.space}</span></td>
+                    <td>${algorithm.stable === 'Ya' ? '<span class="stable-yes">Ya</span>' : '<span class="stable-no">Tidak</span>'}</td>
+                    <td>${algorithm.method}</td>
+                    <td>${algorithm.description}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fungsi untuk mengisi kartu aplikasi
+        function populateAppCards() {
+            const appsGrid = document.getElementById('appsGrid');
+            
+            sortingAlgorithms.forEach(algorithm => {
+                const appCard = document.createElement('div');
+                appCard.className = 'app-card';
+                
+                // Membuat list aplikasi
+                let appsList = '';
+                algorithm.applications.forEach(app => {
+                    appsList += `
+                        <div class="use-case">
+                            <div class="use-case-title">
+                                <span>🎯</span> ${app.title}
+                            </div>
+                            <p class="use-case-desc">${app.description}</p>
+                        </div>
+                    `;
+                });
+                
+                appCard.innerHTML = `
+                    <div class="app-header">
+                        <div class="app-icon">${algorithm.icon}</div>
+                        <div>
+                            <div class="app-name">${algorithm.name}</div>
+                            <div class="app-platform">
+                                <span>Algoritma Sorting</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-body">
+                        <span class="algorithm-badge">${algorithm.method}</span>
+                        <p class="app-description">${algorithm.description}</p>
+                        
+                        ${appsList}
+                        
+                        <div class="real-note">
+                            <strong>Realitas Produksi:</strong> ${algorithm.realNote}
+                        </div>
+                        
+                        <div class="complexity-tags">
+                            <span class="tag time-best">${algorithm.best}</span>
+                            <span class="tag time-avg">${algorithm.average}</span>
+                            <span class="tag time-worst">${algorithm.worst}</span>
+                            <span class="tag space">${algorithm.space}</span>
+                        </div>
+                    </div>
+                `;
+                
+                appsGrid.appendChild(appCard);
+            });
+        }
+
+        // Fungsi untuk animasi tabel
+        function addTableEffects() {
+            const tableRows = document.querySelectorAll('#sortingTable tbody tr');
+            
+            tableRows.forEach((row, index) => {
+                // Animasi masuk bertahap
+                setTimeout(() => {
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(30px)';
+                    row.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    
+                    setTimeout(() => {
+                        row.style.opacity = '1';
+                        row.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+                
+                // Efek hover
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(8px)';
+                    this.style.transition = 'transform 0.3s ease, background-color 0.3s';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        }
+
+        // Fungsi untuk animasi kartu
+        function addCardEffects() {
+            const appCards = document.querySelectorAll('.app-card');
+            
+            appCards.forEach((card, index) => {
+                // Animasi masuk bertahap
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(40px) scale(0.95)';
+                    card.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0) scale(1)';
+                    }, 150);
+                }, index * 150);
+            });
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTable();
+            populateAppCards();
+            
+            // Tambahkan efek visual setelah konten dimuat
+            setTimeout(() => {
+                addTableEffects();
+                addCardEffects();
+            }, 300);
+            
+            // Efek scroll untuk header
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                const scrolled = window.pageYOffset;
+                
+                if (scrolled > 50) {
+                    header.style.transform = 'translateY(-8px)';
+                    header.style.boxShadow = '0 20px 40px rgba(37, 99, 235, 0.3)';
+                } else {
+                    header.style.transform = 'translateY(0)';
+                    header.style.boxShadow = '0 15px 40px rgba(37, 99, 235, 0.25)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
