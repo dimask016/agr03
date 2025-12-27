@@ -814,6 +814,12 @@
                 <strong>Proses Build Max-Heap:</strong><br>
                 • Array Awal: <code style="color: #e55039;">[5293.8, 5399.2, 4942.5, 5163.5, 5529.0, 4712.0]</code><br>
                 • Array Setelah Build Max-Heap: <code style="color: #4caf50; font-weight: bold;">[5529.0, 5399.2, 4942.5, 5163.5, 5293.8, 4712.0]</code><br><br>
+				• n = 6, leaf mulai dari index = floor(6/2) = 3,
+				  Leaf nodes: index 3, 4, 5 (tidak perlu di-heapify)<br>
+				• Heapify : floor(n)/2 ,jika n=6,maka heapify = 6/2= 3,index heapify :  2 , 1 , 0<br>
+				• Left Child : 2*i+1<br>
+				• Right Child : 2*i+2<br>
+				
                 <strong>Heap Property (Max-Heap) terpenuhi:</strong><br>
                 • Parent node (index 0: 5529.0) ≥ Child nodes (5399.2, 4942.5) ✓<br>
                 • Parent node (index 1: 5399.2) ≥ Child nodes (5163.5, 5293.8) ✓<br>
@@ -821,17 +827,7 @@
             </div>
         </div>
         
-        <div class="status" id="status">Status: Inisialisasi data hotel...</div>
-        
-        <div class="controls">
-            <button class="btn" id="prevBtn">⏮️ Langkah Sebelumnya</button>
-            <button class="btn" id="nextBtn">Langkah Berikutnya ⏭️</button>
-            <button class="btn" id="autoBtn">▶️ Jalankan Otomatis (2 detik)</button>
-            <button class="btn" id="resetBtn">🔄 Ulang Simulasi</button>
-            <button class="btn" id="speedUpBtn">⚡ Percepat (1 detik)</button>
-            <button class="btn" id="speedDownBtn">🐢 Perlambat (3 detik)</button>
-        </div>
-        
+       
         <div class="section-title">
             Data Hotel Makassar (n = 6) - SETELAH BUILD MAX-HEAP
             <span class="step-counter" id="stepCounter">Step: 0/0</span>
@@ -854,6 +850,16 @@
                 ✅ <strong>MAX-HEAP PROPERTY TERPENUHI:</strong> 
                 Root (Four Points) memiliki nilai tertinggi (5529.0). Setiap parent node memiliki nilai priority yang lebih BESAR atau SAMA dengan child nodes-nya.
             </div>
+        </div>
+         <div class="status" id="status">Status: Inisialisasi data hotel...</div>
+        
+        <div class="controls">
+            <button class="btn" id="prevBtn">⏮️ Langkah Sebelumnya</button>
+            <button class="btn" id="nextBtn">Langkah Berikutnya ⏭️</button>
+            <button class="btn" id="autoBtn">▶️ Jalankan Otomatis (2 detik)</button>
+            <button class="btn" id="resetBtn">🔄 Ulang Simulasi</button>
+            <button class="btn" id="speedUpBtn">⚡ Percepat (1 detik)</button>
+            <button class="btn" id="speedDownBtn">🐢 Perlambat (3 detik)</button>
         </div>
         
         <!-- ===== LAYOUT VERTIKAL ATAS-BAWAH ===== -->
