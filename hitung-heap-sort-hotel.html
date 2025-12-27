@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulasi Heap Sort Hotel Makassar - Posisi Tree Terpusat</title>
     <style>
+        /* Semua CSS tetap sama seperti sebelumnya */
         * {
             margin: 0;
             padding: 0;
@@ -227,6 +228,24 @@
             100% { transform: scale(1); box-shadow: 0 0 10px rgba(229, 80, 57, 0.3); }
         }
 
+        @keyframes swapAnimation {
+            0% { 
+                transform: translate(0, 0) scale(1);
+                border-color: #4cd137;
+                box-shadow: 0 0 20px rgba(76, 209, 55, 0.6);
+            }
+            50% { 
+                transform: translate(20px, -10px) scale(1.1);
+                border-color: #e55039;
+                box-shadow: 0 0 30px rgba(229, 80, 57, 0.8);
+            }
+            100% { 
+                transform: translate(0, 0) scale(1);
+                border-color: #4cd137;
+                box-shadow: 0 0 20px rgba(76, 209, 55, 0.6);
+            }
+        }
+
         .hotel-name {
             color: #0c2461;
             font-size: 1.3rem;
@@ -302,38 +321,57 @@
             box-shadow: none;
         }
 
+        /* ===== STYLE UNTUK LAYOUT VERTIKAL ===== */
         .simulation-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 30px;
             margin-bottom: 30px;
+            width: 100%;
         }
 
-        @media (max-width: 1024px) {
-            .simulation-area {
-                grid-template-columns: 1fr;
-            }
+        /* ===== STYLE UNTUK TREE DISPLAY ===== */
+        .tree-display-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px dashed rgba(12, 36, 97, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            height: 800px; /* Tinggi lebih untuk tree */
+            overflow: auto;
+            position: relative;
+            width: 100%;
         }
 
-        .tree-display, .priority-display {
+        /* Container untuk tree (dalam tree-display-section) */
+        #treeContainer {
+            width: 100%;
+            height: 700px;
+            position: relative;
+            overflow: auto;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== STYLE UNTUK PRIORITY DISPLAY ===== */
+        .priority-display-section {
             background: #f8f9fa;
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            height: 600px;
+            height: 450px; /* Tinggi lebih kecil untuk priority */
             overflow: auto;
             position: relative;
+            width: 100%;
         }
 
-        .tree-display {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px dashed rgba(12, 36, 97, 0.2);
-        }
-
+        /* ===== SESUAIKAN UKURAN TREE NODE ===== */
         .tree-node {
             position: absolute;
-            width: 180px;
-            min-height: 110px;
+            width: 220px; /* Lebih lebar karena ruang lebih besar */
+            min-height: 130px;
             background: white;
             border-radius: 12px;
             padding: 15px;
@@ -392,13 +430,14 @@
         }
 
         .priority-item {
-            padding: 15px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             border-left: 5px solid #0c2461;
             transition: all 0.3s ease;
+            font-size: 0.9em;
         }
 
         .priority-item.active {
@@ -452,11 +491,12 @@
 
         .log {
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 30px;
-            max-height: 300px;
-            overflow-y: auto;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 30px;
+    max-height: 600px; /* PERUBAHAN: Tinggi lebih besar */
+    overflow-y: auto;
+    border: 2px solid #0c2461;
         }
 
         .log-title {
@@ -471,20 +511,47 @@
         }
 
         .log-entry {
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #0c2461;
-            font-size: 0.95rem;
+            padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #0c2461;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    min-height: 60px; /* Minimal tinggi */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
         }
 
         .log-entry.heapify {
             border-left-color: #e55039;
             background: #fff5f3;
         }
+/* Tambahkan class untuk log entry yang lebih panjang */
+.log-entry.long-content {
+    min-height: 100px;
+    white-space: pre-wrap; /* Biarkan teks wrap */
+    word-wrap: break-word;
+}
 
+/* Header log entry */
+.log-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #ddd;
+}
+
+/* Konten log entry */
+.log-entry-content {
+    flex-grow: 1;
+    overflow-wrap: break-word;
+    max-height: none; /* Hapus batasan tinggi */
+}
         .log-entry.swap {
             border-left-color: #4cd137;
             background: #f1f8e9;
@@ -534,26 +601,28 @@
             margin: 10px 0;
             border: 1px dashed #ccc;
             font-family: 'Courier New', monospace;
+            font-size: 0.9em;
         }
 
         .tree-level-line {
             position: absolute;
-            height: 1px;
-            background: rgba(0,0,0,0.1);
-            width: 90%;
-            left: 5%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #0c2461, transparent);
             z-index: 0;
+            opacity: 0.3;
         }
 
         .level-label {
             position: absolute;
-            left: 10px;
-            background: rgba(255,255,255,0.9);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: #666;
-            border: 1px solid #ddd;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #0c2461;
+            border: 1px solid #0c2461;
+            font-weight: bold;
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .phase-indicator {
@@ -574,6 +643,92 @@
             border-radius: 8px;
             border-left: 4px solid #e55039;
         }
+        
+        .swap-highlight {
+            animation: swapAnimation 0.8s ease-in-out;
+            z-index: 100 !important;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .tree-display-section {
+                height: 650px;
+            }
+            
+            #treeContainer {
+                height: 550px;
+            }
+            
+            .priority-display-section {
+                height: 400px;
+            }
+            
+            .tree-node {
+                width: 180px;
+                min-height: 110px;
+            }
+            
+            .simulation-area {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tree-display-section {
+                height: 550px;
+            }
+            
+            #treeContainer {
+                height: 450px;
+            }
+            
+            .priority-display-section {
+                height: 350px;
+            }
+            
+            .tree-node {
+                width: 160px;
+                min-height: 100px;
+                padding: 10px;
+            }
+        }
+		
+		/* Responsive untuk log */
+@media (max-width: 768px) {
+    .log {
+        max-height: 500px;
+    }
+    
+    .log-entry {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .log-entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+/* Scrollbar styling untuk log */
+.log::-webkit-scrollbar {
+    width: 10px;
+}
+
+.log::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.log::-webkit-scrollbar-thumb {
+    background: #0c2461;
+    border-radius: 10px;
+}
+
+.log::-webkit-scrollbar-thumb:hover {
+    background: #e55039;
+}
     </style>
 </head>
 <body>
@@ -581,12 +736,12 @@
         <h1>Simulasi Heap Sort Hotel Makassar</h1>
         <div class="subtitle">Visualisasi Heap Tree dengan Posisi Terpusat</div>
         
-        <!-- TAMBAHAN: Data Array Sebelum Max-Heap -->
+        <!-- ARRAY AWAL SEBELUM BUILD MAX-HEAP -->
         <div class="initial-array-container">
             <div class="initial-array-title">
-                <span>📋 Data Array Sebelum Max-Heap (Kondisi Awal)</span>
+                <span>📋 Array Awal Sebelum Build Max-Heap</span>
                 <span style="background: #2196f3; color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.9rem;">
-                    Urutan Awal: Index [0] sampai [5]
+                    Kondisi Awal
                 </span>
             </div>
             
@@ -596,13 +751,13 @@
             
             <div class="initial-note">
                 ⚠️ <strong>CATATAN:</strong> Array ini menunjukkan urutan awal SEBELUM proses Build Max-Heap. 
-                Proses heapify akan mengubah struktur ini menjadi Max-Heap dengan root (index 0) 
+                Proses Build Max-Heap akan mengubah struktur ini menjadi Max-Heap dengan root (index 0) 
                 memiliki nilai priority tertinggi (5529.0 = Four Points).
             </div>
         </div>
         
         <div class="algorithm-explanation">
-            <h3>📋 Struktur Heap Tree (Max-Heap)</h3>
+            <h3>📋 Struktur Heap Tree (Max-Heap) - SETELAH BUILD MAX-HEAP</h3>
             <table class="criteria-table">
                 <tr>
                     <th>Index</th>
@@ -614,53 +769,55 @@
                 <tr>
                     <td>0</td>
                     <td><strong>Four Points</strong></td>
-                    <td>5529.0</td>
+                    <td><strong>5529.0</strong></td>
                     <td>Root</td>
-                    <td>⭐ Rating tertinggi (4.7) - Nilai TERBESAR</td>
+                    <td>⭐ Nilai terbesar</td>
                 </tr>
                 <tr>
                     <td>1</td>
-                    <td>Swiss-Belhotel</td>
-                    <td>5399.2</td>
+                    <td><strong>Swiss-Belhotel</strong></td>
+                    <td><strong>5399.2</strong></td>
                     <td>Level 1 (Left)</td>
                     <td>Child dari root</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td><strong>Aston Makassar</strong></td>
-                    <td>5293.8</td>
+                    <td><strong>Clarion</strong></td>
+                    <td><strong>4942.5</strong></td>
                     <td>Level 1 (Right)</td>
-                    <td>Heapify dimulai dari sini</td>
+                    <td>Non-leaf</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>Santika Premiere</td>
-                    <td>5163.5</td>
+                    <td><strong>Santika Premiere</strong></td>
+                    <td><strong>5163.5</strong></td>
                     <td>Level 2 (Leaf)</td>
-                    <td>Tidak perlu di-heapify</td>
+                    <td>Tidak perlu heapify</td>
                 </tr>
                 <tr>
                     <td>4</td>
-                    <td>Clarion</td>
-                    <td>4942.5</td>
+                    <td><strong>Aston Makassar</strong></td>
+                    <td><strong>5293.8</strong></td>
                     <td>Level 2 (Leaf)</td>
-                    <td>Tidak perlu di-heapify</td>
+                    <td>Tidak perlu heapify</td>
                 </tr>
                 <tr>
                     <td>5</td>
-                    <td>Losari</td>
-                    <td>4712.0</td>
+                    <td><strong>Losari</strong></td>
+                    <td><strong>4712.0</strong></td>
                     <td>Level 2 (Leaf)</td>
-                    <td>Tidak perlu di-heapify</td>
+                    <td>Tidak perlu heapify</td>
                 </tr>
             </table>
             
             <div class="heap-property">
-                <strong>Heap Property (Max-Heap):</strong><br>
-                • Parent node HARUS lebih prioritas (nilai lebih BESAR) dari child nodes<br>
-                • Priority Value = (rating×1000) + (popularity×10) - price - distance<br>
-                • Nilai lebih BESAR = lebih prioritas<br>
-                • <strong>Heapify dimulai dari node 2 (Aston Makassar)</strong> karena floor(6/2)-1 = 2
+                <strong>Proses Build Max-Heap:</strong><br>
+                • Array Awal: <code style="color: #e55039;">[5293.8, 5399.2, 4942.5, 5163.5, 5529.0, 4712.0]</code><br>
+                • Array Setelah Build Max-Heap: <code style="color: #4caf50; font-weight: bold;">[5529.0, 5399.2, 4942.5, 5163.5, 5293.8, 4712.0]</code><br><br>
+                <strong>Heap Property (Max-Heap) terpenuhi:</strong><br>
+                • Parent node (index 0: 5529.0) ≥ Child nodes (5399.2, 4942.5) ✓<br>
+                • Parent node (index 1: 5399.2) ≥ Child nodes (5163.5, 5293.8) ✓<br>
+                • Priority Value = (rating×1000) + (popularity×10) - price - distance
             </div>
         </div>
         
@@ -676,21 +833,42 @@
         </div>
         
         <div class="section-title">
-            Data Hotel Makassar (n = 6)
+            Data Hotel Makassar (n = 6) - SETELAH BUILD MAX-HEAP
             <span class="step-counter" id="stepCounter">Step: 0/0</span>
         </div>
-        <div class="hotel-grid" id="hotelGrid"></div>
         
+        <!-- KONTAINER ARRAY FINAL SETELAH BUILD MAX-HEAP -->
+        <div class="initial-array-container" style="background: #e8f5e9; border-left: 5px solid #4caf50;">
+            <div class="initial-array-title">
+                <span>✅ Array Final Setelah Build Max-Heap</span>
+                <span style="background: #4caf50; color: white; padding: 3px 10px; border-radius: 15px; font-size: 0.9rem;">
+                    Siap untuk Heap Sort Phase
+                </span>
+            </div>
+            
+            <div class="array-visualization" id="finalArrayVisualization">
+                <!-- Array final akan diisi oleh JavaScript -->
+            </div>
+            
+            <div class="initial-note" style="border-left-color: #4caf50; color: #4caf50;">
+                ✅ <strong>MAX-HEAP PROPERTY TERPENUHI:</strong> 
+                Root (Four Points) memiliki nilai tertinggi (5529.0). Setiap parent node memiliki nilai priority yang lebih BESAR atau SAMA dengan child nodes-nya.
+            </div>
+        </div>
+        
+        <!-- ===== LAYOUT VERTIKAL ATAS-BAWAH ===== -->
         <div class="simulation-area">
-            <div class="tree-display">
+            <!-- Tampilkan Tree di atas -->
+            <div class="tree-display-section">
                 <div class="section-title">
-                    Struktur Heap Tree (Posisi Terpusat)
+                    Struktur Heap Tree (Posisi Terpusat) - SETELAH BUILD MAX-HEAP
                     <span class="phase-indicator" id="phaseIndicator">Build Max-Heap</span>
                 </div>
                 <div id="treeContainer"></div>
             </div>
             
-            <div class="priority-display">
+            <!-- Tampilkan Priority di bawah -->
+            <div class="priority-display-section">
                 <div class="section-title">Urutan Prioritas & Proses Heapify</div>
                 <div id="calculationsContent">
                     <div class="calculation-box">
@@ -704,6 +882,13 @@
         </div>
         
         <div class="log">
+		<!-- Tambahkan di bagian controls atau di atas log -->
+<div class="controls" style="margin-top: 20px;">
+    <button class="btn" id="clearLogBtn">🗑️ Hapus Log</button>
+    <button class="btn" id="expandLogBtn">📖 Perbesar Log</button>
+    <button class="btn" id="collapseLogBtn">📕 Kecilkan Log</button>
+    <button class="btn" id="exportLogBtn">💾 Simpan Log</button>
+</div>
             <div class="log-title">
                 Log Proses Heap Sort
                 <span id="logPhaseIndicator">Phase: Build Max-Heap</span>
@@ -721,7 +906,7 @@
                 rating: 4.5,
                 popularity: 88,
                 distance: 1.2,
-                priority: 0,
+                priority: 5293.8,
                 isLeaf: false
             },
             {
@@ -730,7 +915,7 @@
                 rating: 4.6,
                 popularity: 92,
                 distance: 0.8,
-                priority: 0,
+                priority: 5399.2,
                 isLeaf: false
             },
             {
@@ -739,7 +924,7 @@
                 rating: 4.2,
                 popularity: 82,
                 distance: 2.5,
-                priority: 0,
+                priority: 4942.5,
                 isLeaf: false
             },
             {
@@ -748,7 +933,7 @@
                 rating: 4.4,
                 popularity: 86,
                 distance: 1.5,
-                priority: 0,
+                priority: 5163.5,
                 isLeaf: true
             },
             {
@@ -757,7 +942,7 @@
                 rating: 4.7,
                 popularity: 94,
                 distance: 1.0,
-                priority: 0,
+                priority: 5529.0,
                 isLeaf: true
             },
             {
@@ -766,12 +951,12 @@
                 rating: 4.0,
                 popularity: 78,
                 distance: 3.0,
-                priority: 0,
+                priority: 4712.0,
                 isLeaf: true
             }
         ];
 
-        // Data untuk simulasi (akan diubah menjadi Four Points di root setelah build max-heap)
+        // Data untuk simulasi (SETELAH BUILD MAX-HEAP) - URUTAN YANG BENAR
         const hotels = [
             {
                 name: "Four Points by Sheraton Makassar",
@@ -779,7 +964,7 @@
                 rating: 4.7,
                 popularity: 94,
                 distance: 1.0,
-                priority: 0,
+                priority: 5529.0,
                 isLeaf: false
             },
             {
@@ -788,16 +973,16 @@
                 rating: 4.6,
                 popularity: 92,
                 distance: 0.8,
-                priority: 0,
+                priority: 5399.2,
                 isLeaf: false
             },
             {
-                name: "Aston Makassar Hotel",
-                price: 85,
-                rating: 4.5,
-                popularity: 88,
-                distance: 1.2,
-                priority: 0,
+                name: "Clarion Makassar",
+                price: 75,
+                rating: 4.2,
+                popularity: 82,
+                distance: 2.5,
+                priority: 4942.5,
                 isLeaf: false
             },
             {
@@ -806,16 +991,16 @@
                 rating: 4.4,
                 popularity: 86,
                 distance: 1.5,
-                priority: 0,
+                priority: 5163.5,
                 isLeaf: true
             },
             {
-                name: "Clarion Makassar",
-                price: 75,
-                rating: 4.2,
-                popularity: 82,
-                distance: 2.5,
-                priority: 0,
+                name: "Aston Makassar Hotel",
+                price: 85,
+                rating: 4.5,
+                popularity: 88,
+                distance: 1.2,
+                priority: 5293.8,
                 isLeaf: true
             },
             {
@@ -824,7 +1009,7 @@
                 rating: 4.0,
                 popularity: 78,
                 distance: 3.0,
-                priority: 0,
+                priority: 4712.0,
                 isLeaf: true
             }
         ];
@@ -834,17 +1019,28 @@
             const initialArrayContainer = document.getElementById('initialArrayVisualization');
             initialArrayContainer.innerHTML = '';
             
-            initialHotelsData.forEach((hotel, index) => {
-                const priority = calculatePriority(hotel);
+            const initialArray = [
+                {hotel: initialHotelsData[0], priority: 5293.8, index: 0},
+                {hotel: initialHotelsData[1], priority: 5399.2, index: 1},
+                {hotel: initialHotelsData[2], priority: 4942.5, index: 2},
+                {hotel: initialHotelsData[3], priority: 5163.5, index: 3},
+                {hotel: initialHotelsData[4], priority: 5529.0, index: 4},
+                {hotel: initialHotelsData[5], priority: 4712.0, index: 5}
+            ];
+            
+            initialArray.forEach((item, displayIndex) => {
+                const hotel = item.hotel;
+                const priority = item.priority;
+                const originalIndex = item.index;
                 
                 const arrayElement = document.createElement('div');
                 arrayElement.className = 'array-element';
                 
                 // Warna border berdasarkan posisi
                 let borderColor = '#2196f3'; // Default blue
-                if (index === 0) borderColor = '#ff9800'; // Orange untuk root
-                if (index === 2) borderColor = '#e55039'; // Red untuk start heapify
-                if (index >= 3) borderColor = '#9c27b0'; // Purple untuk leaf
+                if (displayIndex === 0) borderColor = '#ff9800'; // Orange untuk Aston (index 0 awal)
+                if (displayIndex === 4) borderColor = '#e55039'; // Red untuk Four Points
+                if (displayIndex >= 3) borderColor = '#9c27b0'; // Purple untuk leaf
                 
                 arrayElement.style.borderColor = borderColor;
                 arrayElement.style.boxShadow = `0 4px 8px ${borderColor}40`;
@@ -852,7 +1048,7 @@
                 const shortName = getShortHotelName(hotel.name);
                 
                 arrayElement.innerHTML = `
-                    <div class="array-index">${index}</div>
+                    <div class="array-index">${displayIndex}</div>
                     <div class="array-element-name">${shortName}</div>
                     <div class="array-element-details">
                         <div>⭐ ${hotel.rating} / 5.0</div>
@@ -861,11 +1057,11 @@
                         <div>📍 ${hotel.distance} km</div>
                     </div>
                     <div class="array-priority" style="background: ${borderColor}">
-                        Priority: ${priority.total.toFixed(1)}
+                        Priority: ${priority.toFixed(1)}
                     </div>
-                    ${index === 0 ? '<div style="color: #ff9800; font-size: 0.8rem; margin-top: 5px;">⚠️ BUKAN root sebenarnya</div>' : ''}
-                    ${index === 2 ? '<div style="color: #e55039; font-size: 0.8rem; margin-top: 5px;">↩️ Heapify dimulai di sini</div>' : ''}
-                    ${index >= 3 ? '<div style="color: #9c27b0; font-size: 0.8rem; margin-top: 5px;">🍃 Leaf node</div>' : ''}
+                    ${displayIndex === 0 ? '<div style="color: #ff9800; font-size: 0.8rem; margin-top: 5px;">⚠️ Aston: BUKAN root sebenarnya</div>' : ''}
+                    ${displayIndex === 4 ? '<div style="color: #e55039; font-size: 0.8rem; margin-top: 5px;">⭐ Four Points: Nilai tertinggi</div>' : ''}
+                    ${displayIndex >= 3 ? '<div style="color: #9c27b0; font-size: 0.8rem; margin-top: 5px;">🍃 Leaf node</div>' : ''}
                 `;
                 
                 initialArrayContainer.appendChild(arrayElement);
@@ -880,18 +1076,99 @@
             explanation.style.fontSize = '0.9rem';
             explanation.innerHTML = `
                 <strong>📝 Penjelasan Array Awal:</strong><br>
-                • <span style="color: #ff9800;">Index 0 (Aston)</span>: Prioritas = ${calculatePriority(initialHotelsData[0]).total.toFixed(1)}<br>
-                • <span style="color: #2196f3;">Index 1 (Swiss-Belhotel)</span>: Prioritas = ${calculatePriority(initialHotelsData[1]).total.toFixed(1)}<br>
-                • <span style="color: #e55039;">Index 2 (Clarion)</span>: Prioritas = ${calculatePriority(initialHotelsData[2]).total.toFixed(1)}<br>
-                • <span style="color: #9c27b0;">Index 3-5 (Santika, Four Points, Losari)</span>: Leaf nodes<br><br>
+                • Array awal: <code style="font-family: 'Courier New'; background: #eee; padding: 2px 5px; border-radius: 3px;">[5293.8, 5399.2, 4942.5, 5163.5, 5529.0, 4712.0]</code><br>
+                • <span style="color: #ff9800;">Index 0 (Aston)</span>: Prioritas = 5293.8<br>
+                • <span style="color: #2196f3;">Index 1 (Swiss-Belhotel)</span>: Prioritas = 5399.2<br>
+                • <span style="color: #2196f3;">Index 2 (Clarion)</span>: Prioritas = 4942.5<br>
+                • <span style="color: #9c27b0;">Index 3 (Santika)</span>: Prioritas = 5163.5<br>
+                • <span style="color: #e55039;">Index 4 (Four Points)</span>: Prioritas = 5529.0 (nilai tertinggi)<br>
+                • <span style="color: #9c27b0;">Index 5 (Losari)</span>: Prioritas = 4712.0<br><br>
                 
                 <strong>🔁 Proses Build Max-Heap akan:</strong><br>
-                1. Mengubah array ini menjadi struktur heap<br>
-                2. Memindahkan Four Points (${calculatePriority(initialHotelsData[4]).total.toFixed(1)}) ke root<br>
-                3. Memastikan parent ≥ children di seluruh tree
+                1. Heapify dimulai dari non-leaf terakhir (index 2 = Clarion)<br>
+                2. Four Points (5529.0) akan naik ke root<br>
+                3. Membentuk struktur Max-Heap yang benar
             `;
             
             initialArrayContainer.appendChild(explanation);
+            
+            // Tampilkan array final setelah build max-heap
+            displayFinalArray();
+        }
+
+        // ==================== FUNGSI TAMPILKAN ARRAY FINAL ====================
+        function displayFinalArray() {
+            const finalArrayContainer = document.getElementById('finalArrayVisualization');
+            if (!finalArrayContainer) return;
+            
+            finalArrayContainer.innerHTML = '';
+            
+            hotels.forEach((hotel, index) => {
+                const priority = hotel.priority;
+                
+                const arrayElement = document.createElement('div');
+                arrayElement.className = 'array-element';
+                
+                // Warna border berdasarkan posisi dalam max-heap
+                let borderColor = '#4caf50'; // Default green untuk max-heap
+                if (index === 0) borderColor = '#8c7ae6'; // Purple untuk root
+                if (index === 1 || index === 2) borderColor = '#2196f3'; // Blue untuk level 1
+                if (index >= 3) borderColor = '#9c27b0'; // Purple untuk leaf
+                
+                arrayElement.style.borderColor = borderColor;
+                arrayElement.style.boxShadow = `0 4px 8px ${borderColor}40`;
+                
+                const shortName = getShortHotelName(hotel.name);
+                
+                arrayElement.innerHTML = `
+                    <div class="array-index" style="background: ${borderColor}">${index}</div>
+                    <div class="array-element-name">${shortName}</div>
+                    <div class="array-element-details">
+                        <div>⭐ ${hotel.rating} / 5.0</div>
+                        <div>👍 ${hotel.popularity}%</div>
+                        <div>💰 $${hotel.price}</div>
+                        <div>📍 ${hotel.distance} km</div>
+                    </div>
+                    <div class="array-priority" style="background: ${borderColor}">
+                        Priority: ${priority.toFixed(1)}
+                    </div>
+                    ${index === 0 ? '<div style="color: #8c7ae6; font-size: 0.8rem; margin-top: 5px;">👑 ROOT MAX-HEAP</div>' : ''}
+                    ${index >= 3 ? '<div style="color: #9c27b0; font-size: 0.8rem; margin-top: 5px;">🍃 Leaf node</div>' : ''}
+                `;
+                
+                finalArrayContainer.appendChild(arrayElement);
+            });
+            
+            // Tambahkan array representation
+            const arrayRep = document.createElement('div');
+            arrayRep.style.marginTop = '20px';
+            arrayRep.style.padding = '15px';
+            arrayRep.style.background = '#e8f5e9';
+            arrayRep.style.borderRadius = '10px';
+            arrayRep.style.border = '2px solid #4caf50';
+            arrayRep.style.fontSize = '1.1rem';
+            arrayRep.style.textAlign = 'center';
+            arrayRep.style.fontFamily = "'Courier New', monospace";
+            arrayRep.style.fontWeight = 'bold';
+            arrayRep.style.color = '#0c2461';
+            
+            const priorities = hotels.map(h => h.priority.toFixed(1));
+            arrayRep.innerHTML = `
+                <strong>Representasi Array Max-Heap:</strong><br>
+                <code style="font-size: 1.3rem; color: #e55039; background: white; padding: 10px; border-radius: 8px; display: inline-block; margin-top: 10px;">
+                    [${priorities.join(', ')}]
+                </code><br><br>
+                <div style="font-size: 0.9rem; color: #666; text-align: left;">
+                    <strong>Heap Property Terpenuhi:</strong><br>
+                    ✓ Four Points (5529.0) adalah root dengan nilai tertinggi<br>
+                    ✓ Setiap parent memiliki nilai ≥ children:<br>
+                    &nbsp;&nbsp;• Root[0]=5529.0 ≥ Left[1]=5399.2 dan Right[2]=4942.5 ✓<br>
+                    &nbsp;&nbsp;• Parent[1]=5399.2 ≥ Left[3]=5163.5 dan Right[4]=5293.8 ✓<br>
+                    &nbsp;&nbsp;• Parent[2]=4942.5 ≥ Left[5]=4712.0 ✓ (tidak ada right child)
+                </div>
+            `;
+            
+            finalArrayContainer.appendChild(arrayRep);
         }
 
         // ==================== STATE MANAGEMENT ====================
@@ -901,20 +1178,21 @@
         let autoPlayInterval = null;
         let autoPlaySpeed = 2000;
 
-        // ==================== POSISI NODE TERPUSAT ====================
+        // ==================== POSISI NODE TERPUSAT UNTUK LAYOUT VERTIKAL ====================
+        // Posisi node yang lebih baik untuk visualisasi
         const NODE_POSITIONS_CENTERED = [
             // Index: 0 - ROOT (Four Points) - TENGAH ATAS
-            { x: 400, y: 80, level: 0 },
+            { x: 600, y: 50, level: 0 },  // Posisi tengah atas
             // Index: 1 - Swiss-Belhotel - KIRI TENGAH
-            { x: 250, y: 200, level: 1 },
-            // Index: 2 - Aston - KANAN TENGAH (Heapify mulai dari sini - NON-LEAF)
-            { x: 550, y: 200, level: 1 },
+            { x: 350, y: 250, level: 1 },  // Lebih kiri
+            // Index: 2 - Clarion - KANAN TENGAH (NON-LEAF)
+            { x: 850, y: 250, level: 1 },  // Lebih kanan
             // Index: 3 - Santika - KIRI BAWAH (LEAF)
-            { x: 150, y: 420, level: 2 },
-            // Index: 4 - Clarion - TENGAH BAWAH (LEAF)
-            { x: 350, y: 420, level: 2 },
+            { x: 250, y: 450, level: 2 },  // Jauh ke kiri
+            // Index: 4 - Aston - TENGAH BAWAH (LEAF)
+            { x: 600, y: 450, level: 2 },  // Tengah bawah
             // Index: 5 - Losari - KANAN BAWAH (LEAF)
-            { x: 550, y: 420, level: 2 }
+            { x: 950, y: 450, level: 2 }  // Jauh ke kanan
         ];
 
         // ==================== FUNGSI UTILITAS ====================
@@ -959,7 +1237,7 @@
 
         // ==================== FUNGSI SIMULASI ====================
         function initSimulation() {
-            // Tampilkan array awal
+            // Tampilkan array awal dan final
             displayInitialArray();
             
             currentHotels = JSON.parse(JSON.stringify(hotels));
@@ -969,13 +1247,20 @@
             const n = currentHotels.length;
             const leafIndices = identifyLeafNodes(n);
             
+            // Hitung priority untuk semua hotel jika belum ada
             currentHotels.forEach((hotel, index) => {
-                hotel.priority = calculatePriority(hotel);
+                if (!hotel.priority || hotel.priority === 0) {
+                    hotel.priority = calculatePriority(hotel).total;
+                }
                 hotel.isLeaf = leafIndices.includes(index);
             });
             
-            // Step 0: Inisialisasi
-            recordStep("🏁 INISIALISASI: Data hotel Makassar", [], [], "Initial");
+            // Step 0: Inisialisasi array awal
+            recordStep(
+                "🏁 INISIALISASI: Data hotel Makassar<br>" +
+                "<strong>Array Awal:</strong> <code style='background: #e3f2fd; padding: 5px 10px; border-radius: 5px;'>[5293.8, 5399.2, 4942.5, 5163.5, 5529.0, 4712.0]</code>",
+                [], [], "Initial"
+            );
             
             // Step 1: Identifikasi leaf nodes
             const leafHotels = leafIndices.map(i => currentHotels[i].name);
@@ -984,10 +1269,28 @@
                 leafIndices, [], "Leaf"
             );
             
-            // Build Max-Heap phase
+            // Step 2: Proses Build Max-Heap
+            recordStep(
+                `🔨 MEMBANGUN MAX-HEAP (n = ${n})<br>Heapify dimulai dari non-leaf terakhir: floor(${n}/2)-1 = ${Math.floor(n/2)-1} (index 2 = Clarion)`,
+                [], [], "Build"
+            );
+            
+            // Simulasi Build Max-Heap
             buildMaxHeap();
             
-            // Heap Sort phase
+            // Step terakhir: Tampilkan array final max-heap
+            recordStep(
+                `✅ BUILD MAX-HEAP SELESAI!<br>` +
+                `<strong>Array Final Max-Heap:</strong> <code style="background: #e8f5e9; padding: 10px; border-radius: 8px; font-family: 'Courier New'; font-size: 1.1rem; font-weight: bold;">[${currentHotels.map(h => h.priority.toFixed(1)).join(', ')}]</code><br><br>` +
+                `<strong>Struktur Max-Heap:</strong><br>` +
+                `• Root [0]: ${getShortHotelName(currentHotels[0].name)} = ${currentHotels[0].priority.toFixed(1)} (tertinggi)<br>` +
+                `• Left child [1]: ${getShortHotelName(currentHotels[1].name)} = ${currentHotels[1].priority.toFixed(1)}<br>` +
+                `• Right child [2]: ${getShortHotelName(currentHotels[2].name)} = ${currentHotels[2].priority.toFixed(1)}<br>` +
+                `• Siap untuk Heap Sort Phase!`,
+                [], [], "Complete"
+            );
+            
+            // Heap Sort phase (dimulai dari step berikutnya)
             heapSort();
             
             updateDisplay();
@@ -996,20 +1299,13 @@
         function buildMaxHeap() {
             let n = currentHotels.length;
             
-            recordStep(
-                `🔨 MEMBANGUN MAX-HEAP (n = ${n})<br>Heapify dimulai dari non-leaf terakhir: floor(${n}/2)-1 = ${Math.floor(n/2)-1}`,
-                [], [], "Build"
-            );
-            
-            let startIdx = Math.floor(n / 2) - 1;
+            let startIdx = Math.floor(n / 2) - 1; // index 2 = Clarion
             
             for (let i = startIdx; i >= 0; i--) {
-                const heapifyMessage = `🔄 HEAPIFY Node ${i}: ${getShortHotelName(currentHotels[i].name)}<br>Priority: ${currentHotels[i].priority.total.toFixed(1)}`;
+                const heapifyMessage = `🔄 HEAPIFY Node ${i}: ${getShortHotelName(currentHotels[i].name)}<br>Priority: ${currentHotels[i].priority.toFixed(1)}`;
                 recordStep(heapifyMessage, [i], [], "Heapify");
                 maxHeapify(n, i, "build");
             }
-            
-            recordStep("✅ MAX-HEAP BERHASIL DIBANGUN!<br>Root (Four Points) memiliki nilai priority tertinggi: 5529.0", [], [], "Complete");
         }
 
         function maxHeapify(n, i, phase) {
@@ -1018,14 +1314,14 @@
             let right = 2 * i + 2;
             
             const leftInfo = left < n ? 
-                `${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)})` : 
+                `${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.toFixed(1)})` : 
                 "tidak ada";
             const rightInfo = right < n ? 
-                `${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)})` : 
+                `${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.toFixed(1)})` : 
                 "tidak ada";
             
             let message = `🔍 ANALISIS Node ${i} (${getShortHotelName(currentHotels[i].name)}):<br>`;
-            message += `• Priority: ${currentHotels[i].priority.total.toFixed(1)}<br>`;
+            message += `• Priority: ${currentHotels[i].priority.toFixed(1)}<br>`;
             message += `• Left child [${left}]: ${leftInfo}<br>`;
             message += `• Right child [${right}]: ${rightInfo}`;
             
@@ -1036,18 +1332,18 @@
             recordStep(message, activeIndices, [], "Heapify");
             
             // Cari child dengan nilai TERBESAR (karena ini Max-Heap)
-            if (left < n && currentHotels[left].priority.total > currentHotels[largest].priority.total) {
+            if (left < n && currentHotels[left].priority > currentHotels[largest].priority) {
                 largest = left;
                 recordStep(
-                    `👈 LEFT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.total.toFixed(1)}) > ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>Set largest = ${left}`,
+                    `👈 LEFT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[left].name)} (${currentHotels[left].priority.toFixed(1)}) > ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.toFixed(1)})<br>Set largest = ${left}`,
                     [i, left], [], "Heapify"
                 );
             }
             
-            if (right < n && currentHotels[right].priority.total > currentHotels[largest].priority.total) {
+            if (right < n && currentHotels[right].priority > currentHotels[largest].priority) {
                 largest = right;
                 recordStep(
-                    `👉 RIGHT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.total.toFixed(1)}) > ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})<br>Set largest = ${right}`,
+                    `👉 RIGHT CHILD LEBIH PRIORITAS (NILAI LEBIH BESAR):<br>${getShortHotelName(currentHotels[right].name)} (${currentHotels[right].priority.toFixed(1)}) > ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.toFixed(1)})<br>Set largest = ${right}`,
                     [i, right], [], "Heapify"
                 );
             }
@@ -1061,131 +1357,220 @@
                 [currentHotels[i], currentHotels[largest]] = [currentHotels[largest], currentHotels[i]];
                 
                 recordStep(
-                    `✅ SETELAH SWAP:<br>• Index ${i}: ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.total.toFixed(1)})<br>• Index ${largest}: ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.total.toFixed(1)})`,
+                    `✅ SETELAH SWAP:<br>• Index ${i}: ${getShortHotelName(currentHotels[i].name)} (${currentHotels[i].priority.toFixed(1)})<br>• Index ${largest}: ${getShortHotelName(currentHotels[largest].name)} (${currentHotels[largest].priority.toFixed(1)})`,
                     [], [i, largest], "Swap"
                 );
                 
                 maxHeapify(n, largest, phase);
             } else {
                 recordStep(
-                    `✓ Node ${i} (${getShortHotelName(currentHotels[i].name)}) SUDAH memenuhi max-heap property<br>Parent (${currentHotels[i].priority.total.toFixed(1)}) ≥ children`,
+                    `✓ Node ${i} (${getShortHotelName(currentHotels[i].name)}) SUDAH memenuhi max-heap property<br>Parent (${currentHotels[i].priority.toFixed(1)}) ≥ children`,
                     [i], [], "Heapify"
                 );
             }
         }
 
-        // ==================== HEAP SORT ====================
+        // ==================== HEAP SORT YANG BENAR ====================
         function heapSort() {
             let n = currentHotels.length;
             
-            // Simpan heap awal untuk visualisasi
+            // Buat copy dari heap yang sudah dibangun
             let heapArray = JSON.parse(JSON.stringify(currentHotels));
             
             recordStep(
-                `🎯 MULAI HEAP SORT PHASE<br>Max-Heap saat ini:<br>${heapArray.map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
+                `🎯 MULAI HEAP SORT PHASE<br>Max-Heap awal (n=${n}):<br><code style="background: #e8f5e9; padding: 10px; border-radius: 8px; font-family: 'Courier New'; font-size: 1.1rem;">[${heapArray.map(h => h.priority.toFixed(1)).join(', ')}]</code><br>` +
+                `<strong>Algoritma Heap Sort:</strong><br>1. Swap root dengan elemen terakhir<br>2. Kurangi heap size<br>3. Heapify root baru<br>4. Ulangi hingga heap size = 1`,
                 [], [], "Sort"
             );
             
-            // ALGORITMA HEAP SORT STANDAR UNTUK MAX-HEAP:
+            // ALGORITMA HEAP SORT
             for (let i = n - 1; i > 0; i--) {
                 const iteration = n - i;
+                const heapSizeBeforeSwap = i + 1; // Sebelum swap, heap size = i+1
                 
+                // Step 1: Tampilkan sebelum swap
                 recordStep(
-                    `📦 ITERASI ${iteration}: Swap root [0] (${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.total.toFixed(1)}) dengan elemen terakhir [${i}] (${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.total.toFixed(1)})`,
-                    [0, i], [0, i], "Sort"
+                    `📦 ITERASI ${iteration}: SEBELUM SWAP<br>` +
+                    `• Heap size: ${heapSizeBeforeSwap} elemen<br>` +
+                    `• Root [0]: ${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.toFixed(1)}<br>` +
+                    `• Elemen terakhir [${i}]: ${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.toFixed(1)}`,
+                    [0, i], [], "Sort"
                 );
                 
-                // Swap root dengan elemen terakhir
+                // Step 2: Proses swap
+                recordStep(
+                    `🔄 SWAP ROOT DENGAN ELEMEN TERAKHIR:<br>` +
+                    `${getShortHotelName(heapArray[0].name)} [0] ⇄ ${getShortHotelName(heapArray[i].name)} [${i}]<br>` +
+                    `Heap size setelah swap: ${i} elemen`,
+                    [], [0, i], "Swap"
+                );
+                
+                // Lakukan swap
                 [heapArray[0], heapArray[i]] = [heapArray[i], heapArray[0]];
                 
+                // Update currentHotels untuk visualisasi
+                currentHotels = JSON.parse(JSON.stringify(heapArray));
+                
+                // Step 3: Setelah swap - TAMPILKAN PERUBAHAN
                 recordStep(
-                    `✅ SETELAH SWAP:<br>• Index ${i} (posisi akhir): ${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.total.toFixed(1)}<br>• Index 0 (root baru): ${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.total.toFixed(1)}`,
+                    `✅ SETELAH SWAP - PERUBAHAN TERJADI:<br>` +
+                    `• Index ${i} (posisi akhir): ${getShortHotelName(heapArray[i].name)} = ${heapArray[i].priority.toFixed(1)}<br>` +
+                    `• Index 0 (root baru): ${getShortHotelName(heapArray[0].name)} = ${heapArray[0].priority.toFixed(1)}<br>` +
+                    `• Elemen terurut: ${n - i} dari ${n} elemen`,
                     [0, i], [0, i], "Swap"
                 );
                 
-                // Heapify root baru dengan ukuran heap yang dikurangi
-                recordStep(
-                    `🔄 HEAPIFY root baru (${getShortHotelName(heapArray[0].name)}) pada heap size = ${i}`,
-                    [0], [], "Heapify"
-                );
+                // Step 4: Heapify jika perlu
+                if (i > 1) {
+                    recordStep(
+                        `🔄 HEAPIFY ROOT BARU:<br>` +
+                        `Root baru: ${getShortHotelName(heapArray[0].name)} (${heapArray[0].priority.toFixed(1)})<br>` +
+                        `Heap size yang aktif: ${i} elemen`,
+                        [0], [], "Heapify"
+                    );
+                    
+                    // Simpan state sebelum heapify
+                    recordStep(
+                        `🔍 STATE SEBELUM HEAPIFY (size=${i}):<br>` +
+                        `${heapArray.slice(0, i).map((h, idx) => 
+                            `${idx === 0 ? '👑 ' : ''}[${idx}] ${getShortHotelName(h.name)} = ${h.priority.toFixed(1)}`
+                        ).join('<br>')}`,
+                        [], [], "Heapify"
+                    );
+                    
+                    // Lakukan heapify dengan visualisasi
+                    performHeapifyWithVisualization(heapArray, i, 0);
+                    
+                } else {
+                    recordStep(
+                        `✓ Heap size = 1, tidak perlu di-heapify<br>` +
+                        `Proses heap sort hampir selesai!`,
+                        [], [], "Complete"
+                    );
+                }
                 
-                maxHeapifyForSort(heapArray, i, 0);
-                
-                // Tampilkan state heap setelah heapify
+                // Step 5: Tampilkan progress
                 recordStep(
-                    `📊 STATE SETELAH HEAPIFY (size=${i}):<br>${heapArray.slice(0, i).map((h, idx) => `[${idx}] ${getShortHotelName(h.name)} (${h.priority.total.toFixed(1)})`).join('<br>')}`,
-                    [], [], "Heapify"
+                    `📈 PROGRESS setelah iterasi ${iteration}:<br>` +
+                    `Heap aktif (${i} elemen): ${heapArray.slice(0, i).map(h => getShortHotelName(h.name)).join(', ')}<br>` +
+                    `Terurut (${n - i} elemen): ${heapArray.slice(i).map(h => getShortHotelName(h.name)).join(', ')}`,
+                    [], [], "Sort"
                 );
             }
             
-            // Setelah loop, heapArray sudah terurut ASCENDING
+            // Final step - hasil akhir
             currentHotels = heapArray;
             
-            // Tambahkan step penjelasan hasil akhir
             recordStep(
-                `🎉 HEAP SORT SELESAI!<br><br>
-                <strong>📊 HASIL AKHIR HEAP SORT (MAX-HEAP):</strong><br><br>
-                
-                <strong>URUTAN ASCENDING (dari terkecil ke terbesar):</strong><br>
-                ${currentHotels.map((h, idx) => 
-                    `${idx}. ${getShortHotelName(h.name)} - Priority: ${h.priority.total.toFixed(1)} ` +
-                    `(Rating: ${h.rating}⭐)`
-                ).join('<br>')}<br><br>
-                
-                <strong>⚡ PERBANDINGAN DENGAN ARRAY AWAL:</strong><br>
-                • Array Awal: [Aston, Swiss-Belhotel, Clarion, Santika, Four Points, Losari]<br>
-                • Array Hasil: [Losari, Clarion, Santika, Aston, Swiss-Belhotel, Four Points]<br>
-                • Four Points (rating tertinggi) sekarang di akhir array<br>
-                • Losari (rating terendah) sekarang di awal array`,
+                `🎉 HEAP SORT SELESAI!<br><br>` +
+                `<strong>HASIL AKHIR (TERURUT ASCENDING):</strong><br>` +
+                `${currentHotels.map((h, idx) => 
+                    `${idx}. ${getShortHotelName(h.name)} = ${h.priority.toFixed(1)} (${h.rating}⭐)`
+                ).join('<br>')}<br><br>` +
+                `<strong>PERBANDINGAN:</strong><br>` +
+                `• Array Awal: [5293.8, 5399.2, 4942.5, 5163.5, 5529.0, 4712.0]<br>` +
+                `• Max-Heap: [5529.0, 5399.2, 4942.5, 5163.5, 5293.8, 4712.0]<br>` +
+                `• Hasil Sort: [4712.0, 5163.5, 5293.8, 5399.2, 5529.0, 4942.5]`,
                 [], [], "Complete"
             );
         }
-        
-        function maxHeapifyForSort(arr, n, i) {
+
+        function performHeapifyWithVisualization(arr, n, i) {
             let largest = i;
             let left = 2 * i + 1;
             let right = 2 * i + 2;
             
-            if (left < n && arr[left].priority.total > arr[largest].priority.total) {
-                largest = left;
+            // Analisis child nodes
+            let analysis = `🔍 Analisis node ${i} (${getShortHotelName(arr[i].name)} = ${arr[i].priority.toFixed(1)}):<br>`;
+            if (left < n) {
+                analysis += `• Left child [${left}]: ${getShortHotelName(arr[left].name)} = ${arr[left].priority.toFixed(1)}<br>`;
+            }
+            if (right < n) {
+                analysis += `• Right child [${right}]: ${getShortHotelName(arr[right].name)} = ${arr[right].priority.toFixed(1)}<br>`;
             }
             
-            if (right < n && arr[right].priority.total > arr[largest].priority.total) {
+            // Cari nilai terbesar
+            if (left < n && arr[left].priority > arr[largest].priority) {
+                largest = left;
+                analysis += `• <span style="color:#e55039">LEFT lebih besar! largest = ${left}</span><br>`;
+            }
+            
+            if (right < n && arr[right].priority > arr[largest].priority) {
                 largest = right;
+                analysis += `• <span style="color:#e55039">RIGHT lebih besar! largest = ${right}</span><br>`;
             }
             
             if (largest !== i) {
+                // Step: Sebelum swap
+                recordStep(
+                    analysis + `<br>🔄 PERLU SWAP: ${getShortHotelName(arr[i].name)} [${i}] ⇄ ${getShortHotelName(arr[largest].name)} [${largest}]`,
+                    [i, largest], [i, largest], "Swap"
+                );
+                
+                // Lakukan swap
                 [arr[i], arr[largest]] = [arr[largest], arr[i]];
-                maxHeapifyForSort(arr, n, largest);
+                
+                // Update currentHotels untuk visualisasi
+                currentHotels = JSON.parse(JSON.stringify(arr));
+                
+                // Step: Setelah swap
+                recordStep(
+                    `✅ SETELAH SWAP:<br>` +
+                    `• Index ${i}: ${getShortHotelName(arr[i].name)} = ${arr[i].priority.toFixed(1)}<br>` +
+                    `• Index ${largest}: ${getShortHotelName(arr[largest].name)} = ${arr[largest].priority.toFixed(1)}`,
+                    [i, largest], [i, largest], "Swap"
+                );
+                
+                // Rekursif heapify
+                performHeapifyWithVisualization(arr, n, largest);
+            } else {
+                recordStep(
+                    analysis + `<br>✓ Tidak perlu swap, sudah memenuhi heap property`,
+                    [i], [], "Heapify"
+                );
             }
         }
 
-        function recordStep(message, activeIndices, swapIndices, stepType) {
-            steps.push({
-                hotels: JSON.parse(JSON.stringify(currentHotels)),
-                message: message,
-                activeIndices: [...activeIndices],
-                swapIndices: [...swapIndices],
-                stepType: stepType,
-                stepNumber: steps.length
-            });
-        }
+   function recordStep(message, activeIndices, swapIndices, stepType) {
+    // Format pesan agar lebih rapi
+    let formattedMessage = message;
+    
+    // Jika ada <br>, beri jarak antar paragraf
+    if (message.includes('<br>')) {
+        const parts = message.split('<br>');
+        formattedMessage = parts.map(part => {
+            if (part.trim().startsWith('•') || part.trim().startsWith('✓') || 
+                part.trim().startsWith('🔍') || part.trim().startsWith('🔄')) {
+                return `<div style="margin: 5px 0; padding-left: 10px;">${part}</div>`;
+            }
+            return `<div style="margin: 10px 0; font-weight: ${part.includes(':') ? 'bold' : 'normal'};">${part}</div>`;
+        }).join('');
+    }
+    
+    steps.push({
+        hotels: JSON.parse(JSON.stringify(currentHotels)),
+        message: formattedMessage,
+        activeIndices: [...activeIndices],
+        swapIndices: [...swapIndices],
+        stepType: stepType,
+        stepNumber: steps.length
+    });
+}
 
         // ==================== FUNGSI DISPLAY ====================
         function updateDisplay() {
-            if (currentStep >= steps.length) return;
-            
-            const step = steps[currentStep];
-            
-            updateHotelCards(step);
-            updateTreeDisplay(step);
-            updatePriorityList(step);
-            updateCalculations(step);
-            updateLog(step);
-            updateStatus(step);
-            updateButtons();
-            updateStepCounter();
-        }
+    if (currentStep >= steps.length) return;
+    
+    const step = steps[currentStep];
+    
+    updateTreeDisplay(step);
+    updatePriorityList(step);
+    updateCalculations(step);
+    updateLog(step);
+    updateStatus(step);
+    updateButtons();
+    updateStepCounter();
+}
 
         function updateHotelCards(step) {
             const hotelGrid = document.getElementById('hotelGrid');
@@ -1202,6 +1587,9 @@
                 if (step.swapIndices.includes(index)) card.classList.add('swap');
                 if (index === 0) card.classList.add('root');
                 if (leafIndices.includes(index)) card.classList.add('leaf');
+                
+                // Tentukan priority display
+                const priority = hotel.priority || calculatePriority(hotel).total;
                 
                 card.innerHTML = `
                     <div class="node-index">${index}</div>
@@ -1225,13 +1613,11 @@
                         </div>
                         <div class="hotel-detail">
                             <span class="detail-label">Priority:</span>
-                            <span class="priority-value">${hotel.priority.total.toFixed(1)}</span>
+                            <span class="priority-value">${priority.toFixed(1)}</span>
                         </div>
                     </div>
-                    <div style="margin-top: 10px; font-size: 0.85rem; color: #666; font-family: 'Courier New', monospace;">
-                        ${hotel.priority.tuple}
-                    </div>
                     ${leafIndices.includes(index) ? '<div style="margin-top: 5px; color: #9c27b0; font-size: 0.8rem;">🍃 Leaf Node</div>' : ''}
+                    ${step.swapIndices.includes(index) ? '<div style="margin-top: 5px; color: #4cd137; font-size: 0.8rem; font-weight: bold;">🔄 Sedang Ditukar</div>' : ''}
                 `;
                 
                 hotelGrid.appendChild(card);
@@ -1239,216 +1625,748 @@
         }
 
         function updateTreeDisplay(step) {
-            const treeContainer = document.getElementById('treeContainer');
-            treeContainer.innerHTML = '';
-            
-            // Tambahkan garis level
-            drawLevelLines();
-            
-            // Gambar konektor
-            step.hotels.forEach((hotel, index) => {
-                const leftChild = 2 * index + 1;
-                const rightChild = 2 * index + 2;
-                
-                if (leftChild < step.hotels.length) {
-                    drawConnector(index, leftChild, step.activeIndices.includes(index));
-                }
-                if (rightChild < step.hotels.length) {
-                    drawConnector(index, rightChild, step.activeIndices.includes(index));
-                }
-            });
-            
-            // Gambar node
-            step.hotels.forEach((hotel, index) => {
-                if (NODE_POSITIONS_CENTERED[index]) {
-                    createTreeNode(hotel, index, step);
-                }
-            });
+         const treeContainer = document.getElementById('treeContainer');
+    if (!treeContainer) {
+        console.error("treeContainer not found!");
+        return;
+    }
+    
+    treeContainer.innerHTML = '';
+    
+    // Hitung ukuran container
+    const containerWidth = treeContainer.clientWidth || 1200;
+    const containerHeight = treeContainer.clientHeight || 700;
+    
+    // Definisikan posisi node yang lebih baik
+    const NODE_POSITIONS = [
+        // Index: 0 - ROOT (Four Points) - TENGAH ATAS
+        { x: containerWidth / 2 - 110, y: 50, level: 0 },
+        // Index: 1 - Swiss-Belhotel - KIRI TENGAH
+        { x: containerWidth / 4 - 110, y: 250, level: 1 },
+        // Index: 2 - Clarion - KANAN TENGAH (NON-LEAF)
+        { x: 3 * containerWidth / 4 - 110, y: 250, level: 1 },
+        // Index: 3 - Santika - KIRI BAWAH (LEAF)
+        { x: containerWidth / 6 - 110, y: 450, level: 2 },
+        // Index: 4 - Aston - TENGAH BAWAH (LEAF)
+        { x: containerWidth / 2 - 110, y: 450, level: 2 },
+        // Index: 5 - Losari - KANAN BAWAH (LEAF)
+        { x: 5 * containerWidth / 6 - 110, y: 450, level: 2 }
+    ];
+    
+    // Gambar garis level terlebih dahulu (agar di belakang node)
+    drawLevelLines(treeContainer);
+    
+    // Gambar konektor antar node
+    const heapSize = getCurrentHeapSize(step);
+    
+    for (let i = 0; i < step.hotels.length; i++) {
+        const leftChild = 2 * i + 1;
+        const rightChild = 2 * i + 2;
+        
+        // Hanya gambar konektor untuk node yang masih dalam heap
+        if (i < heapSize) {
+            if (leftChild < heapSize && leftChild < step.hotels.length) {
+                drawConnector(i, leftChild, step, NODE_POSITIONS, treeContainer);
+            }
+            if (rightChild < heapSize && rightChild < step.hotels.length) {
+                drawConnector(i, rightChild, step, NODE_POSITIONS, treeContainer);
+            }
         }
+    }
+    
+    // Gambar node-node
+    for (let i = 0; i < step.hotels.length; i++) {
+        createTreeNode(step.hotels[i], i, step, NODE_POSITIONS, treeContainer);
+    }
+}
+   function drawLevelLines(treeContainer) {
+    if (!treeContainer) return;
+    
+    // Level 1 (y = 200)
+    const level1 = document.createElement('div');
+    level1.className = 'tree-level-line';
+    level1.style.position = 'absolute';
+    level1.style.top = '200px';
+    level1.style.width = '95%';
+    level1.style.left = '2.5%';
+    level1.style.height = '2px';
+    level1.style.background = 'linear-gradient(to right, transparent, #0c2461, transparent)';
+    level1.style.opacity = '0.3';
+    level1.style.zIndex = '0';
+    
+    const label1 = document.createElement('div');
+    label1.className = 'level-label';
+    label1.style.position = 'absolute';
+    label1.style.top = '185px';
+    label1.style.left = '20px';
+    label1.textContent = 'Level 1';
+    
+    // Level 2 (y = 400)
+    const level2 = document.createElement('div');
+    level2.className = 'tree-level-line';
+    level2.style.position = 'absolute';
+    level2.style.top = '400px';
+    level2.style.width = '95%';
+    level2.style.left = '2.5%';
+    level2.style.height = '2px';
+    level2.style.background = 'linear-gradient(to right, transparent, #0c2461, transparent)';
+    level2.style.opacity = '0.3';
+    level2.style.zIndex = '0';
+    
+    const label2 = document.createElement('div');
+    label2.className = 'level-label';
+    label2.style.position = 'absolute';
+    label2.style.top = '385px';
+    label2.style.left = '20px';
+    label2.textContent = 'Level 2 (Leaf)';
+    
+    treeContainer.appendChild(level1);
+    treeContainer.appendChild(label1);
+    treeContainer.appendChild(level2);
+    treeContainer.appendChild(label2);
+}
 
-        function drawLevelLines() {
-            const treeContainer = document.getElementById('treeContainer');
-            
-            // Level 1 (y = 200)
-            const level1 = document.createElement('div');
-            level1.className = 'tree-level-line';
-            level1.style.top = '200px';
-            level1.style.width = '90%';
-            level1.style.left = '5%';
-            
-            const label1 = document.createElement('div');
-            label1.className = 'level-label';
-            label1.style.top = '195px';
-            label1.textContent = 'Level 1';
-            
-            // Level 2 (y = 320)
-            const level2 = document.createElement('div');
-            level2.className = 'tree-level-line';
-            level2.style.top = '320px';
-            level2.style.width = '90%';
-            level2.style.left = '5%';
-            
-            const label2 = document.createElement('div');
-            label2.className = 'level-label';
-            label2.style.top = '315px';
-            label2.textContent = 'Level 2 (Leaf)';
-            
-            treeContainer.appendChild(level1);
-            treeContainer.appendChild(label1);
-            treeContainer.appendChild(level2);
-            treeContainer.appendChild(label2);
+       function drawConnector(fromIndex, toIndex, step, positions, treeContainer) {
+    if (!treeContainer) return;
+    
+    const fromPos = positions[fromIndex];
+    const toPos = positions[toIndex];
+    
+    if (!fromPos || !toPos) return;
+    
+    // Hitung koordinat tengah node
+    const fromX = fromPos.x + 110; // Tengah node (110px dari kiri)
+    const fromY = fromPos.y + 65;  // Tengah node (65px dari atas)
+    const toX = toPos.x + 110;     // Tengah node
+    const toY = toPos.y;           // Atas node
+    
+    // Hitung panjang dan sudut garis
+    const deltaX = toX - fromX;
+    const deltaY = toY - fromY;
+    const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+    
+    // Buat elemen connector
+    const connector = document.createElement('div');
+    connector.className = 'tree-connector';
+    connector.style.position = 'absolute';
+    connector.style.width = `${length}px`;
+    connector.style.height = '3px';
+    connector.style.background = '#0c2461';
+    connector.style.left = `${fromX}px`;
+    connector.style.top = `${fromY}px`;
+    connector.style.transform = `rotate(${angle}deg)`;
+    connector.style.transformOrigin = '0 0';
+    connector.style.zIndex = '1';
+    connector.style.opacity = '0.7';
+    
+    // Tambahkan panah
+    const arrow = document.createElement('div');
+    arrow.style.position = 'absolute';
+    arrow.style.right = '-6px';
+    arrow.style.top = '-4px';
+    arrow.style.width = '0';
+    arrow.style.height = '0';
+    arrow.style.borderLeft = '5px solid transparent';
+    arrow.style.borderRight = '5px solid transparent';
+    arrow.style.borderTop = '8px solid #0c2461';
+    connector.appendChild(arrow);
+    
+    // Highlight jika node aktif
+    if (step.activeIndices.includes(fromIndex) || step.activeIndices.includes(toIndex) ||
+        step.swapIndices.includes(fromIndex) || step.swapIndices.includes(toIndex)) {
+        connector.style.background = '#e55039';
+        connector.style.height = '4px';
+        connector.style.opacity = '0.9';
+        arrow.style.borderTop = '8px solid #e55039';
+    }
+    
+    treeContainer.appendChild(connector);
+}
+
+
+      function isHeapSortStep(stepIndex) {
+    if (stepIndex >= steps.length) return false;
+    
+    // Cari step pertama yang berisi "HEAP SORT"
+    for (let i = 0; i < steps.length; i++) {
+        if (steps[i].message.includes("HEAP SORT PHASE")) {
+            return stepIndex >= i;
         }
+    }
+    
+    return false;
+}
 
-        function drawConnector(fromIndex, toIndex, isActive) {
-            const treeContainer = document.getElementById('treeContainer');
-            const connector = document.createElement('div');
-            connector.className = 'tree-connector';
-            
-            const from = NODE_POSITIONS_CENTERED[fromIndex];
-            const to = NODE_POSITIONS_CENTERED[toIndex];
-            
-            if (!from || !to) return;
-            
-            // Hitung dari tengah node atas ke atas node bawah
-            const fromCenterX = from.x;
-            const fromCenterY = from.y + 55; // Tengah node (110px/2)
-            const toCenterX = to.x;
-            const toCenterY = to.y; // Atas node
-            
-            const deltaX = toCenterX - fromCenterX;
-            const deltaY = toCenterY - fromCenterY;
-            const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-            
-            connector.style.width = `${length}px`;
-            connector.style.left = `${fromCenterX}px`;
-            connector.style.top = `${fromCenterY}px`;
-            connector.style.transform = `rotate(${angle}deg)`;
-            connector.style.transformOrigin = '0 0';
-            connector.style.background = isActive ? '#e55039' : '#0c2461';
-            connector.style.height = isActive ? '4px' : '3px';
-            connector.style.opacity = isActive ? '0.9' : '0.7';
-            
-            treeContainer.appendChild(connector);
+        function getCurrentHeapSize(step) {
+           const message = step.message;
+    
+    // Pattern 1: "Heap size: X"
+    let match = message.match(/Heap size: (\d+)/);
+    if (match) return parseInt(match[1]);
+    
+    // Pattern 2: "size: X"
+    match = message.match(/size: (\d+)/);
+    if (match) return parseInt(match[1]);
+    
+    // Pattern 3: "Heap size sekarang: X"
+    match = message.match(/Heap size sekarang: (\d+)/);
+    if (match) return parseInt(match[1]);
+    
+    // Pattern 4: Cari dari iterasi
+    if (message.includes("ITERASI")) {
+        match = message.match(/ITERASI (\d+)/);
+        if (match) {
+            const iteration = parseInt(match[1]);
+            return step.hotels.length - iteration + 1;
         }
-
-        function createTreeNode(hotel, index, step) {
-            const treeContainer = document.getElementById('treeContainer');
-            const node = document.createElement('div');
-            node.className = 'tree-node';
-            
-            const isActive = step.activeIndices.includes(index);
-            const isSwapping = step.swapIndices.includes(index);
-            const isRoot = index === 0;
-            const leafIndices = identifyLeafNodes(step.hotels.length);
-            const isLeaf = leafIndices.includes(index);
-            
-            if (isActive) node.classList.add('active');
-            if (isSwapping) node.classList.add('swap');
-            if (isRoot) node.classList.add('root');
-            if (isLeaf) node.classList.add('leaf');
-            
-            const position = NODE_POSITIONS_CENTERED[index];
-            node.style.left = `${position.x - 90}px`;
-            node.style.top = `${position.y}px`;
-            
-            // Tentukan warna border
-            let borderColor = '#0c2461';
-            if (isActive) borderColor = '#e55039';
-            if (isSwapping) borderColor = '#4cd137';
-            if (isRoot) borderColor = '#8c7ae6';
-            if (isLeaf) borderColor = '#9c27b0';
-            
-            node.style.borderColor = borderColor;
-            node.style.boxShadow = `0 0 15px ${borderColor}40`;
-            
-            const shortName = getShortHotelName(hotel.name);
-            
-            node.innerHTML = `
-                <div style="position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
-                      background: ${borderColor}; color: white; padding: 4px 12px; 
-                      border-radius: 15px; font-size: 0.85rem; font-weight: bold; z-index: 20;
-                      white-space: nowrap; box-shadow: 0 3px 8px rgba(0,0,0,0.2);">
-                    [${index}] ${isRoot ? 'ROOT' : isLeaf ? 'LEAF' : 'NODE'}
+    }
+    // ==================== FUNGSI TAMBAHAN YANG DIPERLUKAN ====================
+function updateHotelCards(step) {
+    const hotelGrid = document.getElementById('hotelGrid');
+    if (!hotelGrid) return;
+    
+    hotelGrid.innerHTML = '';
+    
+    const n = step.hotels.length;
+    const leafIndices = identifyLeafNodes(n);
+    
+    step.hotels.forEach((hotel, index) => {
+        const card = document.createElement('div');
+        card.className = 'hotel-card';
+        
+        if (step.activeIndices.includes(index)) card.classList.add('active');
+        if (step.swapIndices.includes(index)) card.classList.add('swap');
+        if (index === 0) card.classList.add('root');
+        if (leafIndices.includes(index)) card.classList.add('leaf');
+        
+        // Tentukan priority display
+        const priority = hotel.priority || calculatePriority(hotel).total;
+        
+        card.innerHTML = `
+            <div class="node-index">${index}</div>
+            <div class="hotel-name">${hotel.name}</div>
+            <div class="hotel-details">
+                <div class="hotel-detail">
+                    <span class="detail-label">Rating:</span>
+                    <span class="detail-value">${hotel.rating} ⭐</span>
                 </div>
-                
-                <div style="text-align: center; padding: 12px 10px;">
-                    <div style="font-weight: bold; color: #0c2461; font-size: 1.1rem; 
-                          margin-bottom: 10px; line-height: 1.2; height: 2.4em; display: flex; 
-                          align-items: center; justify-content: center;">
-                        ${shortName}
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; 
-                          font-size: 0.85rem; margin-top: 5px;">
-                        <div style="text-align: left; color: #555;">
-                            <div>⭐ ${hotel.rating}</div>
-                            <div>👍 ${hotel.popularity}</div>
-                        </div>
-                        <div style="text-align: right; color: #555;">
-                            <div>💰 $${hotel.price}</div>
-                            <div>📍 ${hotel.distance}km</div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 10px; padding: 6px; background: #f8f9fa; 
-                          border-radius: 8px; font-size: 0.8rem; border: 1px solid #eee;">
-                        <strong style="color: ${borderColor};">Priority:</strong> 
-                        <span style="font-weight: bold; color: #e55039;">${hotel.priority.total.toFixed(1)}</span>
-                    </div>
-                    
-                    ${isActive ? 
-                        `<div style="position: absolute; bottom: -25px; left: 0; right: 0; 
-                              text-align: center; color: #e55039; font-size: 0.75rem; 
-                              font-weight: bold; animation: nodeHighlight 1s infinite;
-                              background: white; padding: 3px; border-radius: 10px;
-                              box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                            🔍 SEDANG DIPROSES
-                        </div>` : ''}
+                <div class="hotel-detail">
+                    <span class="detail-label">Popularitas:</span>
+                    <span class="detail-value">${hotel.popularity}/100</span>
                 </div>
-            `;
-            
-            treeContainer.appendChild(node);
-        }
+                <div class="hotel-detail">
+                    <span class="detail-label">Harga:</span>
+                    <span class="detail-value">$${hotel.price}</span>
+                </div>
+                <div class="hotel-detail">
+                    <span class="detail-label">Jarak:</span>
+                    <span class="detail-value">${hotel.distance} km</span>
+                </div>
+                <div class="hotel-detail">
+                    <span class="detail-label">Priority:</span>
+                    <span class="priority-value">${priority.toFixed(1)}</span>
+                </div>
+            </div>
+            ${leafIndices.includes(index) ? '<div style="margin-top: 5px; color: #9c27b0; font-size: 0.8rem;">🍃 Leaf Node</div>' : ''}
+            ${step.swapIndices.includes(index) ? '<div style="margin-top: 5px; color: #4cd137; font-size: 0.8rem; font-weight: bold;">🔄 Sedang Ditukar</div>' : ''}
+        `;
+        
+        hotelGrid.appendChild(card);
+    });
+}
 
+function updateCalculations(step) {
+    const calculationsContent = document.getElementById('calculationsContent');
+    if (!calculationsContent) return;
+    
+    const n = step.hotels.length;
+    const heapSize = getCurrentHeapSize(step);
+    const isHeapSortPhase = isHeapSortStep(currentStep);
+    
+    if (step.stepType === "Leaf") {
+        const leafIndices = identifyLeafNodes(n);
+        calculationsContent.innerHTML = `
+            <div class="calculation-box">
+                <strong>🍃 ANALISIS LEAF NODES:</strong><br>
+                • n = ${n} hotel<br>
+                • Leaf mulai dari: floor(${n}/2) = ${Math.floor(n/2)}<br>
+                • Leaf indices: ${leafIndices.join(', ')}<br>
+                • Leaf hotels: ${leafIndices.map(i => getShortHotelName(step.hotels[i].name)).join(', ')}<br><br>
+                <em>Leaf nodes tidak perlu di-heapify karena tidak memiliki child nodes.</em>
+            </div>
+        `;
+    } else if (isHeapSortPhase) {
+        let content = `<div class="calculation-box"><strong>📊 ANALISIS HEAP SORT:</strong><br><br>`;
+        
+        if (step.swapIndices.length === 2) {
+            const [idx1, idx2] = step.swapIndices;
+            content += `<strong>🔄 PROSES SWAP:</strong><br>`;
+            content += `• Index ${idx1}: ${getShortHotelName(step.hotels[idx1].name)} (${step.hotels[idx1].priority.toFixed(1)})<br>`;
+            content += `• Index ${idx2}: ${getShortHotelName(step.hotels[idx2].name)} (${step.hotels[idx2].priority.toFixed(1)})<br>`;
+            
+            if (idx1 === 0 || idx2 === 0) {
+                content += `<br><strong>💡 ALGORITMA HEAP SORT:</strong><br>`;
+                content += `1. Swap root (index 0) dengan elemen terakhir heap<br>`;
+                content += `2. Kurangi heap size menjadi ${heapSize}<br>`;
+                content += `3. Heapify root baru untuk menjaga max-heap property<br>`;
+            }
+        }
+        
+        content += `<br><strong>📈 STATUS HEAP:</strong><br>`;
+        content += `• Total elemen: ${n}<br>`;
+        content += `• Heap size aktif: ${heapSize} elemen<br>`;
+        content += `• Elemen terurut: ${n - heapSize} elemen<br>`;
+        
+        if (heapSize > 0) {
+            content += `<br><strong>🔵 ELEMEN DALAM HEAP:</strong><br>`;
+            for (let i = 0; i < heapSize; i++) {
+                const isRoot = i === 0;
+                content += `${isRoot ? '👑 ' : ''}[${i}] ${getShortHotelName(step.hotels[i].name)} (${step.hotels[i].priority.toFixed(1)})<br>`;
+            }
+        }
+        
+        if (n - heapSize > 0) {
+            content += `<br><strong>✅ ELEMEN TERURUT:</strong><br>`;
+            for (let i = heapSize; i < n; i++) {
+                content += `[${i}] ${getShortHotelName(step.hotels[i].name)} (${step.hotels[i].priority.toFixed(1)})<br>`;
+            }
+        }
+        
+        content += `</div>`;
+        calculationsContent.innerHTML = content;
+    } else if (step.stepType === "Build") {
+        calculationsContent.innerHTML = `
+            <div class="calculation-box">
+                <strong>🔨 BUILD MAX-HEAP PROCESS:</strong><br><br>
+                • n = ${n} elements<br>
+                • Leaf nodes: ${identifyLeafNodes(n).join(', ')}<br>
+                • Non-leaf nodes: ${Array.from({length: Math.floor(n/2)}, (_, i) => i).join(', ')}<br>
+                • Build order: ${Array.from({length: Math.floor(n/2)}, (_, i) => Math.floor(n/2)-1-i).join(' → ')}<br><br>
+                <em>Setiap node di-heapify untuk memastikan parent memiliki nilai lebih BESAR dari children.</em>
+            </div>
+        `;
+    } else {
+        calculationsContent.innerHTML = `
+            <div class="calculation-box">
+                <strong>📊 STATUS:</strong><br>
+                • Total elemen: ${n}<br>
+                • Heap size: ${heapSize} elemen<br>
+                • Phase: ${step.stepType}<br>
+                • Active nodes: ${step.activeIndices.join(', ')}<br>
+                • Swap nodes: ${step.swapIndices.join(', ')}
+            </div>
+        `;
+    }
+}
+
+function updateLog(step) {
+    const logContent = document.getElementById('logContent');
+    
+    if (currentStep === 0) {
+        logContent.innerHTML = '';
+    }
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = `log-entry ${step.stepType.toLowerCase()}`;
+    
+    // Tentukan apakah konten panjang
+    const messageLength = step.message.length;
+    const hasMultipleLines = step.message.includes('<br>');
+    if (messageLength > 150 || hasMultipleLines) {
+        logEntry.classList.add('long-content');
+    }
+    
+    const stepNum = step.stepNumber.toString().padStart(2, '0');
+    
+    logEntry.innerHTML = `
+        <div class="log-entry-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <strong style="color: #0c2461; font-size: 1rem;">Step ${stepNum}: ${step.stepType}</strong>
+                <span style="background: #f0f0f0; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">
+                    ${step.stepNumber}
+                </span>
+            </div>
+            <span style="font-size: 0.85rem; color: #666; font-family: monospace;">
+                ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}
+            </span>
+        </div>
+        <div class="log-entry-content">
+            ${step.message}
+        </div>
+        <div style="margin-top: 10px; font-size: 0.8rem; color: #888; text-align: right;">
+            <span class="badge" style="background: #e0e0e0; padding: 2px 8px; border-radius: 10px;">
+                Active: [${step.activeIndices.join(', ')}]
+            </span>
+            ${step.swapIndices.length > 0 ? 
+                `<span class="badge" style="background: #4cd137; color: white; padding: 2px 8px; border-radius: 10px; margin-left: 5px;">
+                    Swap: [${step.swapIndices.join(', ')}]
+                </span>` : ''
+            }
+        </div>
+    `;
+    
+    logContent.appendChild(logEntry);
+    
+    // Auto scroll ke entry terbaru
+    logEntry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function updateStatus(step) {
+    const statusElement = document.getElementById('status');
+    const phaseIndicator = document.getElementById('phaseIndicator');
+    const logPhaseIndicator = document.getElementById('logPhaseIndicator');
+    
+    let statusClass = 'status';
+    let phaseText = '';
+    let statusText = step.message.split('<br>')[0];
+    
+    switch(step.stepType) {
+        case 'Leaf':
+            statusClass = 'status leaf';
+            phaseText = 'Identifikasi Leaf Nodes';
+            break;
+        case 'Build':
+        case 'Heapify':
+            statusClass = 'status build';
+            phaseText = 'Build Max-Heap';
+            break;
+        case 'Sort':
+            statusClass = 'status sort';
+            phaseText = 'Heap Sort';
+            const heapSize = getCurrentHeapSize(step);
+            if (heapSize > 0) {
+                statusText += ` | Heap Size: ${heapSize}`;
+            }
+            break;
+        case 'Swap':
+            statusClass = 'status sort';
+            phaseText = 'Heap Sort - Swapping';
+            if (step.swapIndices.length === 2) {
+                const [i, j] = step.swapIndices;
+                statusText = `🔄 SWAP: [${i}] ⇄ [${j}]`;
+            }
+            break;
+        case 'Complete':
+            phaseText = 'Selesai';
+            if (step.message.includes("HEAP SORT SELESAI")) {
+                statusClass = 'status sort';
+                statusText = "🎉 Heap Sort Selesai!";
+            }
+            break;
+        default:
+            phaseText = 'Inisialisasi';
+    }
+    
+    statusElement.className = statusClass;
+    statusElement.innerHTML = statusText;
+    
+    if (phaseIndicator) phaseIndicator.textContent = phaseText;
+    if (logPhaseIndicator) logPhaseIndicator.textContent = `Phase: ${phaseText}`;
+}
+
+function updateStepCounter() {
+    const stepCounter = document.getElementById('stepCounter');
+    if (stepCounter) {
+        stepCounter.textContent = `Step: ${currentStep + 1}/${steps.length}`;
+    }
+}
+
+function updateButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const autoBtn = document.getElementById('autoBtn');
+    
+    if (prevBtn) prevBtn.disabled = currentStep === 0;
+    if (nextBtn) nextBtn.disabled = currentStep === steps.length - 1;
+    
+    if (currentStep === steps.length - 1 && autoBtn) {
+        autoBtn.textContent = '▶️ Jalankan Otomatis';
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+}
+
+    // Default: jika step Complete dan ada "SELESAI", semua elemen terurut
+    if (step.stepType === "Complete" && message.includes("SELESAI")) {
+        return 0;
+    }
+    
+    // Default untuk step Build/Heapify: semua elemen dalam heap
+    if (step.stepType === "Build" || step.stepType === "Heapify" || step.stepType === "Leaf") {
+        return step.hotels.length;
+    }
+    
+    // Default untuk step Sort/Swap: berdasarkan konteks
+    if (step.swapIndices.length === 2) {
+        const [i, j] = step.swapIndices;
+        // Jika swap antara root dan elemen lain
+        if (i === 0 || j === 0) {
+            const otherIndex = i === 0 ? j : i;
+            if (otherIndex > 0) {
+                return otherIndex + 1;
+            }
+        }
+    }
+    
+    return step.hotels.length;
+}
+
+
+        function createTreeNode(hotel, index, step, positions, treeContainer) {
+    if (!treeContainer) return;
+    
+    const position = positions[index];
+    
+    if (!position) {
+        console.error(`No position defined for index ${index}`);
+        return;
+    }
+    
+    const node = document.createElement('div');
+    node.className = 'tree-node';
+    
+    // Tentukan status node
+    const isActive = step.activeIndices.includes(index);
+    const isSwapping = step.swapIndices.includes(index);
+    const leafIndices = identifyLeafNodes(step.hotels.length);
+    const isLeaf = leafIndices.includes(index);
+    const heapSize = getCurrentHeapSize(step);
+    const isHeapSortPhase = isHeapSortStep(currentStep);
+    const isRoot = index === 0;
+    const isInHeap = index < heapSize;
+    
+    // Tambahkan kelas berdasarkan status
+    if (isActive) node.classList.add('active');
+    if (isSwapping) node.classList.add('swap');
+    if (isRoot && isInHeap) node.classList.add('root');
+    if (isLeaf) node.classList.add('leaf');
+    
+    // Set posisi
+    node.style.left = `${position.x}px`;
+    node.style.top = `${position.y}px`;
+    
+    // Tentukan warna border
+    let borderColor = '#0c2461';
+    if (isActive) borderColor = '#e55039';
+    if (isSwapping) borderColor = '#4cd137';
+    if (isRoot && isInHeap) borderColor = '#8c7ae6';
+    if (isLeaf) borderColor = '#9c27b0';
+    
+    node.style.borderColor = borderColor;
+    node.style.boxShadow = `0 4px 12px ${borderColor}40`;
+    
+    const shortName = getShortHotelName(hotel.name);
+    
+    // Buat konten node
+    node.innerHTML = `
+        <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+              background: ${borderColor}; color: white; padding: 3px 10px; 
+              border-radius: 12px; font-size: 0.8rem; font-weight: bold; z-index: 20;
+              white-space: nowrap; min-width: 80px; text-align: center;">
+            [${index}] ${isRoot && isInHeap ? 'ROOT' : isLeaf ? 'LEAF' : 'NODE'}
+        </div>
+        
+        <div style="text-align: center; padding: 10px;">
+            <div style="font-weight: bold; color: #0c2461; font-size: 1rem; 
+                  margin-bottom: 8px; height: 2.2em; display: flex; 
+                  align-items: center; justify-content: center;">
+                ${shortName}
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; 
+                  font-size: 0.8rem; margin-bottom: 8px;">
+                <div style="text-align: left; color: #555;">
+                    <div>⭐ ${hotel.rating}</div>
+                    <div>👍 ${hotel.popularity}</div>
+                </div>
+                <div style="text-align: right; color: #555;">
+                    <div>💰 $${hotel.price}</div>
+                    <div>📍 ${hotel.distance}km</div>
+                </div>
+            </div>
+            
+            <div style="padding: 5px; background: #f8f9fa; border-radius: 6px; 
+                  font-size: 0.75rem; border: 1px solid #eee;">
+                <strong style="color: ${borderColor};">Priority:</strong> 
+                <span style="font-weight: bold; color: #e55039; margin-left: 5px;">
+                    ${hotel.priority.toFixed(1)}
+                </span>
+            </div>
+        </div>
+        
+        ${isHeapSortPhase ? 
+            `<div style="position: absolute; bottom: -22px; left: 0; right: 0;
+                  text-align: center; color: ${isInHeap ? '#2196f3' : '#4caf50'}; 
+                  font-size: 0.65rem; font-weight: bold; background: white; padding: 2px 4px;
+                  border-radius: 6px; border: 1px solid ${isInHeap ? '#2196f3' : '#4caf50'};">
+                ${isInHeap ? '🔵 DALAM HEAP' : '✅ TERURUT'}
+            </div>` : ''}
+        
+        ${isActive ? 
+            `<div style="position: absolute; bottom: ${isHeapSortPhase ? '-45px' : '-25px'}; left: 0; right: 0;
+                  text-align: center; color: #e55039; font-size: 0.75rem; 
+                  font-weight: bold; animation: nodeHighlight 1s infinite;
+                  background: white; padding: 3px; border-radius: 10px;
+                  box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                🔍 SEDANG DIPROSES
+            </div>` : ''}
+    `;
+    
+    // Tambahkan animasi jika diperlukan
+    if (isActive) {
+        node.style.animation = 'nodeHighlight 1s infinite';
+    }
+    
+    if (isSwapping) {
+        node.style.animation = 'swapPulse 0.5s';
+    }
+    
+    treeContainer.appendChild(node);
+}
+function createTreeNode(hotel, index, step, positions) {
+    const treeContainer = document.getElementById('treeContainer');
+    const position = positions[index];
+    
+    if (!position) return;
+    
+    const node = document.createElement('div');
+    node.className = 'tree-node';
+    
+    // Tentukan status node
+    const isActive = step.activeIndices.includes(index);
+    const isSwapping = step.swapIndices.includes(index);
+    const leafIndices = identifyLeafNodes(step.hotels.length);
+    const isLeaf = leafIndices.includes(index);
+    const heapSize = getCurrentHeapSize(step);
+    const isHeapSortPhase = isHeapSortStep(currentStep);
+    const isRoot = index === 0;
+    const isInHeap = index < heapSize;
+    
+    // Tambahkan kelas berdasarkan status
+    if (isActive) node.classList.add('active');
+    if (isSwapping) node.classList.add('swap');
+    if (isRoot && isInHeap) node.classList.add('root');
+    if (isLeaf) node.classList.add('leaf');
+    
+    // Set posisi
+    node.style.left = `${position.x}px`;
+    node.style.top = `${position.y}px`;
+    
+    // Tentukan warna border
+    let borderColor = '#0c2461';
+    if (isActive) borderColor = '#e55039';
+    if (isSwapping) borderColor = '#4cd137';
+    if (isRoot && isInHeap) borderColor = '#8c7ae6';
+    if (isLeaf) borderColor = '#9c27b0';
+    
+    node.style.borderColor = borderColor;
+    node.style.boxShadow = `0 4px 12px ${borderColor}40`;
+    
+    const shortName = getShortHotelName(hotel.name);
+    
+    // Buat konten node
+    node.innerHTML = `
+        <div style="position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+              background: ${borderColor}; color: white; padding: 3px 10px; 
+              border-radius: 12px; font-size: 0.8rem; font-weight: bold; z-index: 20;
+              white-space: nowrap; min-width: 80px; text-align: center;">
+            [${index}] ${isRoot && isInHeap ? 'ROOT' : isLeaf ? 'LEAF' : 'NODE'}
+        </div>
+        
+        <div style="text-align: center; padding: 10px;">
+            <div style="font-weight: bold; color: #0c2461; font-size: 1rem; 
+                  margin-bottom: 8px; height: 2.2em; display: flex; 
+                  align-items: center; justify-content: center;">
+                ${shortName}
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; 
+                  font-size: 0.8rem; margin-bottom: 8px;">
+                <div style="text-align: left; color: #555;">
+                    <div>⭐ ${hotel.rating}</div>
+                    <div>👍 ${hotel.popularity}</div>
+                </div>
+                <div style="text-align: right; color: #555;">
+                    <div>💰 $${hotel.price}</div>
+                    <div>📍 ${hotel.distance}km</div>
+                </div>
+            </div>
+            
+            <div style="padding: 5px; background: #f8f9fa; border-radius: 6px; 
+                  font-size: 0.75rem; border: 1px solid #eee;">
+                <strong style="color: ${borderColor};">Priority:</strong> 
+                <span style="font-weight: bold; color: #e55039; margin-left: 5px;">
+                    ${hotel.priority.toFixed(1)}
+                </span>
+            </div>
+        </div>
+        
+        ${isHeapSortPhase ? 
+            `<div style="position: absolute; bottom: -22px; left: 0; right: 0;
+                  text-align: center; color: ${isInHeap ? '#2196f3' : '#4caf50'}; 
+                  font-size: 0.65rem; font-weight: bold; background: white; padding: 2px 4px;
+                  border-radius: 6px; border: 1px solid ${isInHeap ? '#2196f3' : '#4caf50'};">
+                ${isInHeap ? '🔵 DALAM HEAP' : '✅ TERURUT'}
+            </div>` : ''}
+    `;
+    
+    // Tambahkan animasi jika diperlukan
+    if (isActive) {
+        node.style.animation = 'nodeHighlight 1s infinite';
+    }
+    
+    if (isSwapping) {
+        node.style.animation = 'swapPulse 0.5s';
+    }
+    
+    treeContainer.appendChild(node);
+}
         function updatePriorityList(step) {
-            const priorityList = document.getElementById('priorityList');
-            priorityList.innerHTML = '';
-            
-            // Urutkan dari TERBESAR ke TERKECIL (rating tertinggi pertama)
-            const sortedHotels = [...step.hotels].sort((a, b) => b.priority.total - a.priority.total);
-            const leafIndices = identifyLeafNodes(step.hotels.length);
-            
-            sortedHotels.forEach((hotel, index) => {
-                const originalIndex = step.hotels.findIndex(h => h.name === hotel.name);
-                const item = document.createElement('li');
-                item.className = 'priority-item';
-                
-                if (step.activeIndices.includes(originalIndex)) item.classList.add('active');
-                if (leafIndices.includes(originalIndex)) item.classList.add('leaf-node');
-                
-                item.innerHTML = `
-                    <span class="priority-rank">${index + 1}</span>
-                    <div>
-                        <strong>${getShortHotelName(hotel.name)}</strong>
-                        <div style="font-size: 0.85rem; color: #666; margin-top: 3px;">
-                            Priority: <strong>${hotel.priority.total.toFixed(1)}</strong> | 
-                            Index: [${originalIndex}] | 
-                            ${leafIndices.includes(originalIndex) ? '🍃 Leaf' : '🌿 Non-leaf'}
-                        </div>
-                        <div style="font-size: 0.75rem; color: #888; font-family: 'Courier New'; margin-top: 2px;">
-                            ${hotel.priority.tuple}
-                        </div>
-                    </div>
-                `;
-                
-                priorityList.appendChild(item);
-            });
-        }
+    const priorityList = document.getElementById('priorityList');
+    if (!priorityList) return;
+    
+    priorityList.innerHTML = '';
+    
+    // JANGAN diurutkan berdasarkan priority, tapi ambil dari step.hotels langsung
+    // Karena step.hotels sudah dalam urutan heap yang benar (index 0-5)
+    step.hotels.forEach((hotel, index) => {
+        const originalIndex = index; // Index dalam heap
+        const item = document.createElement('li');
+        item.className = 'priority-item';
+        
+        if (step.activeIndices.includes(originalIndex)) item.classList.add('active');
+        
+        // Tentukan apakah leaf node
+        const leafIndices = identifyLeafNodes(step.hotels.length);
+        if (leafIndices.includes(originalIndex)) item.classList.add('leaf-node');
+        
+        // Tampilkan ranking berdasarkan urutan dalam heap (index + 1)
+        const rank = index + 1;
+        
+        item.innerHTML = `
+            <span class="priority-rank">${rank}</span>
+            <div style="flex: 1;">
+                <strong>${getShortHotelName(hotel.name)}</strong>
+                <div style="font-size: 0.85rem; color: #666; margin-top: 3px;">
+                    Priority: <strong>${hotel.priority.toFixed(1)}</strong> | 
+                    Index: [${originalIndex}] | 
+                    ${leafIndices.includes(originalIndex) ? '🍃 Leaf' : '🌿 Non-leaf'}
+                </div>
+            </div>
+        `;
+        
+        priorityList.appendChild(item);
+    });
+}
 
         function updateCalculations(step) {
             const calculationsContent = document.getElementById('calculationsContent');
             const n = step.hotels.length;
+            const heapSize = getCurrentHeapSize(step);
+            const isHeapSortPhase = isHeapSortStep(currentStep);
             
             if (step.stepType === "Leaf") {
                 const leafIndices = identifyLeafNodes(n);
@@ -1462,28 +2380,45 @@
                         <em>Leaf nodes tidak perlu di-heapify karena tidak memiliki child nodes.</em>
                     </div>
                 `;
-            } else if (step.stepType === "Heapify" && step.activeIndices[0] === 2) {
-                const leftChild = 2 * 2 + 1; // index 5
-                const rightChild = 2 * 2 + 2; // index 6 (tidak ada)
+            } else if (isHeapSortPhase) {
+                let content = `<div class="calculation-box"><strong>📊 ANALISIS HEAP SORT:</strong><br><br>`;
                 
-                calculationsContent.innerHTML = `
-                    <div class="calculation-box">
-                        <strong>🔄 HEAPIFY NODE 2 (Aston Makassar):</strong><br><br>
-                        <strong>Mengapa mulai dari node 2?</strong><br>
-                        • startIdx = floor(n/2) - 1 = floor(${n}/2) - 1 = ${Math.floor(n/2)-1}<br>
-                        • Algoritma bekerja BOTTOM-UP dari non-leaf terakhir<br><br>
-                        
-                        <strong>Struktur subtree node 2:</strong><br>
-                        • Parent: Aston [2] (${step.hotels[2].priority.total.toFixed(1)})<br>
-                        • Left child: Losari [5] (2×2+1) (${step.hotels[5] ? step.hotels[5].priority.total.toFixed(1) : 'N/A'})<br>
-                        • Right child: tidak ada (2×2+2=6 ≥ n)<br><br>
-                        
-                        <strong>Keputusan:</strong><br>
-                        ${step.hotels[5] && step.hotels[5].priority.total > step.hotels[2].priority.total ? 
-                          'Perlu SWAP karena child (Losari) memiliki nilai lebih BESAR' : 
-                          'Tidak perlu swap (Aston sudah memiliki nilai yang lebih BESAR dari child)'}
-                    </div>
-                `;
+                if (step.swapIndices.length === 2) {
+                    const [idx1, idx2] = step.swapIndices;
+                    content += `<strong>🔄 PROSES SWAP:</strong><br>`;
+                    content += `• Index ${idx1}: ${getShortHotelName(step.hotels[idx1].name)} (${step.hotels[idx1].priority.toFixed(1)})<br>`;
+                    content += `• Index ${idx2}: ${getShortHotelName(step.hotels[idx2].name)} (${step.hotels[idx2].priority.toFixed(1)})<br>`;
+                    
+                    if (idx1 === 0 || idx2 === 0) {
+                        content += `<br><strong>💡 ALGORITMA HEAP SORT:</strong><br>`;
+                        content += `1. Swap root (index 0) dengan elemen terakhir heap<br>`;
+                        content += `2. Kurangi heap size menjadi ${heapSize}<br>`;
+                        content += `3. Heapify root baru untuk menjaga max-heap property<br>`;
+                    }
+                }
+                
+                content += `<br><strong>📈 STATUS HEAP:</strong><br>`;
+                content += `• Total elemen: ${n}<br>`;
+                content += `• Heap size aktif: ${heapSize} elemen<br>`;
+                content += `• Elemen terurut: ${n - heapSize} elemen<br>`;
+                
+                if (heapSize > 0) {
+                    content += `<br><strong>🔵 ELEMEN DALAM HEAP:</strong><br>`;
+                    for (let i = 0; i < heapSize; i++) {
+                        const isRoot = i === 0;
+                        content += `${isRoot ? '👑 ' : ''}[${i}] ${getShortHotelName(step.hotels[i].name)} (${step.hotels[i].priority.toFixed(1)})<br>`;
+                    }
+                }
+                
+                if (n - heapSize > 0) {
+                    content += `<br><strong>✅ ELEMEN TERURUT:</strong><br>`;
+                    for (let i = heapSize; i < n; i++) {
+                        content += `[${i}] ${getShortHotelName(step.hotels[i].name)} (${step.hotels[i].priority.toFixed(1)})<br>`;
+                    }
+                }
+                
+                content += `</div>`;
+                calculationsContent.innerHTML = content;
             } else if (step.stepType === "Build") {
                 calculationsContent.innerHTML = `
                     <div class="calculation-box">
@@ -1528,6 +2463,7 @@
             
             let statusClass = 'status';
             let phaseText = '';
+            let statusText = step.message.split('<br>')[0];
             
             switch(step.stepType) {
                 case 'Leaf':
@@ -1540,19 +2476,34 @@
                     phaseText = 'Build Max-Heap';
                     break;
                 case 'Sort':
-                case 'Swap':
                     statusClass = 'status sort';
                     phaseText = 'Heap Sort';
+                    const heapSize = getCurrentHeapSize(step);
+                    if (heapSize > 0) {
+                        statusText += ` | Heap Size: ${heapSize}`;
+                    }
+                    break;
+                case 'Swap':
+                    statusClass = 'status sort';
+                    phaseText = 'Heap Sort - Swapping';
+                    if (step.swapIndices.length === 2) {
+                        const [i, j] = step.swapIndices;
+                        statusText = `🔄 SWAP: [${i}] ⇄ [${j}]`;
+                    }
                     break;
                 case 'Complete':
                     phaseText = 'Selesai';
+                    if (step.message.includes("HEAP SORT SELESAI")) {
+                        statusClass = 'status sort';
+                        statusText = "🎉 Heap Sort Selesai!";
+                    }
                     break;
                 default:
                     phaseText = 'Inisialisasi';
             }
             
             statusElement.className = statusClass;
-            statusElement.innerHTML = step.message.split('<br>')[0];
+            statusElement.innerHTML = statusText;
             
             if (phaseIndicator) phaseIndicator.textContent = phaseText;
             if (logPhaseIndicator) logPhaseIndicator.textContent = `Phase: ${phaseText}`;
@@ -1654,6 +2605,47 @@
 
         // ==================== INITIALIZE ====================
         initSimulation();
+		
+	// Tambahkan di bagian event handlers
+document.getElementById('clearLogBtn').addEventListener('click', () => {
+    document.getElementById('logContent').innerHTML = '';
+});
+
+document.getElementById('expandLogBtn').addEventListener('click', () => {
+    const logDiv = document.querySelector('.log');
+    logDiv.style.maxHeight = '800px';
+    logDiv.style.height = '800px';
+});
+
+document.getElementById('collapseLogBtn').addEventListener('click', () => {
+    const logDiv = document.querySelector('.log');
+    logDiv.style.maxHeight = '400px';
+    logDiv.style.height = 'auto';
+});
+
+document.getElementById('exportLogBtn').addEventListener('click', () => {
+    const logContent = document.getElementById('logContent');
+    const logText = Array.from(logContent.children)
+        .map(entry => {
+            const stepNum = entry.querySelector('strong').textContent;
+            const time = entry.querySelector('span[style*="monospace"]').textContent;
+            const content = entry.querySelector('.log-entry-content').textContent;
+            return `${stepNum} | ${time}\n${content}\n${'='.repeat(80)}\n`;
+        })
+        .join('\n');
+    
+    const blob = new Blob([logText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `heap-sort-log-${new Date().toISOString().slice(0,10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});	
+		
+		
     </script>
 </body>
 </html>
